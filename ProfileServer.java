@@ -1,20 +1,37 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
-public class ProfileServer {
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(1234);
+// Server class
+public class ProfileServer
+{
+    public static void main(String[] args) throws IOException
+    {
 
-        System.out.println("Waiting for client to connect...");
-        Socket socket = serverSocket.accept();
-        System.out.println("Client connected");
+        ServerSocket ss = new ServerSocket(1234);
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter writer = new PrintWriter(socket.getOutputStream());
+        while (true)
+        {
+            Socket s = null;
+
+            try
+            {
+
+                s = ss.accept();
+
+                System.out.println("A new client is connected : " + s);
+
+                DataInputStream dis = new DataInputStream(s.getInputStream());
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+
+                //Create new thread to handle client
+                Thread t = new ProfileClientHandler(s, dis, dos);
+                t.start();
+
+            }
+            catch (Exception e){
+                s.close();
+                e.printStackTrace();
+            }
+        }
     }
-
 }
