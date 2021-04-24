@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class profileInfo {
+public class EnterInfoGUI {
 
     private static final String[] statesOptions = {"Arizona", "Indiana", "Ohio", "Virginia"};
 
