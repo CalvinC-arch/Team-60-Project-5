@@ -248,11 +248,13 @@ public class profileInfo {
                     "CampsGram", JOptionPane.QUESTION_MESSAGE);
             boolean char1 = (password.contains("!") || password.contains("@") || password.contains("#"));
             boolean char2 = (password.contains("$") || password.contains("%") || password.contains("^"));
+            boolean char3 = (password.contains("&") || password.contains("*") || password.contains("?"));
+
             if(password.length() < 7) {
                 JOptionPane.showMessageDialog(null, "Password needs to be at least 7 characters!",
                         "CamsGram", JOptionPane.ERROR_MESSAGE);
                 checking = false;
-            } else if(!char1 && !char2) {
+            } else if(!char1 && !char2 && !char3) {
                 JOptionPane.showMessageDialog(null,
                         "Password needs to contain at least one special character!", "CamsGram",
                         JOptionPane.ERROR_MESSAGE);
