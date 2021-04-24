@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
@@ -25,7 +26,8 @@ class ProfileClientHandler extends Thread {
             this.dos.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
+                    "Campsgram", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
