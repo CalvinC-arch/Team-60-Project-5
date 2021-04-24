@@ -11,11 +11,8 @@ public class Profile {
 
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
                    String email, long phoneNumber, String aboutMe) {
-        if (username == null) {
-            throw new NullPointerException();
-        } else {
-            this.username = username;
-        }
+
+        this.username = username;
         this.interests = interests;
         this.friends = friends;
         this.education = education;
@@ -51,5 +48,33 @@ public class Profile {
     public String getAboutMe() {
         return this.aboutMe;
     }
-}
 
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFriends(ArrayList<String> friends) {
+        this.friends = friends;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+}
