@@ -9,7 +9,7 @@ public class ProfileGUI implements Runnable{
     private String name; //name of the user
     private String phone; //phone of the user
     private String email; //email of the user
-    private ArrayList<String> interests; //an array of the users interests
+    private String interests; //an array of the users interests
 
     //top elements
     JButton edit; //edit button
@@ -29,17 +29,12 @@ public class ProfileGUI implements Runnable{
 
 
     //TODO make more extensive
-    public ProfileGUI(String name, String phone, String email, ArrayList<String> interests)
+    public ProfileGUI(String name, String phone, String email, String interests)
     {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.interests = interests;
-
-        //sample interests
-        this.interests.add("football");
-        this.interests.add("soccer");
-        this.interests.add("tennis");
 
     }
 
@@ -49,12 +44,8 @@ public class ProfileGUI implements Runnable{
         this.name = "zeke";
         this.phone = "1234567890";
         this.email = "EmailOrSomething";
-        this.interests = new ArrayList<String>();
+        this.interests = "sldkfjsdklfjds";
 
-        //sample interests
-        this.interests.add("football");
-        this.interests.add("soccer");
-        this.interests.add("tennis");
 
     }
 
@@ -107,11 +98,7 @@ public class ProfileGUI implements Runnable{
 
         //interests panel
         JPanel interestsPanel = new JPanel();
-        String interestString = "";
-        for (int i = 0; i < interests.size(); i++) {
-            interestString += interests.get(i) + "\n";
-        }
-        interestsText = new JLabel("INTERESTS:\n" + interestString);
+        interestsText = new JLabel("INTERESTS:\n" + interests);
         interestsPanel.add(interestsText);
 
         //Combines the above three panels in grid layout
@@ -138,7 +125,7 @@ public class ProfileGUI implements Runnable{
                 nameText.setText(name);
                 emailText.setText(email);
                 phoneText.setText(phone);
-                interestsText.setText(interests.toString());
+                interestsText.setText(interests);
             }
             if(e.getSource() == requests) {
                 new FriendsListGUI().run();
