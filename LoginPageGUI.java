@@ -75,6 +75,25 @@ public class LoginPageGUI implements Runnable {
             }
             //Code to perform when Make Account Button is clicked
             if (e.getSource() == makeAccountButton) {
+                //TODO: Flesh out Login-Account Transition
+                //sample account
+                String accountName = emailField.getText();
+
+                //Creates an ArrayList of Test Profiles
+                ArrayList<ProfileGUI> profiles = new ArrayList<>();
+                for(int i = 0; i < 7; i++) {
+                    profiles.add(new ProfileGUI());
+                }
+
+                AccountGUI acc = new AccountGUI(accountName, profiles);
+
+                acc.run();
+                /*
+                if (createAccount()) {
+
+                }
+                 */
+                
                 if (createAccount()) {
                     //TODO: Switch Screens
                 }
