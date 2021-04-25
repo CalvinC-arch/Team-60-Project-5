@@ -7,13 +7,12 @@ import java.util.ArrayList;
 public class AccountGUI implements Runnable{
 
     private String accountName;
-    private int numProfiles; //how many profiles the account owns
+    private ArrayList<ProfileGUI> profiles; //how many profiles the account owns
 
-    public AccountGUI(String name, int numProfiles) {
+    public AccountGUI(String name, ArrayList<ProfileGUI> profiles) {
         this.accountName = name;
-        this.numProfiles = numProfiles;
+        this.profiles = profiles;
     }
-
 
     public void run() {
         JFrame frame = new JFrame("Account: " + accountName);
@@ -22,18 +21,24 @@ public class AccountGUI implements Runnable{
 
         JPanel topBar = new JPanel();
         JButton deleteAcc = new JButton("Delete");
+        deleteAcc.addActionListener(topBarListener);
         JButton addProfile = new JButton("Add Profile");
+        addProfile.addActionListener(topBarListener);
 
 
-        JPanel mainPanel = new JPanel(new GridLayout(numProfiles, 1));
+        JPanel mainPanel = new JPanel(new GridLayout(profiles.size() / 2 + 1, 2));
 
         //TODO Network I/O for profiles
-        for(int i = 0; i < numProfiles; i++) {
+        for(int i = 0; i < profiles.size(); i++) {
             System.out.println(i);
             JPanel profilePanel = new JPanel();
-            JTextField profileName = new JTextField("Derek");
+            JTextArea profileName = new JTextArea(profiles.get(i).getName());
             JButton view = new JButton("View");
+            view.addActionListener(profileListener);
+            view.setActionCommand("view" + i);
             JButton delete = new JButton("Delete");
+            delete.addActionListener(profileListener);
+            delete.setActionCommand("delete" + i);
 
             profilePanel.add(profileName);
             profilePanel.add(view);
@@ -48,10 +53,26 @@ public class AccountGUI implements Runnable{
         frame.setVisible(true);
     }
 
-    ActionListener actionListener = new ActionListener() {
+    ActionListener topBarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //TODO add functionality to buttons
 
+        }
+    };
+
+    ActionListener profileListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if(e.getActionCommand().contains("view")) {
+                int profileIndex = Integer.parseInt(e.getActionCommand().substring(4));
+                profiles.get(profileIndex).run();
+            } else if(e.getActionCommand().contains("delete")){
+                int profileIndex = Integer.parseInt(e.getActionCommand().substring(4));
+                profiles.remove(profileIndex);
+                //TODO figure out how to remove the panel from GUI
+            } else {
+                System.out.println("failure");
+
+            }
         }
     };
 }
