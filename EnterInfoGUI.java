@@ -1,6 +1,15 @@
 import javax.swing.*;
 import java.util.ArrayList;
-
+/**
+ * EnterInfoGUI.java
+ *
+ * This program prompts contains all the input
+ * dialogs that asks the user information
+ * for the creation of a profile.
+ *
+ * @author Team 060, Section 11
+ * @version May 03, 2021
+ * */
 public class EnterInfoGUI {
     //declaration of final String arrays of state and university options
     private static final String[] statesOptions = {"Arizona", "Indiana", "Ohio", "Virginia"};
