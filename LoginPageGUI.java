@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * LoginPageGUI.java
@@ -111,7 +112,14 @@ public class LoginPageGUI implements Runnable {
         //Checks whether input fields are empty
         if (emailField.getText() == null || passwordField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
+                    "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+
+        } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
+            JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
+                    "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+        } else if (passwordField.getText().length() < 8) {
+            JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
+                    "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
         } else {
             email = emailField.getText();
             emailField.setText("");
