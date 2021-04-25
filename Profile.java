@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 
 public class Profile {
@@ -76,5 +77,22 @@ public class Profile {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
+    public void writeExportFile() throws IOException {
+        //creating new file for this profile
+        File f = new File(this.username + "Export.csv");
+        PrintWriter pw = new PrintWriter(new FileWriter(f, false));
+        pw.print(this.username + ',' + interests.size() + ',');
+        //loop to write each element of interests list to file
+        for (int i = 0; i < interests.size(); i++) {
+            pw.print(this.interests.get(i) + ',');
+        }
+        pw.print(this.friends.size() + ',');
+        //loop to write each element of friends list to file
+        for (int x = 0; x < friends.size(); x++) {
+            pw.print(friends.get(x) + ',');
+        }
+        pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
+        pw.close();
+    }
 }
