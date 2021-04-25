@@ -7,13 +7,12 @@ import java.util.ArrayList;
 public class ProfileGUI implements Runnable{
 
     private String name; //name of the user
-    private long phone; //phone of the user
+    private String phone; //phone of the user
     private String email; //email of the user
     private ArrayList<String> interests; //an array of the users interests
 
     //top elements
     JButton edit; //edit button
-    JButton delete; //delete button
     JButton requests; //requests button
 
     //bottom elements
@@ -22,7 +21,15 @@ public class ProfileGUI implements Runnable{
     JButton search; //search button
     JButton add; //add user button
 
-    public ProfileGUI(String name, long phone, String email, ArrayList<String> interests)
+    //Text Boxes
+    JLabel nameText;
+    JLabel phoneText;
+    JLabel emailText;
+    JLabel interestsText;
+
+
+    //TODO make more extensive
+    public ProfileGUI(String name, String phone, String email, ArrayList<String> interests)
     {
         this.name = name;
         this.phone = phone;
@@ -36,10 +43,19 @@ public class ProfileGUI implements Runnable{
 
     }
 
-    //>) new AccountGUI("Will", 4)
-    public static void main(String[] args) {
-        //test array
-        SwingUtilities.invokeLater(new ProfileGUI("Will", 1111111111, "jwstoneb@purdue.edu", new ArrayList<String>()));
+    //for testing purposes
+    public ProfileGUI()
+    {
+        this.name = "zeke";
+        this.phone = "1234567890";
+        this.email = "EmailOrSomething";
+        this.interests = new ArrayList<String>();
+
+        //sample interests
+        this.interests.add("football");
+        this.interests.add("soccer");
+        this.interests.add("tennis");
+
     }
 
     public void run() {
@@ -52,9 +68,6 @@ public class ProfileGUI implements Runnable{
         edit = new JButton("Edit Profile");
         edit.addActionListener(actionListener);
         topPanel.add(edit);
-        delete = new JButton("Edit Profile");
-        delete.addActionListener(actionListener);
-        topPanel.add(delete);
         requests = new JButton("View Friend Requests");
         requests.addActionListener(actionListener);
         topPanel.add(requests);
@@ -79,27 +92,27 @@ public class ProfileGUI implements Runnable{
 
         //name panel
         JPanel namePanel = new JPanel();
-        JTextArea name = new JTextArea("USER: " + this.name);
-        namePanel.add(name);
+        nameText = new JLabel("USER: " + this.name);
+        namePanel.add(nameText);
 
         //phone panel
         JPanel phonePanel = new JPanel();
-        JTextArea phone = new JTextArea("PHONE: " + this.phone);
-        phonePanel.add(phone);
+        phoneText = new JLabel("PHONE: " + this.phone);
+        phonePanel.add(phoneText);
 
         //email panel
         JPanel emailPanel = new JPanel();
-        JTextArea email = new JTextArea("EMAIL: " + this.email);
-        emailPanel.add(email);
+        emailText = new JLabel("EMAIL: " + this.email);
+        emailPanel.add(emailText);
 
         //interests panel
         JPanel interestsPanel = new JPanel();
         String interestString = "";
-        for(int i = 0; i < interests.size(); i++) {
+        for (int i = 0; i < interests.size(); i++) {
             interestString += interests.get(i) + "\n";
         }
-        JTextArea interests = new JTextArea("INTERESTS:\n" + interestString);
-        interestsPanel.add(interests);
+        interestsText = new JLabel("INTERESTS:\n" + interestString);
+        interestsPanel.add(interestsText);
 
         //Combines the above three panels in grid layout
         JPanel profilePanel = new JPanel();
@@ -115,17 +128,22 @@ public class ProfileGUI implements Runnable{
 
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            //TODO add functionality to top panel buttons
+            //TODO add I/O aspects to edit
             if(e.getSource() == edit) {
+                name = EnterInfoGUI.showNameInputDialog();
+                email = EnterInfoGUI.showEmailInputDialog();
+                phone = EnterInfoGUI.showPhoneInputDialog();
+                interests = EnterInfoGUI.showInterestsInputDialog();
 
-            }
-            if(e.getSource() == delete) {
-
+                nameText.setText(name);
+                emailText.setText(email);
+                phoneText.setText(phone);
+                interestsText.setText(interests.toString());
             }
             if(e.getSource() == requests) {
-
+                new FriendsListGUI().run();
             }
-            //TODO Utilize data from bottom panel
+            //TODO Utilize data from bottom panel I/O
             if(e.getSource() == search) {
                 String profileSearch = searchBox.getText(); //the profile name entered by the user
                 searchBox.setText("");
@@ -136,4 +154,8 @@ public class ProfileGUI implements Runnable{
             }
         }
     };
+
+    public String getName() {
+        return this.name;
+    }
 }
