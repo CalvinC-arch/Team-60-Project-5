@@ -9,7 +9,7 @@ public class ProfileGUI implements Runnable{
     private String name; //name of the user
     private String phone; //phone of the user
     private String email; //email of the user
-    private String interests; //an array of the users interests
+    private String interests; //user personal interests
 
     //top elements
     JButton edit; //edit button
