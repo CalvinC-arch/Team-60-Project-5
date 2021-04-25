@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class AccountGUI implements Runnable{
 
-    private String accountName;
+
+    private String accountName; //email the account is under (appears in menu bar)
     private ArrayList<ProfileGUI> profiles; //how many profiles the account owns
 
     public AccountGUI(String name, ArrayList<ProfileGUI> profiles) {
@@ -32,7 +33,7 @@ public class AccountGUI implements Runnable{
         for(int i = 0; i < profiles.size(); i++) {
             System.out.println(i);
             JPanel profilePanel = new JPanel();
-            JTextArea profileName = new JTextArea(profiles.get(i).getName());
+            JLabel profileName = new JLabel(profiles.get(i).getName());
             JButton view = new JButton("View");
             view.addActionListener(profileListener);
             view.setActionCommand("view" + i);
