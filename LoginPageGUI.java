@@ -34,7 +34,7 @@ public class LoginPageGUI implements Runnable {
     //Creates the GUI
     public void run() {
         //Set Up JFrame
-        JFrame frame = new JFrame("Welcome to CampsGram!");
+        JFrame frame = new JFrame("Welcome to CampsGram!"); //sets new frame
         frame.setSize(480,200); //sets frame size
         frame.setLocationRelativeTo(null); //sets the location of the frame
         frame.setResizable(false); //sets the frame as unresizable
