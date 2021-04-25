@@ -20,7 +20,7 @@ public class EnterInfoGUI {
         String birthdate; //birth date of the user
         String education; //the university and state of the user
         String about; //extra information about the user
-        ArrayList<String> interests; //interests of the user
+        String interests; //interests of the user
         String password; //password for the user's account
         String output;   //contains all information of the user in order
 
@@ -111,9 +111,10 @@ public class EnterInfoGUI {
         return email; //returns String email
     } //showEmailInputDialog
 
-    public static ArrayList<String> showInterestsInputDialog() {
+    public static String showInterestsInputDialog() {
         ArrayList<String> interests = new ArrayList<>(); //List with user interests
         String interest; //personal interests of the user
+        String elements = ""; //personal interests formatted
         boolean checking = true; //initializes 'checking' as true
         do {
             interest = JOptionPane.showInputDialog(null, "Enter personal interests separated by commas: ",
@@ -135,13 +136,11 @@ public class EnterInfoGUI {
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
         } while (checking); //do-while loops runs while 'checking' is true
-
-        //for-loop below prints array elements, it is commented bc it is not needed
-        /* for(int i = 0; i < interests.size(); i++) {
-            System.out.println(interests.get(i));
-        }*/
-
-        return interests; //returns the ArrayList 'interests'
+        
+         for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
+            elements = elements + "\n"+ interests.get(i); //formats 'elements' and adds every item in the array
+        }
+        return elements; //returns the String 'elements' will all the interests formatted correctly
     } //end showInterestsInputDialog
 
     public static String showAboutInputDialog() {
