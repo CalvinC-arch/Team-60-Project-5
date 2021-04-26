@@ -44,7 +44,40 @@ class ProfileClientHandler extends Thread {
     @Override
     public void run() {
 
-        //TODO insert functionality here
+        String command;
+        System.out.println("A new client handler is operational");
+
+        try {
+            while (true) {
+
+                switch(command = dis.readUTF()) {
+
+                    case "View": //Client wants to view profile
+
+                        System.out.println("View");
+
+                        if (dis.readUTF().equals("True")) {
+                            dos.writeUTF("True");
+                        } else {
+                            dos.writeUTF("False");
+                        }
+
+                        break;
+
+                    case "CreateProfile": //Client wants to create profile
+
+                        System.out.println("CreateProfile");
+
+                        break;
+
+                }
+
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
+                    "Campsgram", JOptionPane.ERROR_MESSAGE);
+        }
 
         try {
             // closing resources
