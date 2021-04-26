@@ -1,8 +1,6 @@
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 /**
@@ -23,6 +21,16 @@ public class ProfileClient {
 
         boolean check = false; //used to determine whether a connection to the server has been achieved
 
+        // getting localhost ip
+        InetAddress ip = InetAddress.getByName("localhost");
+
+        // establish the connection with server port 5056
+        Socket s = new Socket(ip, 1234);
+
+        // obtaining input and out streams
+        DataInputStream dis = new DataInputStream(s.getInputStream());
+        DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+
         try { //connect to server and set up network io, display error message if connection unsuccessful
             while(!check) {
                 Socket socket = new Socket("localhost", 1234);
@@ -41,6 +49,7 @@ public class ProfileClient {
         //Confirm connection successful
         JOptionPane.showMessageDialog(null, "Connection Established", "CampsGram",
                 JOptionPane.INFORMATION_MESSAGE);
+
 
     }
 }
