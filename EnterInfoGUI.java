@@ -23,16 +23,18 @@ public class EnterInfoGUI {
     private static final String[] virginiaOptions = {"University of Richmond", "Virginia Polytechnic",
             "Liberty University", "University of Virginia"};
     public static void main (String[] args) {
+        String username; //unique username for the profile
         String name;  //name of the user
         String phone; //phone of the user
         String email; //email of the user
         String birthdate; //birth date of the user
         String education; //the university and state of the user
         String about; //extra information about the user
-        String interests; //interests of the user
+        ArrayList<String> interests; //interests of the user
         String password; //password for the user's account
         String output;   //contains all information of the user in order
 
+        username = showUsernameInputDialog();
         name = showNameInputDialog(); //calls the method that prompts user to enter name
         phone = showPhoneInputDialog(); //calls the method that prompts user to enter phone
         email = showEmailInputDialog(); //calls the method that prompts user to enter name
@@ -44,6 +46,7 @@ public class EnterInfoGUI {
         showCreatingDialog(); // shows message indicating the profile is being created
 
         output = String.format("User Information:\n" + //contains all user information in order
+                "Username: %s\n" +
                 "Name: %s\n" +
                 "Phone: %s\n" +
                 "Email: %s\n" +
@@ -51,22 +54,38 @@ public class EnterInfoGUI {
                 "Education: %s\n" +
                 "About: %s\n" +
                 "Interests: %s\n" +
-                "Password: %s\n", name, phone, email, birthdate, education, about, interests, password);
+                "Password: %s\n", username, name, phone, email, birthdate, education, about, interests, password);
         System.out.println(output); //prints output
 
     } //end main
+
+    public static String showUsernameInputDialog() {
+        String username; //unique username of the profile
+        do {
+            username = JOptionPane.showInputDialog(null, "Create Username:",
+                    "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to enter username
+            if ((username == null) || (username.isBlank())) { //checks if username is null
+                JOptionPane.showMessageDialog(null, "Username cannot be empty!",
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
+            } else if (username.contains(" ")) {
+                JOptionPane.showMessageDialog(null, "Username can only be a single word!",
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
+            } //end if 
+        } while (username == null || username.contains(" ")); //do-while runs while username is null or it has a space
+        return username; //returns the username for the profile
+    } //showUsernameInputDialog
 
     public static String showNameInputDialog() {
         String name; //firs and last name of user
         do {
             name = JOptionPane.showInputDialog(null, "Full Name:",
                     "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to enter name
-            if ((name == null) || (name.isBlank())) { //checks is name is null
+            if ((name == null) || (name.isBlank())) { //checks if name is null
                 JOptionPane.showMessageDialog(null, "Name cannot be empty!", "CampsGram",
                         JOptionPane.ERROR_MESSAGE); //shows error
             } else if (!name.contains(" ")) { //checks if name contains first name and last name
-                JOptionPane.showMessageDialog(null, "Please enter your full name!", "CampsGram",
-                        JOptionPane.ERROR_MESSAGE); //shows error
+                JOptionPane.showMessageDialog(null, "Please enter your full name!",
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
 
         } while ((name == null) || (name.isBlank()) || !name.contains(" ")); //do-while runs while name is null
@@ -87,13 +106,13 @@ public class EnterInfoGUI {
                 phone2 = phone.substring(0,10); //throws an exception if phone number is less than 10 digits
                 checking = false; //makes loop stop if no exception is thrown
                 if (phone.length() >= 11) { //checks if phone number has more than 10 digits
-                    JOptionPane.showMessageDialog(null, "Please enter a valid phone number!", "CamsGram",
-                            JOptionPane.ERROR_MESSAGE); //shows error
+                    JOptionPane.showMessageDialog(null, "Please enter a valid phone number!",
+                            "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
                     checking = true; //makes loop run again which asks user to input again
                 } //end if
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Please enter a valid phone number!", "CamsGram",
-                        JOptionPane.ERROR_MESSAGE); //shows error
+                JOptionPane.showMessageDialog(null, "Please enter a valid phone number!", 
+                        "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
         } while (checking); //do-while runs while 'checking' is true
         phoneFormat = "(" + phone.substring(0, 3)+ ") " + phone.substring(3,6) + "-" + phone.substring(6, 10);
@@ -113,24 +132,25 @@ public class EnterInfoGUI {
                 } //end if
                 checking = false; //makes loops stop if no exception is thrown
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Please enter a valid  email!", "CamsGram",
-                        JOptionPane.ERROR_MESSAGE); //shows error
+                JOptionPane.showMessageDialog(null, "Please enter a valid  email!", 
+                        "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
         } while (checking); //do-while loop runs while 'checking' is true
         return email; //returns String email
     } //showEmailInputDialog
 
-    public static String showInterestsInputDialog() {
+    public static ArrayList<String> showInterestsInputDialog() {
         ArrayList<String> interests = new ArrayList<>(); //List with user interests
         String interest; //personal interests of the user
         String elements = ""; //personal interests formatted
         boolean checking = true; //initializes 'checking' as true
         do {
-            interest = JOptionPane.showInputDialog(null, "Enter personal interests separated by commas: ",
-                    "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to input interests
+            interest = JOptionPane.showInputDialog(null,
+                    "Enter personal interests separated by commas: ", "CampsGram", 
+                    JOptionPane.QUESTION_MESSAGE); //asks user to input interests
             if ((interest == null) || (interest.isBlank())) { //checks if interest ArrayList is null
-                JOptionPane.showMessageDialog(null, "Please enter your interests!", "CampsGram",
-                        JOptionPane.ERROR_MESSAGE); //shows error
+                JOptionPane.showMessageDialog(null, "Please enter your interests!", 
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
             try {
                 do {
@@ -141,16 +161,16 @@ public class EnterInfoGUI {
                 interests.add(interest); //adds remaining interest to the ArrayList
                 checking = false; //stops loops since interests format is valid
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Please format your interests correctly!", "CamsGram",
-                        JOptionPane.ERROR_MESSAGE); //shows error
+                JOptionPane.showMessageDialog(null, "Please format your interests correctly!", 
+                        "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
         } while (checking); //do-while loops runs while 'checking' is true
         
-         for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
+         /*for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
             elements = elements + "\n"+ interests.get(i); //formats 'elements' and adds every item in the array
-        }
-        return elements; //returns the String 'elements' will all the interests formatted correctly
-    } //end showInterestsInputDialog
+        }*/
+        return interests; //returns the String 'elements' will all the interests formatted correctly
+    } //showInterestsInputDialog
 
     public static String showAboutInputDialog() {
         String about; //extra information about the user
@@ -214,7 +234,7 @@ public class EnterInfoGUI {
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
         } //end if
-        return (university + ", " + state); //return String University, State
+        return (university + "- " + state); //return String University, State
     } //showEducationInputDialog
 
     public static String showBirthdateInputDialog() {
@@ -262,8 +282,9 @@ public class EnterInfoGUI {
             boolean char3 = (password.contains("&") || password.contains("*") || password.contains("?"));
 
             if (password.length() < 7) { //checks if password has at least 7 characters
-                JOptionPane.showMessageDialog(null, "Password needs to be at least 7 characters!",
-                        "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                JOptionPane.showMessageDialog(null,
+                        "Password needs to be at least 7 characters!", "CamsGram",
+                        JOptionPane.ERROR_MESSAGE); //shows error
                 checking = false; //makes the loop run again which asks user to input again
             } else if(!char1 && !char2 && !char3) { //checks if it contains at least 1 special character
                 JOptionPane.showMessageDialog(null,
