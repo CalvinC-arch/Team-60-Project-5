@@ -54,13 +54,19 @@ class ProfileClientHandler extends Thread {
 
                     case "View": //Client wants to view profile
 
-                        System.out.println("View");
+                        //THIS IS A TEST FOR NETWORK I/O
+                        System.out.println("In View");
 
-                        if (dis.readUTF().equals("True")) {
+                        String code = dis.readUTF();
+                        System.out.println("Code is: " + code);
+
+                        if (code.equals("True")) {
                             dos.writeUTF("True");
                         } else {
                             dos.writeUTF("False");
                         }
+
+                        //END OF TEST
 
                         break;
 
