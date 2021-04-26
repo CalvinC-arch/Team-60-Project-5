@@ -11,6 +11,13 @@ import java.util.ArrayList;
  *
  * This program prompts a user to enter a username and password in order to log-in to a preexisting account
  * or create a new account for a new user.
+ * 
+ * run method - creates and displays the main GUI
+ * validateAccount method - boolean method that is run whenever the EnterButton is clicked. It attempts to connect to the server and send it "Validate" to signal to the
+ * server what to do. Then it sends the server the email and password submitted in the text fields. If the server is able to adequately process this request, it sends
+ * true or false back, which is read in. This boolean value is returned.
+ * createAccount method - boolean method that is very similar to the validateAccount method, except that it sends the server the word "Create" as a signal for what
+ * processing the server should do. This method also reads in true or false from the server to determine whether the processing was complete.
  *
  * @author Team 060, Section 11
  * @version May 03, 2021
@@ -59,23 +66,21 @@ public class LoginPageGUI implements Runnable {
         makeAccountButton.addActionListener(actionListener); //add action listener to respond to button clicks
         panel.add(makeAccountButton);
 
-        //Add JPanel to JFrame and make visible
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
+       
+        frame.add(panel, BorderLayout.CENTER); //add JPanel to JFrame
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
+        frame.setVisible(true); //makes the frame visible to the user
 
     }
 
     ActionListener actionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            //Code to perform when Enter Button is clicked
-            if (e.getSource() == enterButton) {
+        public void actionPerformed(ActionEvent e) { //detects button clicks
+            if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
                 if (validateAccount()) {
                     //TODO: Switch Screens
                 }
             }
-            //Code to perform when Make Account Button is clicked
-            if (e.getSource() == makeAccountButton) {
+            if (e.getSource() == makeAccountButton) { //Code to perform when Make Account Button is clicked
                 //TODO: Flesh out Login-Account Transition
                 //sample account
                 String accountName = emailField.getText();
@@ -103,28 +108,34 @@ public class LoginPageGUI implements Runnable {
     };
 
     //The method sends the user inputs to the server to validate whether the account exists
-    public boolean validateAccount() {
+    public boolean validateAccount() {        
+        //variables to use in the method
         boolean validAccount = false;
         String validation;
         String email;
         String password;
 
-        //Checks whether input fields are empty
+        //Checks whether input fields are empty. Display prompts user to fill out all fields if not.
         if (emailField.getText() == null || passwordField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
-                    "CampsGram Login", JOptionPane.ERROR_MESSAGE);
-
+                    "CampsGram Login", JOptionPane.ERROR_MESSAGE); 
+        
+        //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
         } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
             JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
                     "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+         
+        //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
         } else if (passwordField.getText().length() < 8) {
             JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
                     "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
-        } else {
-            email = emailField.getText();
-            emailField.setText("");
-            password = passwordField.getText();
-            passwordField.setText("");
+             
+        } else { 
+            //If inputs are in the proper format, they are stored as variables
+            email = emailField.getText(); //store email field input in variable
+            emailField.setText(""); //reset the text field to empty
+            password = passwordField.getText(); //store password field input in variable
+            passwordField.setText(""); //reset the text field to empty
 
             //Tries to connect to server and send inputs
             try {
@@ -132,48 +143,60 @@ public class LoginPageGUI implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 PrintWriter writer = new PrintWriter(client.getOutputStream());
 
-                writer.write("Validate");
+                writer.write("Validate"); //send signal word
                 writer.println();
-                writer.write(email);
+                writer.write(email); //send email
                 writer.println();
-                writer.write(password);
+                writer.write(password); //send password
                 writer.println();
 
-                writer.flush();
+                writer.flush(); //flush buffer
 
-                validation = reader.readLine();
-                if(validation.equals("False")) {
+                validation = reader.readLine(); //read in true or false
+                if(validation.equals("False")) { 
                     validAccount = false;
                 } else {
                     validAccount = true;
-                }
+                } // update boolean based on response
 
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE);
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); // display error message if cannot connect to server and let user try again
             }
 
         }
-        return validAccount;
+        return validAccount; //return boolean
 
     }
 
     //This method sends the user inputs to determine whether a new account may be created
     public boolean createAccount() {
+        //variables used in method
         boolean accountCreated = false;
         String creation;
         String email;
         String password;
 
-        //Checks whether input fields are empty
+        //Checks whether input fields are empty. Display prompts user to fill out all fields
         if (emailField.getText() == null || passwordField.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
                     "CampsGram", JOptionPane.ERROR_MESSAGE);
+          //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+        } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
+            JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
+                    "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+         
+        //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+        } else if (passwordField.getText().length() < 8) {
+            JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
+                    "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+              
         } else {
-            email = emailField.getText();
-            emailField.setText("");
-            password = passwordField.getText();
-            passwordField.setText("");
+            //If email and password have proper format, store them in variables
+            email = emailField.getText(); //store email
+            emailField.setText(""); //reset email field
+            password = passwordField.getText(); //store password
+            passwordField.setText(""); //reset password field
 
             //Attempts to connect to server and send inputs
             try {
@@ -181,28 +204,28 @@ public class LoginPageGUI implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 PrintWriter writer = new PrintWriter(client.getOutputStream());
 
-                writer.write("Create");
+                writer.write("Create"); //send signal 
                 writer.println();
-                writer.write(email);
+                writer.write(email); //send email
                 writer.println();
-                writer.write(password);
+                writer.write(password); //send password
                 writer.println();
 
-                writer.flush();
+                writer.flush(); //flush buffer
 
-                creation = reader.readLine();
+                creation = reader.readLine(); //read in true or false
                 if(creation.equals("False")) {
                     accountCreated = false;
                 } else {
                     accountCreated = true;
-                }
+                } //update boolean
 
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE);
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); //display error message is cannot connect to server and let user try again
             }
 
         }
-        return accountCreated;
+        return accountCreated; //return boolean
     }
 }
