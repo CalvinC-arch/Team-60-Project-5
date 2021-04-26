@@ -84,17 +84,17 @@ public class LoginPageGUI implements Runnable {
                 //TODO: Flesh out Login-Account Transition
                 //sample account
                 String accountName = emailField.getText();
-                
+
                 //adds sample profiles
-                ArrayList<Franken> profiles = new ArrayList<>();
+                ArrayList<Profile> profiles = new ArrayList<>();
                 for(int i = 0; i < 7; i++) {
-                    profiles.add(new Franken());
+                    profiles.add(new Profile());
                 }
 
                 //creates and runs the account object
-                AccountGUI acc = new AccountGUI(accountName, profiles);
+                Account acc = new Account(emailField.getText(), passwordField.getText(), profiles);
                 acc.run();
-                
+
                 //erics validate code is below
                 /*
                 if (createAccount()) {
