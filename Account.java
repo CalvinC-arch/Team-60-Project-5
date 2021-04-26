@@ -4,6 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/*
+AccountGUI useful methods:
+
+AccountGUI(String name, ArrayList<Franken> profiles)
+  - name is name of the account
+  - profiles is a list of profiles under the account
+
+.run() ~ runs the GUI for an AccountGUI object
+
+Creators: Will Stonebridge
+ */
+
 public class Account {
     private final String email;
     private final String password;
