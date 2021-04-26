@@ -1,7 +1,7 @@
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
-import java.util.Locale;
 
 public class Profile {
 
@@ -32,38 +32,62 @@ public class Profile {
         int listLength; //length interests and friends arrays
         int index = 0; //index of profileInfo
         int tempIndex; //holds index that is reached before appending to a list
+        boolean fileRead = false;
 
+        //initialize new interests and friends lists so they can be added to
         this.interests = new ArrayList<>();
         this.friends = new ArrayList<>();
 
-        try {
-            File f = new File(filename);
-            FileReader fr = new FileReader(f);
-            BufferedReader bfr = new BufferedReader(fr);
+        //read from file, runs while the boolean indicating the file has been read is false
+        while (!fileRead) {
 
-            profile = bfr.readLine();
+            try {
+                //Read in file using correct filename using new bufferedReader
+                File f = new File(filename);
+                FileReader fr = new FileReader(f);
+                BufferedReader bfr = new BufferedReader(fr);
 
-            bfr.close();
-        } catch (IOException e) {
-            //DISPLAY ERROR GUI
-            e.printStackTrace();
+                //reads in the line from the file
+                profile = bfr.readLine();
+
+                bfr.close();
+
+                //change fileRead to true to exit loop
+                fileRead = true;
+
+            } catch (IOException e) { //if IO Exception, likely due to incorrect file name
+
+                //display error message and ask for new filename for next loop iteration
+                JOptionPane.showMessageDialog(null, "Not a valid file name!", "CamsGram",
+                        JOptionPane.ERROR_MESSAGE);
+
+                filename = JOptionPane.showInputDialog(null, "Enter a valid filename: ",
+                        "CampsGram", JOptionPane.QUESTION_MESSAGE);
+            }
         }
 
+        //split the .csv by commas into a string array for data processing
         profileInfo = profile.split(",");
 
+        //set username to first index in array and iterate the index counter
         this.username = profileInfo[index];
         index++;
 
+        //find length of interests list and iterate the index counter
         listLength = Integer.parseInt(profileInfo[index]);
         index++;
 
+        //set tempIndex to index for loop iterate
         tempIndex = index;
 
+        //loop from current index to index at start of loop + the number of items in the loop to ensure all list items
+        //are found
         while (index < listLength + tempIndex) {
             interests.add(profileInfo[index]);
             index++;
         }
 
+        //repeat the same process as previous for the friends arraylist
         listLength = Integer.parseInt(profileInfo[index]);
         index++;
 
@@ -74,6 +98,7 @@ public class Profile {
             index++;
         }
 
+        //set fields to indexes from the .csv as appropriate for the remaining fields
         this.education = profileInfo[index];
         index++;
 
@@ -83,39 +108,49 @@ public class Profile {
         this.phoneNumber = Long.parseLong(profileInfo[index]);
         index++;
 
-        this.aboutMe = profileInfo[index] + ", ";
+        this.aboutMe = profileInfo[index] + ",";
         index++;
 
+        //loop through the rest of the indexes in profileInfo and append to the aboutMe section with a comma
+        //to account for user entered commas in the about me section
         while (index < profileInfo.length) {
             this.aboutMe = this.aboutMe + profileInfo[index] + ", ";
             index++;
         }
 
+        //remove last two characters, as the aboutMe loop will leave a comma and space at the end of the process
         this.aboutMe = this.aboutMe.substring(0, this.aboutMe.length() - 2);
     }
 
     public void writeExportFile() throws IOException {
 
-        //creating new file and printwriter for this profile
-        File f = new File(this.username + "Export.csv");
-        PrintWriter pw = new PrintWriter(new FileWriter(f, false));
-        pw.print(this.username + ',' + interests.size() + ',');
+        try {
+            //creating new file and printWriter for this profile
+            File f = new File(this.username + "Export.csv");
+            PrintWriter pw = new PrintWriter(new FileWriter(f, false));
+            pw.print(this.username + ',' + interests.size() + ',');
 
-        //loop to write each element of interests list to file
-        for (int i = 0; i < interests.size(); i++) {
-            pw.print(this.interests.get(i) + ',');
+            //loop to write each element of interests list to file
+            for (int i = 0; i < interests.size(); i++) {
+                pw.print(this.interests.get(i) + ',');
+            }
+
+            pw.print(this.friends.size());
+            pw.print(",");
+
+            //loop to write each element of friends list to file
+            for (int x = 0; x < friends.size(); x++) {
+                pw.print(friends.get(x) + ',');
+            }
+
+            pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
+            pw.close();
+
+        } catch (IOException e) { //If the file is open or another error occurs, display this error message
+            JOptionPane.showMessageDialog(null, "There was an error exporting your file, please " +
+                            "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
         }
 
-        pw.print(this.friends.size());
-        pw.print(",");
-
-        //loop to write each element of friends list to file
-        for (int x = 0; x < friends.size(); x++) {
-            pw.print(friends.get(x) + ',');
-        }
-
-        pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
-        pw.close();
     }
 
     public String getUsername() {
