@@ -13,6 +13,16 @@ import java.awt.event.ActionListener;
  * declining friend requests, unfriending current friends, viewing friends' profiles, and navigating away
  * from the page.
  *
+ * run method - creates the GUI
+ * acceptFriend method - boolean method run when accept button is clicked. It sends "Accept" to the server as a signal to process accepting friend request and receives
+ * true or false back from the server depending on if the request was properly processed and returns this value
+ * declineFriend method - boolean method run when decline button is clicked. It sends "Decline" to the server as a signal to process declining friend request and receives
+ * true or false back from the server depening on if the request was properly processed and returns this value
+ * viewProfile method - boolean method run when view profile button is clicked. It sends "View" to the server as a signal to process viewing friend's profile and receives 
+ * true or false back from the server depending on if the rquest was properly processed and returns this value
+ * unfriend method - boolean method run when the unfriend button is clicked. It sends "Unfriend" to the server as a signal to process unfriending and receives true or false
+ * back from the server depending on the request was properly processed and returns this value
+ *
  * @author Team 060, Section 11
  * @version May 03, 2021
  * */
@@ -38,14 +48,14 @@ public class FriendsListGUI implements Runnable {
     //Assemble the GUI
     public void run() {
         //Settings for the JFrame
-        JFrame frame = new JFrame("CampsGram Friends List");
-        frame.setSize(480, 200);
-        frame.setResizable(false);
+        JFrame frame = new JFrame("CampsGram Friends List"); //title JFrame
+        frame.setSize(480, 200); //sets size of JFrame
+        frame.setResizable(false); //makes JFrame unable to be resized
 
         //Add Back Button to Top of Screen
         JPanel northPanel = new JPanel();
         backButton = new JButton("Back");
-        backButton.addActionListener(actionListener);
+        backButton.addActionListener(actionListener); //add action listener to back button
         northPanel.add(backButton);
         frame.add(northPanel, BorderLayout.NORTH);
 
@@ -55,10 +65,10 @@ public class FriendsListGUI implements Runnable {
         requestsLists.setMaximumRowCount(3);
         centralPanel.add(requestsLists);
         acceptButton = new JButton("Accept");
-        acceptButton.addActionListener(actionListener);
+        acceptButton.addActionListener(actionListener); //add action listener to accept button
         centralPanel.add(acceptButton);
-        declineButton = new JButton("Decline");
-        declineButton.addActionListener(actionListener);
+        declineButton = new JButton("Decline"); 
+        declineButton.addActionListener(actionListener); //add action listener to decline button
         centralPanel.add(declineButton);
         frame.add(centralPanel, BorderLayout.CENTER);
 
@@ -77,10 +87,10 @@ public class FriendsListGUI implements Runnable {
         friendsList.setMaximumRowCount(3);
         southPanel.add(friendsList);
         viewProfileButton = new JButton("View Profile");
-        viewProfileButton.addActionListener(actionListener);
+        viewProfileButton.addActionListener(actionListener); //add action listener to view profile button
         southPanel.add(viewProfileButton);
         unfriendButton = new JButton("Unfriend");
-        unfriendButton.addActionListener(actionListener);
+        unfriendButton.addActionListener(actionListener); //add action listener to unfriend button
         southPanel.add(unfriendButton);
         frame.add(southPanel, BorderLayout.SOUTH);
 
@@ -92,10 +102,9 @@ public class FriendsListGUI implements Runnable {
             viewProfileButton.setEnabled(true);
             unfriendButton.setEnabled(true);
         }
-
-        //Make the frame visible
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
+        
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
+        frame.setVisible(true); //make the frame visible
     }
 
     //Create action listener to respond to button clicks
@@ -107,28 +116,28 @@ public class FriendsListGUI implements Runnable {
                     requestsLists.removeItemAt(requestsLists.getSelectedIndex());
                     //TODO: Auto-Update other user's friend list
                 }
-            }
+            } //code that is run if accept button is clicked
             if (e.getSource() == declineButton) {
                 if (declineFriend()) {
                     requestsLists.removeItemAt(requestsLists.getSelectedIndex());
                 }
-            }
+            } //code that is run if decline button is clicked
             if (e.getSource() == viewProfileButton) {
                if (viewProfile()) {
                    //TODO: Display Friend's Profile
                }
-            }
+            } //code that is run if view profile button is clicked
             if (e.getSource() == unfriendButton) {
                 if (unfriend()) {
                     friendsList.removeItemAt(friendsList.getSelectedIndex());
                     //TODO: Auto-Update other user's friend list
                 }
-            }
+            } //code that is run if unfriend button is clicked
             if (e.getSource() == backButton) {
                 if (back()) {
                     //TODO: Display user's profile
                 }
-            }
+            } //code that is run if back button is clicked
         }
     };
 
