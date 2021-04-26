@@ -109,7 +109,6 @@ public class Account {
                 profiles.add(profile);
 
                 //TODO add updating functionality
-                mainPanel.remove(panelList.get(profileIndex));
 
             }
         }
@@ -138,6 +137,8 @@ public class Account {
                 profiles.remove(profileIndex);
 
                 //TODO figure out how to remove the panel from GUI
+                mainPanel.remove(panelList.get(profileIndex));
+
             }
         }
     };
