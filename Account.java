@@ -22,6 +22,7 @@ public class Account {
     private ArrayList<Profile> profiles;
 
     //frame and panels
+    ArrayList<JPanel> panelList;
     JFrame frame;
     JPanel bottomBar;
     JPanel mainPanel;
@@ -74,6 +75,7 @@ public class Account {
             profilePanel.add(profileName);
             profilePanel.add(view);
             profilePanel.add(delete);
+            panelList.add(profilePanel);
 
             //adds the profile panel to the main panel
             mainPanel.add(profilePanel);
@@ -107,6 +109,8 @@ public class Account {
                 profiles.add(profile);
 
                 //TODO add updating functionality
+                mainPanel.remove(panelList.get(profileIndex));
+
             }
         }
     };
