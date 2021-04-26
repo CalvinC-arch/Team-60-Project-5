@@ -1,69 +1,27 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 
-/*
-Profile useful methods:
+public class Profile {
 
-Profile(String name, ArrayList<String> interests, ArrayList<String> friends, String education,
-        String email, String phone, String aboutMe)
-  - constructor with all fields
-
-Profile()
-  - constructor for a test profile object (has prefilled fields)
-
-.run() ~ runs the GUI for an profile object
-
-Creators: Will, Eric
- */
-
-public class Profile implements Runnable{
-
-    //Profile Info
-    private String name;
+    private String username;
     private ArrayList<String> interests;
     private ArrayList<String> friends;
     private String education;
     private String email;
-    private String phone;
+    private long phoneNumber;
     private String aboutMe;
 
-    //Frames and Panels
-    JFrame frame;
-    JPanel topPanel;
-    JPanel bottomPanel;
+    public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
+                   String email, long phoneNumber, String aboutMe) {
 
-    //top elements
-    JButton edit; //edit button
-    JButton requests; //requests button
-
-    //bottom elements
-    JTextField searchBox; //text box for searching users
-    JTextField addBox; //text box for adding users
-    JButton search; //search button
-    JButton add; //add user button
-
-    //Text Boxes
-    JLabel nameText;
-    JLabel phoneText;
-    JLabel emailText;
-    JLabel educationText;
-    JLabel aboutMeText;
-    JLabel interestsText;
-
-    public Profile(String name, ArrayList<String> interests, ArrayList<String> friends, String education,
-                   String email, String phone, String aboutMe) {
-
-        this.name = name;
+        this.username = username;
         this.interests = interests;
         this.friends = friends;
         this.education = education;
         this.email = email;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
         this.aboutMe = aboutMe;
     }
 
@@ -111,8 +69,8 @@ public class Profile implements Runnable{
         //split the .csv by commas into a string array for data processing
         profileInfo = profile.split(",");
 
-        //set name to first index in array and iterate the index counter
-        this.name = profileInfo[index];
+        //set username to first index in array and iterate the index counter
+        this.username = profileInfo[index];
         index++;
 
         //find length of interests list and iterate the index counter
@@ -147,7 +105,7 @@ public class Profile implements Runnable{
         this.email = profileInfo[index];
         index++;
 
-        this.phone = profileInfo[index];
+        this.phoneNumber = Long.parseLong(profileInfo[index]);
         index++;
 
         this.aboutMe = profileInfo[index] + ",";
@@ -163,25 +121,25 @@ public class Profile implements Runnable{
         //remove last two characters, as the aboutMe loop will leave a comma and space at the end of the process
         this.aboutMe = this.aboutMe.substring(0, this.aboutMe.length() - 2);
     }
-
-    //TODO delete test constructor
-    public Profile() {
-        this.name = "zeke";
-        this.phone = "1234567890";
-        this.email = "EmailOrSomething";
-        this.education = "Purdue";
-        this.aboutMe = "Hola, yo estoy zeke";
-        this.interests = new ArrayList<>();
-
+    /*this constructor creates another profile object identical to the one passed to it as an argument, it will be used
+    when the server send profiles back to the client to display after logging in*/
+    public Profile(Profile profile) {
+        this.username = profile.getUsername();
+        this.interests = profile.getInterests();
+        this.friends = profile.getFriends();
+        this.education = profile.getEducation();
+        this.email = profile.getEmail();
+        this.phoneNumber = profile.getPhoneNumber();
+        this.aboutMe = profile.getAboutMe();
     }
 
     public void writeExportFile() throws IOException {
 
         try {
             //creating new file and printWriter for this profile
-            File f = new File(this.name + "Export.csv");
+            File f = new File(this.username + "Export.csv");
             PrintWriter pw = new PrintWriter(new FileWriter(f, false));
-            pw.print(this.name + ',' + interests.size() + ',');
+            pw.print(this.username + ',' + interests.size() + ',');
 
             //loop to write each element of interests list to file
             for (int i = 0; i < interests.size(); i++) {
@@ -196,130 +154,18 @@ public class Profile implements Runnable{
                 pw.print(friends.get(x) + ',');
             }
 
-            pw.print(this.education + ',' + this.email + ',' + this.phone + ',' + this.aboutMe);
+            pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
             pw.close();
 
         } catch (IOException e) { //If the file is open or another error occurs, display this error message
             JOptionPane.showMessageDialog(null, "There was an error exporting your file, please " +
-                    "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
+                            "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
-    public void run() {
-        frame = new JFrame(name);
-        frame.setSize(640, 480);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        //top panel
-        topPanel = new JPanel();
-        edit = new JButton("Edit Profile");
-        edit.addActionListener(actionListener);
-        topPanel.add(edit);
-        requests = new JButton("View Friend Requests");
-        requests.addActionListener(actionListener);
-        topPanel.add(requests);
-        frame.add(topPanel, BorderLayout.NORTH);
-
-        //bottom panel
-        bottomPanel = new JPanel();
-        searchBox = new JTextField(5);
-        bottomPanel.add(searchBox);
-        search = new JButton("Search User");
-        search.addActionListener(actionListener);
-        bottomPanel.add(search);
-        addBox = new JTextField(5);
-        bottomPanel.add(addBox);
-        add = new JButton("Add Friend");
-        add.addActionListener(actionListener);
-        bottomPanel.add(add);
-        frame.add(bottomPanel, BorderLayout.SOUTH);
-
-        //Everything below is for the center panel which holds user info
-
-        //name panel
-        JPanel namePanel = new JPanel();
-        nameText = new JLabel("USER: " + name);
-        namePanel.add(nameText);
-
-        //phone panel
-        JPanel phonePanel = new JPanel();
-        phoneText = new JLabel("PHONE: " + this.phone);
-        phonePanel.add(phoneText);
-
-        //email panel
-        JPanel emailPanel = new JPanel();
-        emailText = new JLabel("EMAIL: " + this.email);
-        emailPanel.add(emailText);
-
-        //education panel
-        JPanel educationPanel = new JPanel();
-        educationText = new JLabel("EDUCATION: " + this.education);
-        educationPanel.add(educationText);
-
-        //about me panel
-        JPanel aboutMePanel = new JPanel();
-        aboutMeText = new JLabel("ABOUT ME:\n" + this.aboutMe);
-        aboutMePanel.add(aboutMeText);
-
-        //interests panel
-        JPanel interestsPanel = new JPanel();
-        interestsText = new JLabel("INTERESTS:\n" + interests.toString());
-        interestsPanel.add(interestsText);
-
-        //Combines the above three panels in grid layout
-        JPanel profilePanel = new JPanel();
-        profilePanel.setLayout(new GridLayout(3, 2));
-        profilePanel.add(namePanel);
-        profilePanel.add(phonePanel);
-        profilePanel.add(emailPanel);
-        profilePanel.add(educationPanel);
-        profilePanel.add(aboutMePanel);
-        profilePanel.add(interestsPanel);
-        frame.add(profilePanel, BorderLayout.CENTER);
-
-        frame.setVisible(true);
-    }
-
-    ActionListener actionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            //TODO add I/O aspects to edit
-            if(e.getSource() == edit) {
-                //Uses the EnterInfoGUI methods to edit the fields of the object
-                name = EnterInfoGUI.showNameInputDialog();
-                email = EnterInfoGUI.showEmailInputDialog();
-                phone = EnterInfoGUI.showPhoneInputDialog();
-                education = EnterInfoGUI.showEducationInputDialog();
-                aboutMe = EnterInfoGUI.showAboutInputDialog();
-                //TODO change showInterests Dialog to an arrayList and implement required changes
-                interests.add(EnterInfoGUI.showInterestsInputDialog());
-
-                //Updates the JLabels to the current fields
-                nameText.setText(name);
-                emailText.setText(email);
-                phoneText.setText(phone);
-                //TODO Create an about me and interests formatting method.
-                educationText.setText(aboutMe);
-                interestsText.setText(interests.toString());
-            }
-            if(e.getSource() == requests) {
-                //Opens the Friends List GUI
-                new FriendsListGUI().run(); //TODO update this once the friends list GUI is more operational
-            }
-            //TODO Utilize retrieved strings from bottom panel I/O to open and befriend the requested profiles
-            if(e.getSource() == search) {
-                String profileSearch = searchBox.getText(); //the profile name entered by the user
-                searchBox.setText("");
-            }
-            if(e.getSource() == add) {
-                String profileAdd = addBox.getText(); //the profile name entered by the user
-                addBox.setText("");
-            }
-        }
-    };
-
-    public String getName() {
-        return this.name;
+    public String getUsername() {
+        return this.username;
     }
 
     public ArrayList<String> getInterests() {
@@ -338,8 +184,8 @@ public class Profile implements Runnable{
         return this.email;
     }
 
-    public String getPhone() {
-        return this.phone;
+    public long getPhoneNumber() {
+        return this.phoneNumber;
     }
 
     public String getAboutMe() {
@@ -366,12 +212,12 @@ public class Profile implements Runnable{
         this.interests = interests;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 }
