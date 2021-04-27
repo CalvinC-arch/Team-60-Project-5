@@ -159,10 +159,39 @@ public class Profile {
 
         } catch (IOException e) { //If the file is open or another error occurs, display this error message
             JOptionPane.showMessageDialog(null, "There was an error exporting your file, please " +
-                            "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
+                    "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
         }
 
     }
+    public static String formatAboutString(String about) { //organizes the About information as a small paragraph
+        String about2 = ""; //initializes about2 as empty
+        String newAbout = about; //duplicates the String about
+        boolean checking = false; //checker that notifies become true if while loop runs
+        while (newAbout.length() > 30) { //while-loop runs if line is too long
+            checking = true; //updates checker
+            if (newAbout.charAt(30) == ' ') { //checks if where the text cuts has a space
+                newAbout = newAbout.substring(0,30) + newAbout.substring(31); //deletes the extra space
+                about = about2 + newAbout.substring(0, 30) + "\n"; //formats the String
+            } else {
+                about = about2 + newAbout.substring(0, 30) + "-\n"; //formats the String
+            } //end if
+            about2 = about; //updates about2
+            newAbout = newAbout.substring(30); //updates NewAbout
+        }
+        if (checking) { //checks if while loop ran
+            return "\n" + about + newAbout; //returns formatted About Info String
+        } else {
+            return "\n" + about; //returns normal About Info String
+        } //end if
+    } //formatAboutString
+
+    public static String formatInterestsString(ArrayList<String> interests) { //converts array to formatted String
+        String newInterests =  ""; //initializes String to be empty
+        for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
+            newInterests = newInterests + "\n    "+ interests.get(i); //formats elements into a vertical list
+        } //for-loop
+        return newInterests; //returns Interests as formatted String
+    } //formatInterestsString
 
     public String getUsername() {
         return this.username;
