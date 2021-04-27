@@ -3,7 +3,7 @@ Cuz its complicated, and this should help a little
 Calvin C
 
 The overall format of the client-server stuff is this: the server, upon connection, makes a client handler to manage functionality for the client. The only places you need to 
-editfor client-server implementation is in ProfileClientHandler.java (Server) and ProfileClient.jav0 (Client). All processing happens between these two classes for the 
+edit for client-server implementation is in ProfileClientHandler.java (Server) and ProfileClient.jav0 (Client). All processing happens between these two classes for the 
 most part.
 
 As a side note, from this point forward I use client handler and server interchangebly, dont worry about profileServer.java at all, its not relevant to processing.
