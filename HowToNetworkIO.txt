@@ -1,0 +1,33 @@
+General Guide on how to implement Network IO!
+Cuz its complicated, and this should help a little
+Calvin C
+
+The overall format of the client-server stuff is this: the server, upon connection, makes a client handler to manage functionality for the client. The only places you need to edit
+for client-server implementation is in ProfileClientHandler.java (Server) and ProfileClient.jav0 (Client). All processing happens between these two classes for the most part.
+
+As a side note, from this point forward I use client handler and server interchangebly, dont worry about profileServer.java at all, its not relevant to processing.
+
+1. Communication Syntax
+
+To send a piece of info from client to server and vice versa, use: dos.writeObject("Insert Object Here");  
+To recieve a piece of info from client to server and vice versa, use: (Data Type) dis.readObject();
+
+This should be pretty much all you need to implement the GUI stuff.
+
+As the object input/output streams send everything as generic objects, you will need to cast the data you are reading in every time you use dis.readObject();. For example, to read
+in the command String send from the client (more on this later), the server uses the following code: command = (String) dis.readObject(). You can see this in profileClientHandler, 
+line 53. This reads in the sent object, casts it as a String, and sets the String variable 'command' equal to it. 
+
+
+2. Processing Syntax
+
+In ProfileClientHandler.java, you will notice a case/switch setup, with the switch being the command variable mentioned earlier. To ensure that the server only runs the 
+functionality it needs at any given time for any given process, this setup is used to 'filter' what the client wants to do. Say you want to create and use a process that sends a 
+profile from the server to the client (I will do this soon/have already done this). You would first create a case with a string identifier, in this case something like
+"Send Profile". The body of this case would then be the processing that selects the correct profile and sends it to the client. You would need additional network IO as well, as
+the client must tell the server which profile it wants by username (what I will use/have used) or some other identifier, up to you. When the process is over, simply add a 'break',
+and that specific processing is done! 
+
+IT IS REALLY IMPORTANT THAT YOU MAKE SURE TO MATCH ALL YOUR INPUTS AND OUTPUTS!!!!!! If you do not do so, the client and/or server will either crash or be stuck constantly waiting
+for input and need to be manually restarted. Just ensure that you have a client output that sends the command string, and that every other client output or input is matched by the
+server case.
