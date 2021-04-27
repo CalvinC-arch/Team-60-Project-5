@@ -16,7 +16,8 @@ To recieve a piece of info from client to server and vice versa, use: (Data Type
 This should be pretty much all you need to implement the GUI stuff.
 
 As the object input/output streams send everything as generic objects, you will need to cast the data you are reading in every time you use dis.readObject();. For example, 
-to read in the command String send from the client (more on this later), the server uses the following code: command = (String) dis.readObject(). You can see this in profileClientHandler, line 53. This reads in the sent object, casts it as a String, and sets the String variable 'command' equal to it. 
+to read in the command String send from the client (more on this later), the server uses the following code: command = (String) dis.readObject(). You can see this in 
+profileClientHandler, line 53. This reads in the sent object, casts it as a String, and sets the String variable 'command' equal to it. 
 
 
 2. Processing Syntax
