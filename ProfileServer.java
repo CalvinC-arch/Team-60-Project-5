@@ -1,5 +1,7 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 /**
  * ProfileServer
@@ -18,6 +20,13 @@ import java.net.*;
 //Class uses port 1234
 public class ProfileServer
 {
+
+    private static ArrayList<Account> accounts = new ArrayList<>(); //Account Master ArrayList
+
+    public static ArrayList<Account> getAccounts() {
+        return accounts;
+    }
+
     public static void main(String[] args) throws IOException
     {
 

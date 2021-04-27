@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * ProfileClient
@@ -26,7 +25,7 @@ public class ProfileClient {
         InetAddress ip = InetAddress.getByName("localhost");
 
         // establish the connection with server port 1234
-        Socket s = new Socket(ip, 1234);
+        Socket s = new Socket(ip, 1234);   //CHANGE FOR USE WITH UNITY TO 5555
 
         // obtaining input and out streams
         ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
@@ -34,10 +33,7 @@ public class ProfileClient {
 
         try { //connect to server and set up network io, display error message if connection unsuccessful
             while(!check) {
-                Socket socket = new Socket("localhost", 1234);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter writer = new PrintWriter(socket.getOutputStream());
+                Socket socket = new Socket("localhost", 1234);   //CHANGE FOR USE WITH UNITY TO 5555
 
                 check = true;
             }
@@ -45,6 +41,8 @@ public class ProfileClient {
         } catch (IOException e) { //display error message is connection not established
             JOptionPane.showMessageDialog(null, "Error: Connection Cannot be Established",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);
+
+            return;
         }
 
         //Confirm connection successful
@@ -52,6 +50,41 @@ public class ProfileClient {
                 JOptionPane.INFORMATION_MESSAGE);
 
         //TODO GUI stuff goes here!
+
+        //TEST SECTION
+
+        //this, when used with the proper setup in the server, demonstrates data persistence. Ignore for now
+
+        TestingProfile profile;
+
+        dos.writeObject("SendProfile");
+        dos.writeObject("ccarta");
+
+        String reply = (String) dis.readObject();
+
+        if (reply.equals("True")) {
+            profile = (TestingProfile) dis.readObject();
+            System.out.println(profile.getUsername());
+            System.out.println(profile.getAboutMe());
+        } else {
+            System.out.println("Profile not returned");
+        }
+
+        //END OF RETURN PROFILE TEST
+        //START OF MODIFY ACCOUNT ARRAYLIST TEST
+
+        dos.writeObject("DeleteProfile");
+        dos.writeObject("ccarta");
+
+        reply = (String) dis.readObject();
+
+        if (reply.equals("True")) {
+            System.out.println("Profile deleted");
+        } else {
+            System.out.println("Profile not found");
+        }
+
+        //END OF TEST SECTION
 
     }
 }
