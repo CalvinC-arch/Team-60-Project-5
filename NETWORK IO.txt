@@ -32,3 +32,14 @@ When the process is over, simply add a 'break',and that specific processing is d
 IT IS REALLY IMPORTANT THAT YOU MAKE SURE TO MATCH ALL YOUR INPUTS AND OUTPUTS!!!!!! If you do not do so, the client and/or server will either crash or 
 be stuck constantly waiting for input and need to be manually restarted. Just ensure that you have a client output that sends the command string, and that
 every other client output or input is matched by the server case.
+
+
+
+3. A Note on The Account Master ArrayList
+
+The ProfileServer.java class contains an ArrayList called "accounts" that serves as the storage space for all the accounts on the server. As each account has an 
+ArrayList of profiles, all of the data entered by the user and displayed by the GUI is contained in this ArrayList. This ArrayList persists through client 
+disconnection (I can show off the test in person), and is accessible and modifiable from any client. At some point we will probably need to ensure that there
+are no race conditions, but I'm not worrying about that quite yet. To reach this ArrayList from a processing case in the client handler, simply use "accounts" and 
+then the proper .word, such as .get or .add. There are two for loop structures in the already written cases that parse through every profile in every account in
+the Account Master ArrayList for reference in making other processing cases.
