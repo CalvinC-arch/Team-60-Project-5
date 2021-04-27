@@ -36,8 +36,8 @@ public class ProfileServer
                 System.out.println("A new client is connected : " + s);
 
                 //Create new input and output stream to communicate with client
-                DataInputStream dis = new DataInputStream(s.getInputStream());
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+                ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
+                ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
                 //Create new thread to handle client
                 Thread t = new ProfileClientHandler(s, dis, dos);

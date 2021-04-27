@@ -18,8 +18,8 @@ import java.net.*;
 
 class ProfileClientHandler extends Thread {
 
-    final DataInputStream dis; //data input stream used to communicate with the server
-    final DataOutputStream dos; //data output stream used to communicate with the server
+    final ObjectInputStream dis; //data input stream used to communicate with the server
+    final ObjectOutputStream dos; //data output stream used to communicate with the server
     final Socket s; //socket used to communicate with the server
 
     /**
@@ -30,7 +30,7 @@ class ProfileClientHandler extends Thread {
      * @param dos socket used to communicate with the server
      */
 
-    public ProfileClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) {
+    public ProfileClientHandler(Socket s, ObjectInputStream dis, ObjectOutputStream dos) {
         this.s = s;
         this.dis = dis;
         this.dos = dos;
@@ -50,36 +50,17 @@ class ProfileClientHandler extends Thread {
         try {
             while (true) {
 
-                switch(command = dis.readUTF()) {
+                switch(command = (String) dis.readObject()) {
 
-                    case "View": //Client wants to view profile
+                    //TODO Insert Cases for various functions here!
 
-                        //THIS IS A TEST FOR NETWORK I/O
-                        System.out.println("In View");
-
-                        String code = dis.readUTF();
-                        System.out.println("Code is: " + code);
-
-                        if (code.equals("True")) {
-                            dos.writeUTF("True");
-                        } else {
-                            dos.writeUTF("False");
-                        }
-
-                        //END OF TEST
-
-                        break;
-
-                    case "CreateProfile": //Client wants to create profile
-
-                        System.out.println("CreateProfile");
-
-                        break;
+                    default:
+                        System.out.println("You sent to the server, but didn't match a case");
 
                 }
 
             }
-        } catch(IOException e) {
+        } catch(IOException | ClassNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);

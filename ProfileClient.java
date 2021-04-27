@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * ProfileClient
@@ -17,19 +18,19 @@ import java.net.Socket;
  */
 
 public class ProfileClient {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         boolean check = false; //used to determine whether a connection to the server has been achieved
 
         // getting localhost ip
         InetAddress ip = InetAddress.getByName("localhost");
 
-        // establish the connection with server port 5056
+        // establish the connection with server port 1234
         Socket s = new Socket(ip, 1234);
 
         // obtaining input and out streams
-        DataInputStream dis = new DataInputStream(s.getInputStream());
-        DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+        ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
+        ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
         try { //connect to server and set up network io, display error message if connection unsuccessful
             while(!check) {
@@ -50,6 +51,7 @@ public class ProfileClient {
         JOptionPane.showMessageDialog(null, "Connection Established", "CampsGram",
                 JOptionPane.INFORMATION_MESSAGE);
 
+        //TODO GUI stuff goes here!
 
     }
 }
