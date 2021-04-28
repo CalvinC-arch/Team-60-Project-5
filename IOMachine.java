@@ -265,36 +265,3 @@ public class IOMachine extends ObjectOutputStream {
     }
 
 }
-
-
-/*
-    try {
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    //TEST SECTION
-    //This gets the profile passed from the server and reads the aboutMe section, then deletes the profile, then
-    //attempts to receive the profile, then adds the profile back, then reads the profile and aboutMe again. Shows
-    //that the cases and network IO function. Can leave out the adding to show that profile deletion persists
-    //past client disconnect
-    //RECEIVING ACCOUNT PROFILES
-        dos.writeObject("SendAccountProfiles");
-        dos.writeObject("ccarta@purdue.edu");
-    result = (String) dis.readObject();
-        if (result.equals("True")) {
-        ArrayList<Profile> profiles = (ArrayList<Profile>) dis.readObject();
-        System.out.println(profiles.size());
-    } else {
-        System.out.println("No profiles found");
-    }
-    //DELETING AN ACCOUNT
-        dos.writeObject("DeleteAccount");
-        dos.writeObject("btac1000@gmail.com");
-    result = (String) dis.readObject();
-        if (result.equals("True")) {
-        System.out.println("Account deleted!");
-    } else {
-        System.out.println("Account not able to be deleted");
-    }
-    //END OF TEST SECTION
-*/
