@@ -50,7 +50,12 @@ public class ProfileClient {
         JOptionPane.showMessageDialog(null, "Connection Established", "CampsGram",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        //TODO GUI stuff goes here!
+        //creates an IOMachine to easily access the server
+        IOMachine ioMachine = new IOMachine(dos, dis);
+
+        //Runs the Login GUI
+        LoginPageGUI Login = new LoginPageGUI(ioMachine);
+        Login.run();
 
         //TEST SECTION
         //This gets the profile passed from the server and reads the aboutMe section, then deletes the profile, then
