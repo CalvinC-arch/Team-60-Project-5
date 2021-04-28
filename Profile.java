@@ -11,7 +11,7 @@ public class Profile implements Serializable, Runnable {
     //Profile Fields
     private String username;
     private ArrayList<String> interests;
-    private ArrayList<String> friends; //TODO make this ArrayList<Profile> ?
+    private ArrayList<String> friends;
     private String education;
     private String email;
     private long phoneNumber;
@@ -235,12 +235,12 @@ public class Profile implements Serializable, Runnable {
 
         //about me panel
         JPanel aboutMePanel = new JPanel();
-        aboutMeText = new JLabel("ABOUT ME:\n" + this.aboutMe);
+        aboutMeText = new JLabel("ABOUT ME:\n" + formatAboutString(aboutMe));
         aboutMePanel.add(aboutMeText);
 
         //interests panel
         JPanel interestsPanel = new JPanel();
-        interestsText = new JLabel("INTERESTS:\n" + interests.toString());
+        interestsText = new JLabel("INTERESTS:\n" + formatInterestsString(interests));
         interestsPanel.add(interestsText);
 
         //Combines the above three panels in grid layout
@@ -267,13 +267,12 @@ public class Profile implements Serializable, Runnable {
                 phoneNumber = EnterInfoGUI.showPhoneInputDialog();
                 education = EnterInfoGUI.showEducationInputDialog();
                 aboutMe = EnterInfoGUI.showAboutInputDialog();
-                //TODO change showInterests Dialog to an arrayList and implement required changes
-                interests.add(EnterInfoGUI.showInterestsInputDialog());
+                interests = EnterInfoGUI.showInterestsInputDialog();
 
                 //Updates the JLabels to the current fields
                 nameText.setText(username);
                 emailText.setText(email);
-                phoneText.setText(phoneNumber); //format phone (update enter info gui)
+                phoneText.setText(formatPhoneString(phoneNumber)); //format phone (update enter info gui)
                 educationText.setText(formatAboutString(aboutMe));
                 interestsText.setText(formatInterestsString(interests));
             }
@@ -349,7 +348,7 @@ public class Profile implements Serializable, Runnable {
     public static String formatInterestsString(ArrayList<String> interests) { //converts array to formatted String
         String newInterests =  ""; //initializes String to be empty
         for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
-            newInterests = newInterests + "\n  "+ interests.get(i); //formats elements into a vertical list
+            newInterests = newInterests + "\n    "+ interests.get(i); //formats elements into a vertical list
         } //for-loop
         return newInterests; //returns Interests as formatted String
     } //formatInterestsString
@@ -361,7 +360,6 @@ public class Profile implements Serializable, Runnable {
         //formats the phone number correctly
         return phoneFormat; //returns phone String in correct format
     } //formatPoneString
-
 
     public String getUsername() {
         return this.username;
