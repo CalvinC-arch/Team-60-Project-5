@@ -30,18 +30,19 @@ public class IOMachine extends ObjectOutputStream {
      * Searches for a Profile in the server by username, returns that profile (Or null if it is not found).
      *
      * @param username - the username of a profile to be searched for
-     *
      * @return Profile or null
      */
 
     public Profile findProfile(String username) {
         try {
+            String result; //result returned from server
+
             //Write command and username to server
             dos.writeObject("SendProfile");
             dos.writeObject(username);
 
             //read whether the profile was found or not
-            String result = (String) dis.readObject();
+            result = (String) dis.readObject();
 
             if (result.equals("True")) {
 
@@ -60,31 +61,30 @@ public class IOMachine extends ObjectOutputStream {
     }
 
     /**
-     * adds a profile to the server
+     * adds a profile to the server based on the associated account
      *
      * @param profile - the profile to added
+     * @return whether the profile was added or not
      */
 
-    public void addProfile(Profile profile) {
+    public boolean addProfile(Profile profile, String email) {
 
         try {
+            String result; //result returned from server
 
             //Write command, email, and profile to add to server
             dos.writeObject("AddProfile");
-            dos.writeObject(profile.getEmail());
+            dos.writeObject(email);
             dos.writeObject(profile);
 
             //read whether the profile was found or not
-            String result = (String) dis.readObject();
+            result = (String) dis.readObject();
 
-            if (result.equals("True")) {
-                System.out.println("Profile Added!");
-            } else {
-                System.out.println("Profile not able to be added");
-            }
+            return result.equals("True");
 
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -92,45 +92,42 @@ public class IOMachine extends ObjectOutputStream {
      * removes a profile from the server
      *
      * @param username - username of the profile to be deleted
-     *
      * @return a boolean that is true if the profile was found and deleted
      */
 
     public boolean deleteProfile(String username) {
 
-        //indicates whether the profile was deleted
-        boolean deleted = false;
-
         try {
+            String result; //result returned from server
 
             //Write command and username to server
             dos.writeObject("DeleteProfile");
             dos.writeObject(username);
 
             //read whether the profile was found or not
-            String result = (String) dis.readObject();
+            result = (String) dis.readObject();
 
-            if (result.equals("True")) {
-                deleted = true;
-            } else {
-                deleted = false;
-            }
+            return result.equals("True");
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return deleted;
+            return false;
         }
+
     }
 
     /**
      * adds an account to the server
      *
-     * @param account - the profile to added
+     * @param account - the account to added
+     * @return whether the account was added or not
      */
 
-    public void addAccount(Account account) {
+    public boolean addAccount(Account account) {
+
         try {
+            String result; //result returned from server
+
             dos.writeObject("CreateAccount");
             dos.writeObject(account.getEmail());
             dos.writeObject(account.getPassword());
@@ -138,19 +135,13 @@ public class IOMachine extends ObjectOutputStream {
             ArrayList<Profile> profiles = account.getProfiles();
             dos.writeObject(profiles);
 
-            String result = (String) dis.readObject();
+            result = (String) dis.readObject();
 
-            if (result.equals("True")) {
+            return result.equals("True");
 
-                System.out.println("Account added!");
-
-            } else {
-
-                System.out.println("Account not able to be added");
-
-            }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -162,90 +153,148 @@ public class IOMachine extends ObjectOutputStream {
      * @return an Account or null
      */
 
-    //TODO Implement finding accounts
+    public Account findAccount(String email) {
+
+        try {
+            String result; //result returned from server
+            String password; //password returned from server
+            ArrayList<Profile> profiles; //profiles returned from the server
+
+            dos.writeObject("SendAccount");
+            dos.writeObject(email);
+
+            result = (String) dis.readObject();
+
+            if (result.equals("True")) {
+                password = (String) dis.readObject();
+                profiles = (ArrayList<Profile>) dis.readObject();
+                return (new Account(email, password, profiles));
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
     /**
      * removes an Account from the server
      *
      * @param account - Account to be deleted
+     * @return whether the account was deleted or not
      */
 
-    public void deleteAccount(Account account) {
+    public boolean deleteAccount(Account account) {
 
         try {
+            String result; //result returned from server
 
             dos.writeObject("DeleteAccount");
             dos.writeObject(account.getEmail());
 
-            String result = (String) dis.readObject();
+            result = (String) dis.readObject();
 
-            if (result.equals("True")) {
+            return result.equals("True");
 
-                System.out.println("Account deleted!");
-
-            } else {
-
-                System.out.println("Account not able to be deleted");
-
-            }
-
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
+
+    /**
+     * edits a non list field for a profile
+     *
+     * @param username - username of the profile to be edited
+     * @param parameter - the name of the field to be edited, capitalized
+     * @param parameterValue - the new value of the field
+     *
+     * @return whether field was edited or not
+     */
+
+    public boolean editProfile(String username, String parameter, String parameterValue) {
+
+        try {
+            String result; //result returned from server
+
+            dos.writeObject("Edit" + parameter);
+            dos.writeObject(username);
+            dos.writeObject(parameterValue);
+
+            result = (String) dis.readObject();
+
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * edits a list field for a profile
+     *
+     * @param action - whether the list is being added to or removed from. Should either be "Add" or "Remove"
+     * @param username - username of the profile to be edited
+     * @param parameter - the name of the field to be edited, capitalized
+     * @param parameterValue - the new value of the field
+     *
+     * @return whether field was edited or not
+     */
+
+    public boolean editProfileList(String action, String username, String parameter, String parameterValue ) {
+
+        try {
+            String result; //result returned from server
+
+            dos.writeObject(action + parameter);
+            dos.writeObject(username);
+            dos.writeObject(parameterValue);
+
+            result = (String) dis.readObject();
+
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+}
 
 
 /*
     try {
-
     } catch (Exception e) {
         e.printStackTrace();
     }
-
     //TEST SECTION
     //This gets the profile passed from the server and reads the aboutMe section, then deletes the profile, then
     //attempts to receive the profile, then adds the profile back, then reads the profile and aboutMe again. Shows
     //that the cases and network IO function. Can leave out the adding to show that profile deletion persists
     //past client disconnect
-
-
-
     //RECEIVING ACCOUNT PROFILES
-
         dos.writeObject("SendAccountProfiles");
         dos.writeObject("ccarta@purdue.edu");
-
     result = (String) dis.readObject();
-
         if (result.equals("True")) {
-
         ArrayList<Profile> profiles = (ArrayList<Profile>) dis.readObject();
         System.out.println(profiles.size());
-
     } else {
-
         System.out.println("No profiles found");
-
     }
-
     //DELETING AN ACCOUNT
-
         dos.writeObject("DeleteAccount");
         dos.writeObject("btac1000@gmail.com");
-
     result = (String) dis.readObject();
-
         if (result.equals("True")) {
-
         System.out.println("Account deleted!");
-
     } else {
-
         System.out.println("Account not able to be deleted");
-
     }
-
     //END OF TEST SECTION
-
 */
-}
