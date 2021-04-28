@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * FriendsListGUI.java
@@ -32,7 +33,10 @@ public class FriendsListGUI implements Runnable {
     //GUI elements are global fields
     JButton backButton;
 
-    JComboBox<String> requestsLists;
+    JComboBox<String> requestsSentList;
+    JButton rescindRequestButton;
+
+    JComboBox<String> requestsPendingList;
     JButton acceptButton;
     JButton declineButton;
 
@@ -45,11 +49,12 @@ public class FriendsListGUI implements Runnable {
         SwingUtilities.invokeLater(new FriendsListGUI());
     }
 
+
     //Assemble the GUI
     public void run() {
         //Settings for the JFrame
         JFrame frame = new JFrame("CampsGram Friends List"); //title JFrame
-        frame.setSize(480, 200); //sets size of JFrame
+        frame.setSize(600, 240); //sets size of JFrame
         frame.setResizable(false); //makes JFrame unable to be resized
 
         //Add Back Button to Top of Screen
@@ -61,19 +66,39 @@ public class FriendsListGUI implements Runnable {
 
         //Add List of Friend Requests, Accept Button, Decline Button to Middle of Screen
         JPanel centralPanel = new JPanel();
-        requestsLists = new JComboBox<>();
-        requestsLists.setMaximumRowCount(3);
-        centralPanel.add(requestsLists);
+        JPanel centralPanelNorth = new JPanel();
+        requestsSentList = new JComboBox<>();
+        requestsSentList.setMaximumRowCount(3);
+        //TODO: Add array elements to JComboBox
+        centralPanelNorth.add(requestsSentList);
+        rescindRequestButton = new JButton("Rescind Friend Request");
+        rescindRequestButton.addActionListener(actionListener);
+        centralPanelNorth.add(rescindRequestButton);
+        centralPanel.add(centralPanelNorth, BorderLayout.NORTH);
+
+        if(requestsSentList.getItemCount() == 0) {
+            rescindRequestButton.setEnabled(false);
+        } else {
+            rescindRequestButton.setEnabled(true);
+        }
+
+
+        JPanel centralPanelSouth = new JPanel();
+        requestsPendingList = new JComboBox<>();
+        requestsPendingList.setMaximumRowCount(3);
+        //TODO: Add array elements to JComboBox
+        centralPanelSouth.add(requestsPendingList);
         acceptButton = new JButton("Accept");
         acceptButton.addActionListener(actionListener); //add action listener to accept button
-        centralPanel.add(acceptButton);
+        centralPanelSouth.add(acceptButton);
         declineButton = new JButton("Decline"); 
         declineButton.addActionListener(actionListener); //add action listener to decline button
-        centralPanel.add(declineButton);
+        centralPanelSouth.add(declineButton);
+        centralPanel.add(centralPanelSouth, BorderLayout.SOUTH);
         frame.add(centralPanel, BorderLayout.CENTER);
 
         //If no friend requests, disable accept and decline buttons
-        if (requestsLists.getItemCount() == 0) {
+        if (requestsPendingList.getItemCount() == 0) {
             acceptButton.setEnabled(false);
             declineButton.setEnabled(false);
         } else {
@@ -83,8 +108,11 @@ public class FriendsListGUI implements Runnable {
 
         //Add friend list, view profile button, and unfriend button to screen
         JPanel southPanel = new JPanel();
+        JLabel friendsLabel = new JLabel("Current Friends: ");
+        southPanel.add(friendsLabel);
         friendsList = new JComboBox<>();
         friendsList.setMaximumRowCount(3);
+        //TODO: Add Array Elements to JComboBox
         southPanel.add(friendsList);
         viewProfileButton = new JButton("View Profile");
         viewProfileButton.addActionListener(actionListener); //add action listener to view profile button
@@ -112,32 +140,37 @@ public class FriendsListGUI implements Runnable {
        public void actionPerformed(ActionEvent e) {
            if (e.getSource() == acceptButton) {
                 if (acceptFriend()) {
-                    friendsList.addItem((String) requestsLists.getSelectedItem());
-                    requestsLists.removeItemAt(requestsLists.getSelectedIndex());
+                    friendsList.addItem((String) requestsPendingList.getSelectedItem());
+                    requestsPendingList.removeItemAt(requestsPendingList.getSelectedIndex());
                     //TODO: Auto-Update other user's friend list
                 }
-            } //code that is run if accept button is clicked
-            if (e.getSource() == declineButton) {
+           } //code that is run if accept button is clicked
+           if (e.getSource() == declineButton) {
                 if (declineFriend()) {
-                    requestsLists.removeItemAt(requestsLists.getSelectedIndex());
+                    requestsPendingList.removeItemAt(requestsPendingList.getSelectedIndex());
+
                 }
-            } //code that is run if decline button is clicked
-            if (e.getSource() == viewProfileButton) {
+           } //code that is run if decline button is clicked
+           if (e.getSource() == viewProfileButton) {
                if (viewProfile()) {
                    //TODO: Display Friend's Profile
                }
-            } //code that is run if view profile button is clicked
-            if (e.getSource() == unfriendButton) {
+           } //code that is run if view profile button is clicked
+           if (e.getSource() == unfriendButton) {
                 if (unfriend()) {
                     friendsList.removeItemAt(friendsList.getSelectedIndex());
                     //TODO: Auto-Update other user's friend list
                 }
-            } //code that is run if unfriend button is clicked
-            if (e.getSource() == backButton) {
+           } //code that is run if unfriend button is clicked
+           if (e.getSource() == backButton) {
                 if (back()) {
                     //TODO: Display user's profile
+
                 }
-            } //code that is run if back button is clicked
+           } //code that is run if back button is clicked
+           if (e.getSource() == rescindRequestButton) {
+               rescindRequest();
+           }
         }
     };
 
@@ -145,7 +178,7 @@ public class FriendsListGUI implements Runnable {
     //Returns true or false depending on whether the proper processing was completed
     public boolean acceptFriend() {
         boolean friendAccepted = false;
-        String friend = (String) requestsLists.getSelectedItem();
+        String friend = (String) requestsPendingList.getSelectedItem();
 
         try {
             Socket client = new Socket("localhost", 1234);
@@ -175,7 +208,7 @@ public class FriendsListGUI implements Runnable {
     //Returns true or false depending on whether the proper processing was completed
     public boolean declineFriend() {
         boolean friendDeclined = false;
-        String friend = (String) requestsLists.getSelectedItem();
+        String friend = (String) requestsPendingList.getSelectedItem();
 
         try {
             Socket client = new Socket("localhost", 1234);
@@ -235,7 +268,7 @@ public class FriendsListGUI implements Runnable {
     //Returns true or false depending on whether the proper processing was completed
     public boolean unfriend() {
         boolean unfriended = false;
-        String friend = (String) requestsLists.getSelectedItem();
+        String friend = (String) requestsPendingList.getSelectedItem();
 
         try {
             Socket client = new Socket("localhost", 1234);
@@ -288,4 +321,9 @@ public class FriendsListGUI implements Runnable {
         }
         return back;
     }
+
+    public void rescindRequest() {
+
+    }
 }
+
