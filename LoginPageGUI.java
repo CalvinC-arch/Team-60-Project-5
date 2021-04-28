@@ -162,7 +162,7 @@ public class LoginPageGUI implements Runnable {
                     } else {
                         validAccount = true;
                     } // update boolean based on response
-                    Account account = new Account()
+                    Account account = new Account();
 
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
