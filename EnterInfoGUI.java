@@ -25,7 +25,7 @@ public class EnterInfoGUI {
     public static void main (String[] args) {
         String username; //unique username for the profile
         String name;  //name of the user
-        String phone; //phone of the user
+        long phone; //phone of the user
         String email; //email of the user
         String birthdate; //birth date of the user
         String education; //the university and state of the user
@@ -52,7 +52,7 @@ public class EnterInfoGUI {
         output = String.format("User Information:\n" + //contains all user information in order
                 "Username: %s\n" +
                 "Name: %s\n" +
-                "Phone: %s\n" +
+                "Phone: %d\n" +
                 "Email: %s\n" +
                 "Birth Date: %s\n" +
                 "Education: %s\n" +
@@ -61,36 +61,37 @@ public class EnterInfoGUI {
                 "Password: %s\n", username, name, phone, email, birthdate, education, formattedAbout,
                 formattedInterests, password);
         System.out.println(output); //prints output
+        System.out.println(formatPhoneString(phone));
     } //end main
-    
+
     public static String formatAboutString(String about) { //organizes the About information as a small paragraph
         String about2 = ""; //initializes about2 as empty
         String newAbout = about; //duplicates the String about
         boolean checking = false; //checker that notifies become true if while loop runs
         while (newAbout.length() > 30) { //while-loop runs if line is too long
-            checking = true; //updates checker 
+            checking = true; //updates checker
             if (newAbout.charAt(30) == ' ') { //checks if where the text cuts has a space
                 newAbout = newAbout.substring(0,30) + newAbout.substring(31); //deletes the extra space
                 about = about2 + newAbout.substring(0, 30) + "\n"; //formats the String
             } else {
                 about = about2 + newAbout.substring(0, 30) + "-\n"; //formats the String
             } //end if
-            about2 = about; //updates about2 
+            about2 = about; //updates about2
             newAbout = newAbout.substring(30); //updates NewAbout
         }
         if (checking) { //checks if while loop ran
-            return "\n" + about + newAbout; //returns formatted About Info
+            return "\n" + about + newAbout; //returns formatted About Info String
         } else {
-            return "\n" + about; //returns normal About Info since it fits in a line
+            return "\n" + about; //returns normal About Info String
         } //end if
     } //formatAboutString
 
     public static String formatInterestsString(ArrayList<String> interests) { //converts array to formatted String
         String newInterests =  ""; //initializes String to be empty
         for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
-            newInterests = newInterests + "\n    "+ interests.get(i); //formats elements into a vertical list
+            newInterests = newInterests + "\n  "+ interests.get(i); //formats elements into a vertical list
         } //for-loop
-        return newInterests; //returns formatted String
+        return newInterests; //returns Interests as formatted String
     } //formatInterestsString
 
     public static String showUsernameInputDialog() {
@@ -126,17 +127,17 @@ public class EnterInfoGUI {
         return name; //returns String name of the user
     } //showNameInputDialog
 
-    public static String showPhoneInputDialog() {
+    public static long showPhoneInputDialog() {
         String phone; //phone number of user
         String phone2; //phone number duplicate
-        String phoneFormat = ""; //declares phone number formatted
+        long phoneLong = 0; //initializes the phone as 0
         boolean checking = true; //initializes 'checking' as true
         do {
             phone = JOptionPane.showInputDialog(null, "Phone Number:",
                     "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to input phone number
             phone2 = phone;  //duplicates the phone number to check validity later
             try {
-                long phoneLong = Long.parseLong(phone); //throws exception is phone number is not a Long
+                phoneLong = Long.parseLong(phone); //throws exception is phone number is not a Long
                 phone2 = phone.substring(0,10); //throws an exception if phone number is less than 10 digits
                 checking = false; //makes loop stop if no exception is thrown
                 if (phone.length() >= 11) { //checks if phone number has more than 10 digits
@@ -149,10 +150,17 @@ public class EnterInfoGUI {
                         "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
         } while (checking); //do-while runs while 'checking' is true
-        phoneFormat = "(" + phone.substring(0, 3)+ ") " + phone.substring(3,6) + "-" + phone.substring(6, 10);
+        //formats the phone number correctly
+        return phoneLong; //returns phone String in correct format
+    } //showPhoneInputDialog
+
+    public static String formatPhoneString(long phone) {
+        String phoneS = String.valueOf(phone);
+        String phoneFormat = ""; //declares phone number formatted
+        phoneFormat = "(" + phoneS.substring(0, 3)+ ") " + phoneS.substring(3,6) + "-" + phoneS.substring(6, 10);
         //formats the phone number correctly
         return phoneFormat; //returns phone String in correct format
-    } //showPhoneInputDialog
+    } //formatPoneString
 
     public static String showEmailInputDialog() {
         String email; //email of the user
