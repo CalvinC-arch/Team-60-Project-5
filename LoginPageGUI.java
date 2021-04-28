@@ -76,9 +76,7 @@ public class LoginPageGUI implements Runnable {
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) { //detects button clicks
             if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
-                if (validateAccount()) {
-                    //TODO: Switch Screens
-                }
+                validateAccount();
             }
             if (e.getSource() == makeAccountButton) { //Code to perform when Make Account Button is clicked
                 //TODO: Flesh out Login-Account Transition
@@ -102,132 +100,144 @@ public class LoginPageGUI implements Runnable {
                 }
                  */
                 
-                if (createAccount()) {
-                    //TODO: Switch Screens
-                }
+                createAccount();
             }
         }
     };
 
     //The method sends the user inputs to the server to validate whether the account exists
-    public boolean validateAccount() {        
+    public void validateAccount() {
         //variables to use in the method
         boolean validAccount = false;
         String validation;
         String email;
         String password;
 
-        //Checks whether input fields are empty. Display prompts user to fill out all fields if not.
-        if (emailField.getText() == null || passwordField.getText() == null) {
-            JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
-                    "CampsGram Login", JOptionPane.ERROR_MESSAGE); 
-        
-        //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
-        } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
-            JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
-                    "CampsGram Login", JOptionPane.ERROR_MESSAGE);
-         
-        //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
-        } else if (passwordField.getText().length() < 8) {
-            JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
-                    "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
-             
-        } else { 
-            //If inputs are in the proper format, they are stored as variables
-            email = emailField.getText(); //store email field input in variable
-            emailField.setText(""); //reset the text field to empty
-            password = passwordField.getText(); //store password field input in variable
-            passwordField.setText(""); //reset the text field to empty
+        while (!validAccount) {
+            //Checks whether input fields are empty. Display prompts user to fill out all fields if not.
+            if (emailField.getText() == null || passwordField.getText() == null) {
+                JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
+                        "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-            //Tries to connect to server and send inputs
-            try {
-                Socket client = new Socket("localhost", 1234);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                PrintWriter writer = new PrintWriter(client.getOutputStream());
+                //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+            } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
+                emailField.setText("");
+                JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
+                        "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                writer.write("Validate"); //send signal word
-                writer.println();
-                writer.write(email); //send email
-                writer.println();
-                writer.write(password); //send password
-                writer.println();
+                //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+            } else if (passwordField.getText().length() < 8) {
+                passwordField.setText("");
+                JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
+                        "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                writer.flush(); //flush buffer
+            } else {
+                //If inputs are in the proper format, they are stored as variables
+                email = emailField.getText(); //store email field input in variable
+                emailField.setText(""); //reset the text field to empty
+                password = passwordField.getText(); //store password field input in variable
+                passwordField.setText(""); //reset the text field to empty
 
-                validation = reader.readLine(); //read in true or false
-                if(validation.equals("False")) { 
-                    validAccount = false;
-                } else {
-                    validAccount = true;
-                } // update boolean based on response
+                //Tries to connect to server and send inputs
+                try {
+                    Socket client = new Socket("localhost", 1234);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    PrintWriter writer = new PrintWriter(client.getOutputStream());
 
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE); // display error message if cannot connect to server and let user try again
+                    writer.write("Validate"); //send signal word
+                    writer.println();
+                    writer.write(email); //send email
+                    writer.println();
+                    writer.write(password); //send password
+                    writer.println();
+
+                    writer.flush(); //flush buffer
+
+                    //TODO: Establish protocols for receiving profile array list
+
+                    validation = reader.readLine(); //read in true or false
+                    if(validation.equals("False")) {
+                        validAccount = false;
+                    } else {
+                        validAccount = true;
+                    } // update boolean based on response
+                    Account account = new Account()
+
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
+                            "CampsGram", JOptionPane.ERROR_MESSAGE); // display error message if cannot connect to server and let user try again
+                }
+
             }
-
         }
-        return validAccount; //return boolean
 
     }
 
     //This method sends the user inputs to determine whether a new account may be created
-    public boolean createAccount() {
+    public void createAccount() {
         //variables used in method
         boolean accountCreated = false;
         String creation;
         String email;
         String password;
 
-        //Checks whether input fields are empty. Display prompts user to fill out all fields
-        if (emailField.getText() == null || passwordField.getText() == null) {
-            JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
-          //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
-        } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
-            JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
-                    "CampsGram Login", JOptionPane.ERROR_MESSAGE);
-         
-        //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
-        } else if (passwordField.getText().length() < 8) {
-            JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
-                    "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
-              
-        } else {
-            //If email and password have proper format, store them in variables
-            email = emailField.getText(); //store email
-            emailField.setText(""); //reset email field
-            password = passwordField.getText(); //store password
-            passwordField.setText(""); //reset password field
+        while (!accountCreated) {
+            //Checks whether input fields are empty. Display prompts user to fill out all fields
+            if (emailField.getText() == null || passwordField.getText() == null) {
+                JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
+                        "CampsGram", JOptionPane.ERROR_MESSAGE);
+                //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+            } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
+                emailField.setText("");
+                JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
+                        "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-            //Attempts to connect to server and send inputs
-            try {
-                Socket client = new Socket("localhost", 1234);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                PrintWriter writer = new PrintWriter(client.getOutputStream());
+                //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+            } else if (passwordField.getText().length() < 8) {
+                passwordField.setText("");
+                JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
+                        "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                writer.write("Create"); //send signal 
-                writer.println();
-                writer.write(email); //send email
-                writer.println();
-                writer.write(password); //send password
-                writer.println();
+            } else {
+                //If email and password have proper format, store them in variables
+                email = emailField.getText(); //store email
+                emailField.setText(""); //reset email field
+                password = passwordField.getText(); //store password
+                passwordField.setText(""); //reset password field
 
-                writer.flush(); //flush buffer
+                //Attempts to connect to server and send inputs
+                try {
+                    Socket client = new Socket("localhost", 1234);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    PrintWriter writer = new PrintWriter(client.getOutputStream());
 
-                creation = reader.readLine(); //read in true or false
-                if(creation.equals("False")) {
-                    accountCreated = false;
-                } else {
-                    accountCreated = true;
-                } //update boolean
+                    writer.write("Create"); //send signal
+                    writer.println();
+                    writer.write(email); //send email
+                    writer.println();
+                    writer.write(password); //send password
+                    writer.println();
 
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE); //display error message is cannot connect to server and let user try again
+                    writer.flush(); //flush buffer
+
+
+
+                    creation = reader.readLine(); //read in true or false
+                    if(creation.equals("False")) {
+                        accountCreated = false;
+                    } else {
+                        accountCreated = true;
+                        EnterInfoGUI enterInfoGUI = new EnterInfoGUI();
+                        //TODO: Run a method
+                    } //update boolean
+
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
+                            "CampsGram", JOptionPane.ERROR_MESSAGE); //display error message is cannot connect to server and let user try again
+                }
+
             }
-
         }
-        return accountCreated; //return boolean
+
     }
 }
