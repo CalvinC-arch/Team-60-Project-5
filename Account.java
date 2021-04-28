@@ -130,7 +130,7 @@ public class Account implements Serializable {
                 ArrayList<String> friends = new ArrayList<>();
                 String education = EnterInfoGUI.showEducationInputDialog();
                 String email = EnterInfoGUI.showEmailInputDialog();
-                Long phone =  Long.parseLong(EnterInfoGUI.showPhoneInputDialog());
+                Long phone =  EnterInfoGUI.showPhoneInputDialog();
                 String aboutMe = EnterInfoGUI.showAboutInputDialog();
 
                 //creates a new profile and adds it to the array list of profiles
