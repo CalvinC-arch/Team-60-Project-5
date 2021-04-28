@@ -349,11 +349,18 @@ public class Profile implements Serializable, Runnable {
     public static String formatInterestsString(ArrayList<String> interests) { //converts array to formatted String
         String newInterests =  ""; //initializes String to be empty
         for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
-            newInterests = newInterests + "\n    "+ interests.get(i); //formats elements into a vertical list
+            newInterests = newInterests + "\n  "+ interests.get(i); //formats elements into a vertical list
         } //for-loop
         return newInterests; //returns Interests as formatted String
     } //formatInterestsString
 
+    public static String formatPhoneString(long phone) {
+        String phoneS = String.valueOf(phone);
+        String phoneFormat = ""; //declares phone number formatted
+        phoneFormat = "(" + phoneS.substring(0, 3)+ ") " + phoneS.substring(3,6) + "-" + phoneS.substring(6, 10);
+        //formats the phone number correctly
+        return phoneFormat; //returns phone String in correct format
+    } //formatPoneString
 
 
     public String getUsername() {
