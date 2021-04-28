@@ -11,10 +11,11 @@ AccountGUI(String name, ArrayList<Franken> profiles)
   - name is name of the account
   - profiles is a list of profiles under the account
 .run() ~ runs the GUI for an AccountGUI object
-Creators: Will Stonebridge
+Creators: Will Stonebridge, Calvin Carta
  */
 
-public class Account {
+public class Account implements Serializable {
+
     private final String email;
     private final String password;
     private ArrayList<Profile> profiles;

@@ -43,42 +43,48 @@ class ProfileClientHandler extends Thread {
     /**
      * Runs functionality for the server
      *
+     * Current cases: AddProfile, DeleteProfile, SendProfile, SendAccountProfiles, AddAccount, DeleteAccount,
+     * AddInterest, RemoveInterest, AddFriend, RemoveFriend, EditEducation, EditEmail, EditPhoneNumber, EditAboutMe
      */
 
     @Override
     public void run() {
 
+        //Initialize variables common across multiple cases
+
         String command; //command from the client to access functionality
         String username; //username passed from client
         String email; //email passed from the client
+        String password; //password passed from client
+        String parameter; // generic parameter passed by the client
         boolean objectFound; //whether or not an object was found for a search (usually profile or account)
         Profile profile; //profile sent by the client
-
-        System.out.println("A new client handler is operational");
+        ArrayList<Profile> profiles; //profile arraylist sent by client
 
         try {
             while (true) {
 
-                switch(command = (String) dis.readObject()) {
+                switch(command = (String) dis.readObject()) { //look for command sent from client
 
                     //TODO Insert Cases for various functions here!
 
-                    case "AddProfile":
+                    case "AddProfile": //adds a profile to an account based on account email
 
+                        //read in and initialize variables
                         email = (String) dis.readObject();
                         profile = (Profile) dis.readObject();
                         objectFound = false;
 
-                        for (int i = 0; i < accounts.size(); i++) {
+                        for (int i = 0; i < accounts.size(); i++) { //search the accounts for a matching email
 
-                            if (accounts.get(i).getEmail().equals(email)) {
+                            if (accounts.get(i).getEmail().equals(email)) { //if account matches, add passed profile
                                 accounts.get(i).addProfile(profile);
                                 dos.writeObject("True");
                                 objectFound = true;
                             }
                         }
 
-                        if (!objectFound) {
+                        if (!objectFound) { //if account not found, send back false
                             dos.writeObject("False");
                         }
 
@@ -86,12 +92,13 @@ class ProfileClientHandler extends Thread {
 
                     case "DeleteProfile": //Deletes a profile based on username
 
+                        //read in and initialize variables
                         username = (String) dis.readObject();
                         objectFound = false;
 
-                        for (int i = 0; i < accounts.size(); i++) {
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
 
-                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) {
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
 
                                 if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
                                     dos.writeObject("True");
@@ -102,7 +109,7 @@ class ProfileClientHandler extends Thread {
                             }
                         }
 
-                        if (!objectFound) {
+                        if (!objectFound) { //if account not found, send back false
                             dos.writeObject("False");
                         }
 
@@ -110,12 +117,13 @@ class ProfileClientHandler extends Thread {
 
                     case "SendProfile": //Sends a profile specific by username to the client.
 
+                        //read in and initialize variables
                         objectFound = false;
                         username = (String) dis.readObject();
 
-                        for (int i = 0; i < accounts.size(); i++) {
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
 
-                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) {
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
 
                                 if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
                                     dos.writeObject("True");
@@ -131,8 +139,262 @@ class ProfileClientHandler extends Thread {
 
                         break;
 
-                    default:
-                        System.out.println("You sent to the server, but didn't match a case");
+                    case "SendAccountProfiles": //Sends the arraylist of profiles related to an account
+
+                        email = (String) dis.readObject();
+                        objectFound = false;
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts for a matching email
+
+                            if (accounts.get(i).getEmail().equals(email)) {
+
+                                dos.writeObject("True");
+                                dos.writeObject(accounts.get(i).getProfiles());
+                                objectFound = true;
+                            }
+                        }
+
+                        if (!objectFound) {
+                            dos.writeObject("False");
+                        }
+
+                        break;
+
+                    case "CreateAccount": //Creates an account and adds it to the Account Master ArrayList
+
+                        email = (String) dis.readObject();
+                        password = (String) dis.readObject();
+                        profiles = (ArrayList<Profile>) dis.readObject();
+
+                        accounts.add(new Account(email, password, profiles));
+
+                        dos.writeObject("True");
+
+                        break;
+
+                    case "DeleteAccount": //Deletes an account from the Account Master Arraylist
+
+                        objectFound = false;
+                        email = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts for a matching email
+
+                            if (accounts.get(i).getEmail().equals(email)) {
+
+                                dos.writeObject("True");
+                                accounts.remove(i);
+                                objectFound = true;
+                            }
+                        }
+
+                        if (!objectFound) {
+                            dos.writeObject("False");
+                        }
+
+
+                    case "AddInterest": //Adds an interest to a profile
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
+                                    dos.writeObject("True");
+                                    accounts.get(i).getProfiles().get(j).addInterest(parameter);
+                                    objectFound = true;
+                                }
+
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                        break;
+
+                    case "RemoveInterest": //Removes an interest from a profile
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) { //if profile found
+
+                                    for (int k = 0; k < accounts.get(i).getProfiles().get(j).getInterests().size(); k++) { //search interests
+
+                                        if (accounts.get(i).getProfiles().get(j).getInterests().get(k).equals(parameter)) { //if interest found
+                                            accounts.get(i).getProfiles().get(j).getInterests().remove(k);
+                                            objectFound = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                        break;
+
+                    case "AddFriend": //Adds a friend to a profile
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
+                                    dos.writeObject("True");
+                                    accounts.get(i).getProfiles().get(j).addFriend(parameter);
+                                    objectFound = true;
+                                }
+
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                        break;
+
+                    case "RemoveFriend": //removes a friend from a profile
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) { //if profile found
+
+                                    for (int k = 0; k < accounts.get(i).getProfiles().get(j).getFriends().size(); k++) { //search friends
+
+                                        if (accounts.get(i).getProfiles().get(j).getFriends().get(k).equals(parameter)) { //if friend found
+                                            accounts.get(i).getProfiles().get(j).getFriends().remove(k);
+                                            objectFound = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                        break;
+
+                    case "EditEducation":
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
+                                    dos.writeObject("True");
+                                    accounts.get(i).getProfiles().get(j).setEducation(parameter);
+                                    objectFound = true;
+                                }
+
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                    case "EditEmail":
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
+                                    dos.writeObject("True");
+                                    accounts.get(i).getProfiles().get(j).setEmail(parameter);
+                                    objectFound = true;
+                                }
+
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                    case "EditPhoneNumber":
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
+                                    dos.writeObject("True");
+                                    accounts.get(i).getProfiles().get(j).setPhoneNumber(Long.parseLong(parameter));
+                                    objectFound = true;
+                                }
+
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                    case "EditAboutMe":
+
+                        objectFound = false;
+                        username = (String) dis.readObject();
+                        parameter = (String) dis.readObject();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) {
+                                    dos.writeObject("True");
+                                    accounts.get(i).getProfiles().get(j).setAboutMe(parameter);
+                                    objectFound = true;
+                                }
+
+                            }
+                        }
+
+                        if (!objectFound) { //if account not found, send back false
+                            dos.writeObject("False");
+                        }
+
+                    default: //if no cases match the command
+                        System.out.println("You sent to the server, but didn't match a case :(");
 
                 }
 

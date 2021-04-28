@@ -147,6 +147,62 @@ public class ProfileClient {
 
         }
 
+        //RECEIVING ACCOUNT PROFILES
+
+        dos.writeObject("SendAccountProfiles");
+        dos.writeObject("ccarta@purdue.edu");
+
+        result = (String) dis.readObject();
+
+        if (result.equals("True")) {
+
+            ArrayList<Profile> profiles = (ArrayList<Profile>) dis.readObject();
+            System.out.println(profiles.size());
+
+        } else {
+
+            System.out.println("No profiles found");
+
+        }
+
+        //ADDING ACCOUNT
+
+        dos.writeObject("CreateAccount");
+        dos.writeObject("btac1000@gmail.com");
+        dos.writeObject("bananas");
+
+        ArrayList<Profile> profiles = null;
+        dos.writeObject(profiles);
+
+        result = (String) dis.readObject();
+
+        if (result.equals("True")) {
+
+            System.out.println("Account added!");
+
+        } else {
+
+            System.out.println("Account not able to be added");
+
+        }
+
+        //DELETING AN ACCOUNT
+
+        dos.writeObject("DeleteAccount");
+        dos.writeObject("btac1000@gmail.com");
+
+        result = (String) dis.readObject();
+
+        if (result.equals("True")) {
+
+            System.out.println("Account deleted!");
+
+        } else {
+
+            System.out.println("Account not able to be deleted");
+
+        }
+
         //END OF TEST SECTION
 
     }

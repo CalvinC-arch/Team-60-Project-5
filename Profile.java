@@ -3,11 +3,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 
-public class Profile implements Serializable{
+public class Profile implements Serializable {
 
     private String username;
     private ArrayList<String> interests;
-    private ArrayList<String> friends;
+    private ArrayList<String> friends; //TODO make this ArrayList<Profile> ?
     private String education;
     private String email;
     private long phoneNumber;
@@ -237,8 +237,36 @@ public class Profile implements Serializable{
         this.friends = friends;
     }
 
+    public void addFriend(String friend) { //TODO change this
+        this.friends.add(friend);
+    }
+
+    public void removeFriends(String friend) { //TODO change this
+
+        for (int i = 0; i < friends.size(); i++) {
+
+            if (friends.get(i).equals(friend)) {
+                friends.remove(i);
+            }
+        }
+    }
+
     public void setInterests(ArrayList<String> interests) {
         this.interests = interests;
+    }
+
+    public void addInterest(String interest) {
+        this.interests.add(interest);
+    }
+
+    public void removeInterest(String interest) {
+
+        for (int i = 0; i < interests.size(); i++) {
+
+            if (interests.get(i).equals(interest)) {
+                interests.remove(i);
+            }
+        }
     }
 
     public void setPhoneNumber(long phoneNumber) {
