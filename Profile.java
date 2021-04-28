@@ -1,10 +1,14 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 
-public class Profile implements Serializable {
+public class Profile implements Serializable, Runnable {
 
+    //Profile Fields
     private String username;
     private ArrayList<String> interests;
     private ArrayList<String> friends; //TODO make this ArrayList<Profile> ?
@@ -12,6 +16,29 @@ public class Profile implements Serializable {
     private String email;
     private long phoneNumber;
     private String aboutMe;
+
+    //Frames and Panels
+    JFrame frame;
+    JPanel topPanel;
+    JPanel bottomPanel;
+
+    //top elements
+    JButton edit; //edit button
+    JButton requests; //requests button
+
+    //bottom elements
+    JTextField searchBox; //text box for searching users
+    JTextField addBox; //text box for adding users
+    JButton search; //search button
+    JButton add; //add user button
+
+    //Text Boxes
+    JLabel nameText;
+    JLabel phoneText;
+    JLabel emailText;
+    JLabel educationText;
+    JLabel aboutMeText;
+    JLabel interestsText;
 
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
                    String email, long phoneNumber, String aboutMe) {
@@ -23,6 +50,28 @@ public class Profile implements Serializable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.aboutMe = aboutMe;
+    }
+
+    public Profile() {
+
+        this.username = "Will Stonebridge";
+        this.interests = new ArrayList<String>() {
+            {
+                add("Rowing");
+                add("Coding");
+                add("History");
+            }
+        };
+        this.friends = new ArrayList<String>() {
+            {
+                add("Calvin Carta");
+                add("Jeff Chen");
+            }
+        };
+        this.education = "Purdue";
+        this.email = "jwstoneb@purdue.edu";
+        this.phoneNumber = 8476360377L;
+        this.aboutMe = "Why are we here, Just to suffer?";
     }
 
     public Profile(String filename) throws IOException {
@@ -133,6 +182,117 @@ public class Profile implements Serializable {
         this.aboutMe = profile.getAboutMe();
     }
 
+    public void run() {
+        frame = new JFrame(username);
+        frame.setSize(640, 480);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        //top panel
+        topPanel = new JPanel();
+        edit = new JButton("Edit Profile");
+        edit.addActionListener(actionListener);
+        topPanel.add(edit);
+        requests = new JButton("View Friend Requests");
+        requests.addActionListener(actionListener);
+        topPanel.add(requests);
+        frame.add(topPanel, BorderLayout.NORTH);
+
+        //bottom panel
+        bottomPanel = new JPanel();
+        searchBox = new JTextField(5);
+        bottomPanel.add(searchBox);
+        search = new JButton("Search User");
+        search.addActionListener(actionListener);
+        bottomPanel.add(search);
+        addBox = new JTextField(5);
+        bottomPanel.add(addBox);
+        add = new JButton("Add Friend");
+        add.addActionListener(actionListener);
+        bottomPanel.add(add);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        //Everything below is for the center panel which holds user info
+
+        //name panel
+        JPanel namePanel = new JPanel();
+        nameText = new JLabel("USER: " + username);
+        namePanel.add(nameText);
+
+        //phone panel
+        JPanel phonePanel = new JPanel();
+        phoneText = new JLabel("PHONE: " + this.phoneNumber);
+        phonePanel.add(phoneText);
+
+        //email panel
+        JPanel emailPanel = new JPanel();
+        emailText = new JLabel("EMAIL: " + this.email);
+        emailPanel.add(emailText);
+
+        //education panel
+        JPanel educationPanel = new JPanel();
+        educationText = new JLabel("EDUCATION: " + this.education);
+        educationPanel.add(educationText);
+
+        //about me panel
+        JPanel aboutMePanel = new JPanel();
+        aboutMeText = new JLabel("ABOUT ME:\n" + this.aboutMe);
+        aboutMePanel.add(aboutMeText);
+
+        //interests panel
+        JPanel interestsPanel = new JPanel();
+        interestsText = new JLabel("INTERESTS:\n" + interests.toString());
+        interestsPanel.add(interestsText);
+
+        //Combines the above three panels in grid layout
+        JPanel profilePanel = new JPanel();
+        profilePanel.setLayout(new GridLayout(3, 2));
+        profilePanel.add(namePanel);
+        profilePanel.add(phonePanel);
+        profilePanel.add(emailPanel);
+        profilePanel.add(educationPanel);
+        profilePanel.add(aboutMePanel);
+        profilePanel.add(interestsPanel);
+        frame.add(profilePanel, BorderLayout.CENTER);
+
+        frame.setVisible(true);
+    }
+
+    ActionListener actionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            //TODO add I/O aspects to edit
+            if(e.getSource() == edit) {
+                //Uses the EnterInfoGUI methods to edit the fields of the object
+                username = EnterInfoGUI.showNameInputDialog();
+                email = EnterInfoGUI.showEmailInputDialog();
+                phoneNumber = EnterInfoGUI.showPhoneInputDialog();
+                education = EnterInfoGUI.showEducationInputDialog();
+                aboutMe = EnterInfoGUI.showAboutInputDialog();
+                //TODO change showInterests Dialog to an arrayList and implement required changes
+                interests.add(EnterInfoGUI.showInterestsInputDialog());
+
+                //Updates the JLabels to the current fields
+                nameText.setText(username);
+                emailText.setText(email);
+                phoneText.setText(phoneNumber); //format phone (update enter info gui)
+                educationText.setText(formatAboutString(aboutMe));
+                interestsText.setText(formatInterestsString(interests));
+            }
+            if(e.getSource() == requests) {
+                //Opens the Friends List GUI
+                new FriendsListGUI().run(); //TODO update this once the friends list GUI is more operational
+            }
+            //TODO Utilize retrieved strings from bottom panel I/O to open and befriend the requested profiles
+            if(e.getSource() == search) {
+                String profileSearch = searchBox.getText(); //the profile name entered by the user
+                searchBox.setText("");
+            }
+            if(e.getSource() == add) {
+                String profileAdd = addBox.getText(); //the profile name entered by the user
+                addBox.setText("");
+            }
+        }
+    };
+
     public void writeExportFile() throws IOException {
 
         try {
@@ -163,6 +323,7 @@ public class Profile implements Serializable {
         }
 
     }
+
     public static String formatAboutString(String about) { //organizes the About information as a small paragraph
         String about2 = ""; //initializes about2 as empty
         String newAbout = about; //duplicates the String about
@@ -192,6 +353,8 @@ public class Profile implements Serializable {
         } //for-loop
         return newInterests; //returns Interests as formatted String
     } //formatInterestsString
+
+
 
     public String getUsername() {
         return this.username;
