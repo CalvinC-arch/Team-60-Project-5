@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 
-public class Profile {
+public class Profile implements Serializable{
 
     private String username;
     private ArrayList<String> interests;

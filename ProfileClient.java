@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * ProfileClient
@@ -52,36 +53,98 @@ public class ProfileClient {
         //TODO GUI stuff goes here!
 
         //TEST SECTION
+        //This gets the profile passed from the server and reads the aboutMe section, then deletes the profile, then
+        //attempts to receive the profile, then adds the profile back, then reads the profile and aboutMe again. Shows
+        //that the cases and network IO function. Can leave out the adding to show that profile deletion persists
+        //past client disconnect
 
-        //this, when used with the proper setup in the server, demonstrates data persistence. Ignore for now
-
-        TestingProfile profile;
-
+        //GETTING PROFILE SENT
+        //Write command and username to server
         dos.writeObject("SendProfile");
         dos.writeObject("ccarta");
 
-        String reply = (String) dis.readObject();
+        //read whether the profile was found or not
+        String result = (String) dis.readObject();
 
-        if (reply.equals("True")) {
-            profile = (TestingProfile) dis.readObject();
-            System.out.println(profile.getUsername());
-            System.out.println(profile.getAboutMe());
+        if (result.equals("True")) {
+
+            //read profile and display about me section
+            Profile profileSent = (Profile) dis.readObject();
+            System.out.println(profileSent.getAboutMe());
+
         } else {
-            System.out.println("Profile not returned");
+
+            System.out.println("No profile found");
+
         }
 
-        //END OF RETURN PROFILE TEST
-        //START OF MODIFY ACCOUNT ARRAYLIST TEST
-
+        //DELETING PROFILE
+        //Write command and username to server
         dos.writeObject("DeleteProfile");
         dos.writeObject("ccarta");
 
-        reply = (String) dis.readObject();
+        //read whether the profile was found or not
+        result = (String) dis.readObject();
 
-        if (reply.equals("True")) {
-            System.out.println("Profile deleted");
+        if (result.equals("True")) {
+            System.out.println("Profile Deleted!");
         } else {
-            System.out.println("Profile not found");
+            System.out.println("No profile found");
+        }
+
+        //GETTING PROFILE SENT
+        //Write command and username to server
+        dos.writeObject("SendProfile");
+        dos.writeObject("ccarta");
+
+        //read whether the profile was found or not
+        result = (String) dis.readObject();
+
+        if (result.equals("True")) {
+
+            //read profile and display about me section
+            Profile profileSent = (Profile) dis.readObject();
+            System.out.println(profileSent.getAboutMe());
+
+        } else {
+
+            System.out.println("No profile found");
+
+        }
+
+        //ADDING PROFILE
+        //Write command, email, and profile to add to server
+        dos.writeObject("AddProfile");
+        dos.writeObject("ccarta@purdue.edu");
+        dos.writeObject(new Profile("testProfile.csv"));
+
+        //read whether the profile was found or not
+        result = (String) dis.readObject();
+
+        if (result.equals("True")) {
+            System.out.println("Profile Added!");
+        } else {
+            System.out.println("Profile not able to be added");
+        }
+
+        //GETTING PROFILE SENT
+        //Write command and username to server
+        dos.writeObject("SendProfile");
+        dos.writeObject("ccarta");
+
+        //read whether the profile was found or not
+        result = (String) dis.readObject();
+
+        if (result.equals("True")) {
+
+            //read profile and display about me section
+            Profile profileSent = (Profile) dis.readObject();
+            System.out.println(profileSent.getAboutMe());
+
+        } else {
+
+            System.out.println("No profile found");
+
         }
 
         //END OF TEST SECTION

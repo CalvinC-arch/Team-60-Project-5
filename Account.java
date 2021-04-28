@@ -2,17 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
 AccountGUI useful methods:
-
 AccountGUI(String name, ArrayList<Franken> profiles)
   - name is name of the account
   - profiles is a list of profiles under the account
-
 .run() ~ runs the GUI for an AccountGUI object
-
 Creators: Will Stonebridge
  */
 
@@ -36,8 +34,38 @@ public class Account {
         this.password = password;
         this.profiles = profiles;
     }
-    
-    
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public ArrayList<Profile> getProfiles() {
+        return this.profiles;
+    }
+
+    public void setProfiles(ArrayList<Profile> profiles) {
+        this.profiles = profiles;
+    }
+
+    //adds a profile to the profile arraylist
+    public void addProfile(Profile profile) {
+        this.profiles.add(profile);
+    }
+
+    //removes a profile from the account profile arraylist
+    public void deleteProfile(String username) {
+
+        for (int i = 0; i < this.profiles.size(); i++) {
+
+            if (profiles.get(i).getUsername().equals(username)) {
+                profiles.remove(i);
+            }
+        }
+    }
 
     public void run() {
         //Creates the frame
@@ -65,7 +93,7 @@ public class Account {
             //the word "view" or "delete" followed by their profiles index
             //in the profile arraylist
             JPanel profilePanel = new JPanel();
-            JLabel profileName = new JLabel(profiles.get(i).getName());
+            JLabel profileName = new JLabel(profiles.get(i).getUsername());
             JButton view = new JButton("View");
             view.addActionListener(profileListener);
             view.setActionCommand("view" + i);
@@ -101,7 +129,7 @@ public class Account {
                 ArrayList<String> friends = new ArrayList<>();
                 String education = EnterInfoGUI.showEducationInputDialog();
                 String email = EnterInfoGUI.showEmailInputDialog();
-                String phone = EnterInfoGUI.showPhoneInputDialog();
+                Long phone =  Long.parseLong(EnterInfoGUI.showPhoneInputDialog());
                 String aboutMe = EnterInfoGUI.showAboutInputDialog();
 
                 //creates a new profile and adds it to the array list of profiles
@@ -125,7 +153,8 @@ public class Account {
                 int profileIndex = Integer.parseInt(e.getActionCommand().substring(4));
 
                 //runs the GUI for the given profile
-                profiles.get(profileIndex).run();
+                //profiles.get(profileIndex).run();
+                //TODO deal with the nonexistent run function in Profile.java later
             }
             else if (e.getActionCommand().contains("delete")) //Runs if the received action command contains delete
             {
@@ -142,20 +171,4 @@ public class Account {
             }
         }
     };
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public ArrayList<Profile> getProfiles() {
-        return this.profiles;
-    }
-
-    public void setProfiles(ArrayList<Profile> profiles) {
-        this.profiles = profiles;
-    }
 }

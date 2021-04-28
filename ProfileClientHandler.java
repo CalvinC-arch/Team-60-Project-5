@@ -50,7 +50,9 @@ class ProfileClientHandler extends Thread {
 
         String command; //command from the client to access functionality
         String username; //username passed from client
+        String email; //email passed from the client
         boolean objectFound; //whether or not an object was found for a search (usually profile or account)
+        Profile profile; //profile sent by the client
 
         System.out.println("A new client handler is operational");
 
@@ -60,6 +62,27 @@ class ProfileClientHandler extends Thread {
                 switch(command = (String) dis.readObject()) {
 
                     //TODO Insert Cases for various functions here!
+
+                    case "AddProfile":
+
+                        email = (String) dis.readObject();
+                        profile = (Profile) dis.readObject();
+                        objectFound = false;
+
+                        for (int i = 0; i < accounts.size(); i++) {
+
+                            if (accounts.get(i).getEmail().equals(email)) {
+                                accounts.get(i).addProfile(profile);
+                                dos.writeObject("True");
+                                objectFound = true;
+                            }
+                        }
+
+                        if (!objectFound) {
+                            dos.writeObject("False");
+                        }
+
+                        break;
 
                     case "DeleteProfile": //Deletes a profile based on username
 
