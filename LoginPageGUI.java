@@ -25,6 +25,9 @@ import java.util.ArrayList;
 
 public class LoginPageGUI implements Runnable {
 
+    // Deals with network I/O
+    IOMachine ioMachine;
+
     //Make GUI elements global fields
     JLabel instructions;
     JLabel emailLabel;
@@ -33,6 +36,10 @@ public class LoginPageGUI implements Runnable {
     JTextField passwordField;
     JButton enterButton;
     JButton makeAccountButton;
+
+    public LoginPageGUI(IOMachine ioMachine) {
+        this.ioMachine = ioMachine;
+    }
 
     //Creates the GUI
     public void run() {
