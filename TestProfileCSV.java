@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * TestProfileCSV
@@ -10,7 +11,8 @@ import java.util.ArrayList;
  * are four test cases in this class; Proper Import, Improper Import, Proper/Improper Export, and
  * Import an Exported Profile. These cases examine the full functionality of the .csv methods Profile() and
  * writeExportFile(). Testing for an Proper/Improper Export case is combined due to the nature of the Improper Export,
- * as explained in the header for that test case.
+ * as explained in the header for that test case. There is a continue dialogue after each test to ensure proper
+ * logic flow.
  *
  * N/A
  *
@@ -23,6 +25,9 @@ public class TestProfileCSV {
 
     public static void main(String args[]) throws IOException {
 
+        Scanner scanner = new Scanner(System.in);
+        String block; //blocks logic from continuing to next test case until user enters input
+
         /*
          * Proper Import Case
          *
@@ -30,6 +35,10 @@ public class TestProfileCSV {
          * this case the file "testProfile.csv", which can be found on the gitHub repository. All fields will be output
          * to ensure accuracy in the creation of the profile.
          */
+
+        //Logic block
+        System.out.println("Enter any input to run Proper Import Case: ");
+        block = scanner.nextLine();
 
         Profile profile = new Profile("testProfile.csv");
 
@@ -54,6 +63,10 @@ public class TestProfileCSV {
          * accuracy in the creation of the profile.
          */
 
+        //Logic block
+        System.out.println("Enter any input to run Improper Import Case: ");
+        block = scanner.nextLine();
+
         Profile newProfile = new Profile("test.csv");
 
         output = String.format("User Information:\n" +
@@ -77,6 +90,10 @@ public class TestProfileCSV {
          * simply have the file "chen3801Export.csv" open on the device.
          */
 
+        //Logic block
+        System.out.println("Enter any input to run Proper/Improper Export Case: ");
+        block = scanner.nextLine();
+
          ArrayList<String> interests = new ArrayList<String>();
          interests.add("running");
          interests.add("gaming");
@@ -98,6 +115,10 @@ public class TestProfileCSV {
          * created using the writeExportFile() methods. This verifies that the processes are compatible.  All fields
          * will be output to ensure accuracy in the creation of the profile.
          */
+
+        //Logic block
+        System.out.println("Enter any input to run Import an Exported Profile Case: ");
+        block = scanner.nextLine();
 
         Profile newJeff = new Profile("chen3801Export.csv");
 

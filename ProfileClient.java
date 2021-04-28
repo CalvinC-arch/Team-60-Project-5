@@ -20,45 +20,39 @@ import java.util.ArrayList;
 public class ProfileClient {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-        boolean check = false; //used to determine whether a connection to the server has been achieved
+        try { //runs client side stuff
 
-        // getting localhost ip
-        InetAddress ip = InetAddress.getByName("localhost");
+            // getting localhost ip
+            InetAddress ip = InetAddress.getByName("localhost");
 
-        // establish the connection with server port 1234
-        Socket s = new Socket(ip, 1234);   //CHANGE FOR USE WITH UNITY TO 5555
+            // establish the connection with server port 1234
+            Socket s = new Socket(ip, 1234);   //CHANGE FOR USE WITH UNITY TO 5555
 
-        // obtaining input and out streams
-        ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
-        ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
+            // obtaining input and out streams
+            ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
+            ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
-        try { //connect to server and set up network io, display error message if connection unsuccessful
-            while(!check) {
-                Socket socket = new Socket("localhost", 1234);   //CHANGE FOR USE WITH UNITY TO 5555
+            //Confirm connection successful
+            JOptionPane.showMessageDialog(null, "Connection Established", "CampsGram",
+                    JOptionPane.INFORMATION_MESSAGE);
 
-                check = true;
-            }
+            //creates an IOMachine to easily access the server
+            IOMachine ioMachine = new IOMachine(dos, dis);
+
+            //Runs the Login GUI
+            LoginPageGUI Login = new LoginPageGUI(ioMachine);
+            Login.run();
+
+            //TODO GUI stuff goes here!
 
         } catch (IOException e) { //display error message is connection not established
             JOptionPane.showMessageDialog(null, "Error: Connection Cannot be Established",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);
 
-            return;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: There was an Error in the code " +
+                            "somewhere", "Campsgram", JOptionPane.ERROR_MESSAGE);
         }
-
-        //Confirm connection successful
-        JOptionPane.showMessageDialog(null, "Connection Established", "CampsGram",
-                JOptionPane.INFORMATION_MESSAGE);
-
-        //creates an IOMachine to easily access the server
-        IOMachine ioMachine = new IOMachine(dos, dis);
-
-        //Runs the Login GUI
-        LoginPageGUI Login = new LoginPageGUI(ioMachine);
-        Login.run();
-
-        //TODO GUI stuff goes here!
-
 
     }
 }
