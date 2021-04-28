@@ -34,11 +34,6 @@ public class LoginPageGUI implements Runnable {
     JButton enterButton;
     JButton makeAccountButton;
 
-    //Create an EDT
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new LoginPageGUI());
-    }
-
     //Creates the GUI
     public void run() {
         //Set Up JFrame
@@ -76,31 +71,30 @@ public class LoginPageGUI implements Runnable {
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) { //detects button clicks
             if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
-                validateAccount();
+                String accountName = emailField.getText();
+                String password = passwordField.getText();
             }
             if (e.getSource() == makeAccountButton) { //Code to perform when Make Account Button is clicked
-                //TODO: Flesh out Login-Account Transition
-                //sample account
-                String accountName = emailField.getText();
 
-                //adds sample profiles
+                //gets the text in the email and password fields
+                String accountName = emailField.getText();
+                String password = passwordField.getText();
+
+                //TODO removes sample profiles in final version code
+                //adds sample profiles for testing purposes
                 ArrayList<Profile> profiles = new ArrayList<>();
                 for(int i = 0; i < 7; i++) {
                     profiles.add(new Profile());
                 }
 
-                //creates and runs the account object
-                Account acc = new Account(emailField.getText(), passwordField.getText(), profiles);
-                acc.run();
+                //creates a new account object
+                Account newAccount = new Account(emailField.getText(), passwordField.getText(), profiles);
 
-                //erics validate code is below
-                /*
-                if (createAccount()) {
+                //adds the account to the server
+                ioMachine.addAccount(newAccount);
 
-                }
-                 */
-                
-                createAccount();
+                //runs the new account
+                newAccount.run();
             }
         }
     };
