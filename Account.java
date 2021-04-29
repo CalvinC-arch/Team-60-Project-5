@@ -19,6 +19,9 @@ public class Account implements Serializable {
     private final String email;
     private final String password;
     private ArrayList<Profile> profiles;
+  
+    //for Network I/O functionality
+    transient IOMachine ioMachine;
 
     //frame and panels
     ArrayList<JPanel> panelList;
@@ -34,6 +37,13 @@ public class Account implements Serializable {
         this.email = email;
         this.password = password;
         this.profiles = profiles;
+    }
+  
+    public Account(Account account, IOMachine ioMachine) throws NullPointerException {
+        this.email = account.getEmail();
+        this.password = account.getPassword();
+        this.profiles = account.getProfiles();
+        this.ioMachine = ioMachine;
     }
 
     public String getEmail() {
@@ -119,9 +129,9 @@ public class Account implements Serializable {
 
     ActionListener bottomBarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            //TODO add functionality to buttons
             if(e.getSource() == deleteAcc) {
-                //TODO add delete Acc functionality
+                ioMachine.deleteAccount(ioMachine.findAccount(email));
+                frame.dispose();
             }
             if(e.getSource() == addProfile) {
                 //Uses EnterInfo GUI to create fields for a profile
