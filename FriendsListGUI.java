@@ -53,6 +53,7 @@ public class FriendsListGUI implements Runnable {
     private ArrayList<String> sentList;
     private ArrayList<String> receivedList;
     private ArrayList<String> friendList;
+    private String username;
 
     //Create the EDT
     /*public static void main(String[] args) {
@@ -60,11 +61,16 @@ public class FriendsListGUI implements Runnable {
     }*/
 
     //FriendsListGUI object constructor
-    public FriendsListGUI(ArrayList<String> sentList, ArrayList<String> receivedList,
+    public FriendsListGUI(String username, ArrayList<String> sentList, ArrayList<String> receivedList,
                           ArrayList<String> friendList) throws NullPointerException {
+        this.username = username;
         this.sentList = sentList;
         this.receivedList = receivedList;
         this.friendList = friendList;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 
     //Assemble the GUI
@@ -175,14 +181,14 @@ public class FriendsListGUI implements Runnable {
        public void actionPerformed(ActionEvent e) {
            if (e.getSource() == acceptButton) {
                String username = (String) requestsPendingList.getSelectedItem();
-               if (ioMachine.acceptFriend(username)) { //changes saved in server
+               if (ioMachine.acceptFriend(getUsername(), username)) { //changes saved in server
                    friendsList.addItem(username); //update friends list with newly accepted friend
                    requestsPendingList.removeItem(username); //remove newly accepted friend from list of pending friend requests
                }
            } //code that is run if accept button is clicked
            if (e.getSource() == declineButton) {
                String username = (String) requestsPendingList.getSelectedItem();
-               if (ioMachine.declineFriend(username)) { //changes saved in server
+               if (ioMachine.declineFriend(getUsername(), username)) { //changes saved in server
                    requestsPendingList.removeItem(username); //remove newly denied friend from the list of pending friend requests
 
                }
@@ -190,18 +196,18 @@ public class FriendsListGUI implements Runnable {
            if (e.getSource() == viewProfileButton) {
                String username = (String) friendsList.getSelectedItem();
                Profile friend = ioMachine.findProfile(username); //retrieve friend's profile from the server
-               //TODO: Display Friend's Profile
+               friend.viewFriendProfile();
 
            } //code that is run if view profile button is clicked
            if (e.getSource() == unfriendButton) {
                String username = (String) friendsList.getSelectedItem();
-               if (ioMachine.unfriend(username)) { //changes saved in server
+               if (ioMachine.unfriend(getUsername(), username)) { //changes saved in server
                    friendsList.removeItem(username); //remove newly unfriended user from the account's friend list
                }
            } //code that is run if unfriend button is clicked
            if (e.getSource() == rescindRequestButton) {
                String username = (String) requestsSentList.getSelectedItem();
-               if (ioMachine.rescindRequest(username)) { //changes saved in server
+               if (ioMachine.rescindRequest(getUsername(), username)) { //changes saved in server
                    requestsSentList.removeItem(username); //remove user from the list of pending sent friends requests
                }
            }
