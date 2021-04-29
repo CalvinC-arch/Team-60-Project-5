@@ -122,7 +122,7 @@ public class LoginPageGUI implements Runnable {
                       
                         validate = ioMachine.findAccount(email);
                         
-                        if (validate.getEmail().equals(email)) {
+                        if (validate.getPassword().equals(password)) {
                             validAccount = true;
                         }
                         
