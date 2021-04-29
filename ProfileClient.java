@@ -43,8 +43,6 @@ public class ProfileClient {
             LoginPageGUI Login = new LoginPageGUI(ioMachine);
             Login.run();
 
-            //TODO GUI stuff goes here!
-
         } catch (IOException e) { //display error message is connection not established
             JOptionPane.showMessageDialog(null, "Error: Connection Cannot be Established",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);
