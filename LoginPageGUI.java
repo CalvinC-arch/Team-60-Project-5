@@ -111,7 +111,7 @@ public class LoginPageGUI implements Runnable {
                         //Tries to connect to server and send inputs
                         validAccount = ioMachine.validateAccount(email, password);
                         if (validAccount) {
-                            Account account = ioMachine.findAccount(email);
+                            Account account = new Account(ioMachine.findAccount(email), ioMachine);
                             account.run();
                         }
                     }
