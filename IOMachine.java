@@ -240,7 +240,7 @@ public class IOMachine extends ObjectOutputStream {
      * @param action - whether the list is being added to or removed from. Should either be "Add" or "Remove"
      * @param username - username of the profile to be edited
      * @param parameter - the name of the field to be edited, capitalized
-     * @param parameterValue - the new value of the field
+     * @param parameterValue - the value of the field being added/removed
      *
      * @return whether field was edited or not
      */
@@ -277,18 +277,68 @@ public class IOMachine extends ObjectOutputStream {
         try {
             String result;
 
-            dos.writeObject("SendRequest");
+            dos.writeObject("AddRequestsSent");
             dos.writeObject(username);
             dos.writeObject(requester);
 
             result = (String) dis.readObject();
 
-            return result.equals("True");
+            if (result.equals("True")) {
+                dos.writeObject("AddRequestsReceived");
+                dos.writeObject(requester);
+                dos.writeObject(username);
+
+                result = (String) dis.readObject();
+
+                return result.equals("True");
+
+            } else {
+                return false;
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
-        }
+            return false; }
+
+    }
+
+    /**
+     * rescinds friend request
+     *
+     * @param username - the username selected in the sent request JComboBox when the rescind friend request
+     *                 button is clicked
+     *
+     * @return whether the friend request was rescinded
+     * */
+
+    public boolean rescindRequest(String username, String requester) {
+        try {
+            String result;
+
+            dos.writeObject("RemoveRequestsSent");
+            dos.writeObject(username);
+            dos.writeObject(requester);
+
+            result = (String) dis.readObject();
+
+            if (result.equals("True")) {
+                dos.writeObject("RemoveRequestsReceived");
+                dos.writeObject(requester);
+                dos.writeObject(username);
+
+                result = (String) dis.readObject();
+
+                return result.equals("True");
+
+            } else {
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; }
 
     }
 
@@ -300,16 +350,44 @@ public class IOMachine extends ObjectOutputStream {
      *
      * @return whether the friend was added to the friends list and removed from the pending requests list
      * */
+
     public boolean acceptFriend(String username, String requester) {
         try {
             String result;
 
-            dos.writeObject("AcceptFriend");
+            dos.writeObject("AddFriend");
             dos.writeObject(username);
             dos.writeObject(requester);
 
             result = (String) dis.readObject();
-            return result.equals("True");
+
+            if (result.equals("True")) {
+                dos.writeObject("AddFriend");
+                dos.writeObject(requester);
+                dos.writeObject(username);
+
+                result = (String) dis.readObject();
+
+            } else {
+                return false;
+            }
+
+            dos.writeObject("RequestsSent");
+            dos.writeObject(username);
+            dos.writeObject(requester);
+
+            result = (String) dis.readObject();
+
+            if (result.equals("True")) {
+                dos.writeObject("RemoveRequestsReceived");
+                dos.writeObject(requester);
+                dos.writeObject(username);
+
+                return true;
+
+            } else {
+                return false;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,18 +406,31 @@ public class IOMachine extends ObjectOutputStream {
         try {
             String result;
 
-            dos.writeObject("Decline");
+            dos.writeObject("RemoveRequestsSent");
             dos.writeObject(username);
+            dos.writeObject(requester);
 
             result = (String) dis.readObject();
-            return result.equals("True");
+
+            if (result.equals("True")) {
+                dos.writeObject("RemoveRequestsReceived");
+                dos.writeObject(requester);
+                dos.writeObject(username);
+
+                result = (String) dis.readObject();
+
+                return result.equals("True");
+
+            } else {
+                return false;
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
-        }
-    }
+            return false; }
 
+    }
 
     /**
      * unfriends another user
@@ -348,46 +439,32 @@ public class IOMachine extends ObjectOutputStream {
      *
      * @return whether the user was unfriended
      * */
-    public boolean unfriend(String username) {
+    public boolean unfriend(String username, String requester) {
         try {
             String result;
 
-            dos.writeObject("Unfriend");
+            dos.writeObject("RemoveFriend");
             dos.writeObject(username);
+            dos.writeObject(requester);
 
             result = (String) dis.readObject();
-            return result.equals("True");
+
+            if (result.equals("True")) {
+                dos.writeObject("RemoveFriend");
+                dos.writeObject(requester);
+                dos.writeObject(username);
+
+                result = (String) dis.readObject();
+                
+                return result.equals("True");
+
+            } else {
+                return false;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-
-    /**
-     * rescinds friend request
-     *
-     * @param username - the username selected in the sent request JComboBox when the rescind friend request
-     *                 button is clicked
-     *
-     * @return whether the friend request was rescinded
-     * */
-
-    public boolean rescindRequest(String username) {
-        try {
-            String result;
-
-            dos.writeObject("Rescind");
-            dos.writeObject(username);
-
-            result = (String) dis.readObject();
-            return result.equals("True");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
 }
