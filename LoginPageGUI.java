@@ -89,6 +89,7 @@ public class LoginPageGUI implements Runnable {
             if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
                 //variables to use in the method
                 boolean validAccount = false;
+                Account validate; //Account passed by server to check if the account exists
                 String email;
                 String password;
 
@@ -119,6 +120,12 @@ public class LoginPageGUI implements Runnable {
 
                         //Tries to connect to server and send inputs
                       
+                        validate = ioMachine.findAccount(email);
+                        
+                        if (validate.getEmail().equals(email)) {
+                            validAccount = true;
+                        }
+                        
                         if (validAccount) {
                             Account account = new Account(ioMachine.findAccount(email), ioMachine);
                             account.run();
