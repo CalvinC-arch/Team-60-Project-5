@@ -150,13 +150,12 @@ public class LoginPageGUI implements Runnable {
                         password = passwordField.getText(); //store password
                         passwordField.setText(""); //reset password field
 
-                        //Attempts to connect to server and send inputs
-                        accountCreated = ioMachine.createAccount(email, password);
+                        //Sends a new account to the server
+                        Account tempAccount = new Account(email, password, new ArrayList<Profile>());
+                        accountCreated = ioMachine.addAccount(tempAccount);
                         if (accountCreated) {
-                            EnterInfoGUI enterInfo = new EnterInfoGUI();
-                            enterInfo.main(null); //IS THIS CORRECT????
-
-
+                            Account account = new Account(ioMachine.findAccount(email), ioMachine);
+                            account.run();
                         }
                     }
 
