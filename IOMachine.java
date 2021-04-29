@@ -265,17 +265,16 @@ public class IOMachine extends ObjectOutputStream {
     }
 
     /**
-     * sends a friend request
+     * sends a friend request and updates fields appropriately
      *
      * @param username - the username receiving the request
      * @param requester - the username sending the request
-     *
      * @return whether the friend was added to the friends list and removed from the pending requests list
      * */
 
     public boolean sendRequest(String username, String requester) {
         try {
-            String result;
+            String result; //result returned from the server
 
             dos.writeObject("AddRequestsSent");
             dos.writeObject(username);
@@ -304,17 +303,16 @@ public class IOMachine extends ObjectOutputStream {
     }
 
     /**
-     * rescinds friend request
+     * rescinds an already sent friend request
      *
-     * @param username - the username selected in the sent request JComboBox when the rescind friend request
-     *                 button is clicked
-     *
-     * @return whether the friend request was rescinded
+     * @param username - the username receiving the request
+     * @param requester - the username sending the request
+     * @return whether the friend request was successfully rescinded
      * */
 
     public boolean rescindRequest(String username, String requester) {
         try {
-            String result;
+            String result; //result returned from the server
 
             dos.writeObject("RemoveRequestsSent");
             dos.writeObject(username);
@@ -353,7 +351,7 @@ public class IOMachine extends ObjectOutputStream {
 
     public boolean acceptFriend(String username, String requester) {
         try {
-            String result;
+            String result; //result returned from the server
 
             dos.writeObject("AddFriend");
             dos.writeObject(username);
@@ -404,7 +402,7 @@ public class IOMachine extends ObjectOutputStream {
      */
     public boolean declineFriend(String username, String requester) {
         try {
-            String result;
+            String result; //result returned from the server
 
             dos.writeObject("RemoveRequestsSent");
             dos.writeObject(username);
@@ -441,7 +439,7 @@ public class IOMachine extends ObjectOutputStream {
      * */
     public boolean unfriend(String username, String requester) {
         try {
-            String result;
+            String result; //result returned from the server
 
             dos.writeObject("RemoveFriend");
             dos.writeObject(username);
@@ -455,7 +453,7 @@ public class IOMachine extends ObjectOutputStream {
                 dos.writeObject(username);
 
                 result = (String) dis.readObject();
-                
+
                 return result.equals("True");
 
             } else {
