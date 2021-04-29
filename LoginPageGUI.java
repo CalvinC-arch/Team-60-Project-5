@@ -118,7 +118,7 @@ public class LoginPageGUI implements Runnable {
                         passwordField.setText(""); //reset the text field to empty
 
                         //Tries to connect to server and send inputs
-                        validAccount = ioMachine.validateAccount(email, password);
+                      
                         if (validAccount) {
                             Account account = new Account(ioMachine.findAccount(email), ioMachine);
                             account.run();
