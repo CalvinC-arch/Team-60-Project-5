@@ -50,15 +50,15 @@ public class EnterInfoGUI {
         showCreatingDialog(); // shows message indicating the profile is being created
 
         output = String.format("User Information:\n" + //contains all user information in order
-                "Username: %s\n" +
-                "Name: %s\n" +
-                "Phone: %d\n" +
-                "Email: %s\n" +
-                "Birth Date: %s\n" +
-                "Education: %s\n" +
-                "About: %s\n" +
-                "Interests: %s\n" +
-                "Password: %s\n", username, name, phone, email, birthdate, education, formattedAbout,
+                        "Username: %s\n" +
+                        "Name: %s\n" +
+                        "Phone: %d\n" +
+                        "Email: %s\n" +
+                        "Birth Date: %s\n" +
+                        "Education: %s\n" +
+                        "About: %s\n" +
+                        "Interests: %s\n" +
+                        "Password: %s\n", username, name, phone, email, birthdate, education, formattedAbout,
                 formattedInterests, password);
         System.out.println(output); //prints output
         System.out.println(formatPhoneString(phone));
@@ -95,35 +95,43 @@ public class EnterInfoGUI {
     } //formatInterestsString
 
     public static String showUsernameInputDialog() {
-        String username; //unique username of the profile
+        String username;
         do {
             username = JOptionPane.showInputDialog(null, "Create Username:",
                     "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to enter username
-            if ((username == null) || (username.isBlank())) { //checks if username is null
-                JOptionPane.showMessageDialog(null, "Username cannot be empty!",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
-            } else if (username.contains(" ")) {
-                JOptionPane.showMessageDialog(null, "Username can only be a single word!",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
-            } //end if
-        } while (username == null || username.contains(" ")); //do-while runs while username is null or it has a space
+            try {
+                if (username.equals("")) { //checks if username is null
+                    JOptionPane.showMessageDialog(null, "Username cannot be empty!",
+                            "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                } else if (username.contains(" ")) {
+                    JOptionPane.showMessageDialog(null, "Username can only be a single word!",
+                            "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                } //end if
+            } catch (Exception e){
+                System.exit(0);
+            }
+        } while (username.equals("") || username.contains(" ")); //do-while runs while username is null or it has a space
         return username; //returns the username for the profile
     } //showUsernameInputDialog
 
     public static String showNameInputDialog() {
-        String name; //firs and last name of user
+        String name = ""; //firs and last name of user
         do {
-            name = JOptionPane.showInputDialog(null, "Full Name:",
-                    "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to enter name
-            if ((name == null) || (name.isBlank())) { //checks if name is null
-                JOptionPane.showMessageDialog(null, "Name cannot be empty!", "CampsGram",
-                        JOptionPane.ERROR_MESSAGE); //shows error
-            } else if (!name.contains(" ")) { //checks if name contains first name and last name
-                JOptionPane.showMessageDialog(null, "Please enter your full name!",
-                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
-            } //end if
+            try {
+                name = JOptionPane.showInputDialog(null, "Full Name:",
+                        "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to enter name
+                if (name.equals("")) { //checks if name is null
+                    JOptionPane.showMessageDialog(null, "Name cannot be empty!", "CampsGram",
+                            JOptionPane.ERROR_MESSAGE); //shows error
+                } else if (!name.contains(" ")) { //checks if name contains first name and last name
+                    JOptionPane.showMessageDialog(null, "Please enter your full name!",
+                            "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                } //end if
+            } catch (Exception e) {
+                System.exit(0);
+            }
 
-        } while ((name == null) || (name.isBlank()) || !name.contains(" ")); //do-while runs while name is null
+        } while (name.equals("")|| !name.contains(" ")); //do-while runs while name is null
         return name; //returns String name of the user
     } //showNameInputDialog
 
@@ -136,16 +144,23 @@ public class EnterInfoGUI {
             phone = JOptionPane.showInputDialog(null, "Phone Number:",
                     "CampsGram", JOptionPane.QUESTION_MESSAGE); //asks user to input phone number
             phone2 = phone;  //duplicates the phone number to check validity later
+
             try {
-                phoneLong = Long.parseLong(phone); //throws exception is phone number is not a Long
-                phone2 = phone.substring(0,10); //throws an exception if phone number is less than 10 digits
-                checking = false; //makes loop stop if no exception is thrown
-                if (phone.length() >= 11) { //checks if phone number has more than 10 digits
+                if (phone.equals("")) {
                     JOptionPane.showMessageDialog(null, "Please enter a valid phone number!",
                             "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
-                    checking = true; //makes loop run again which asks user to input again
-                } //end if
-            } catch (Exception e) {
+                } else {
+                    phoneLong = Long.parseLong(phone); //throws exception is phone number is not a Long
+                    checking = false; //makes loop stop if no exception is thrown
+                    if (phone.length() != 10) { //checks if phone number has more than 10 digits
+                        JOptionPane.showMessageDialog(null, "Please enter a valid phone number!",
+                                "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                        checking = true; //makes loop run again which asks user to input again
+                    } //end if 
+                }
+            } catch (NullPointerException nE) {
+                System.exit(0);
+            } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Please enter a valid phone number!",
                         "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
