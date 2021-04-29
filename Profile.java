@@ -29,10 +29,9 @@ public class Profile implements Serializable, Runnable {
     JButton requests; //requests button
 
     //bottom elements
-    JTextField searchBox; //text box for searching users
-    JTextField addBox; //text box for adding users
-    JButton search; //search button
-    JButton add; //add user button
+    JComboBox<String> users; //all the users on the app
+    JButton sendFriendRequest; //sends friend request
+
 
     //Text Boxes
     JLabel nameText;
@@ -73,8 +72,6 @@ public class Profile implements Serializable, Runnable {
                 add("Jeff Chen");
             }
         };
-        this.requestsSent = new ArrayList<String>();
-        this.requestsReceived = new ArrayList<String>();
         this.education = "Purdue";
         this.email = "jwstoneb@purdue.edu";
         this.phoneNumber = 8476360377L;
@@ -211,17 +208,21 @@ public class Profile implements Serializable, Runnable {
 
         //bottom panel
         bottomPanel = new JPanel();
-        searchBox = new JTextField(5);
-        bottomPanel.add(searchBox);
-        search = new JButton("Search User");
-        search.addActionListener(actionListener);
-        bottomPanel.add(search);
-        addBox = new JTextField(5);
-        bottomPanel.add(addBox);
-        add = new JButton("Add Friend");
-        add.addActionListener(actionListener);
-        bottomPanel.add(add);
-        frame.add(bottomPanel, BorderLayout.SOUTH);
+        JLabel userLabel = new JLabel("Find Other Users: ");
+        bottomPanel.add(userLabel);
+        users = new JComboBox<>();
+        users.setMaximumRowCount(3);
+
+        //TODO: Add users to JComboBox from Array of all users
+
+        bottomPanel.add(users);
+        sendFriendRequest = new JButton("Send Friend Request");
+        sendFriendRequest.addActionListener(actionListener); //add action listener to button
+        bottomPanel.add(sendFriendRequest);
+        JLabel username = new JLabel("Enter Username");
+        bottomPanel.add(username);
+
+        frame.add(bottomPanel, BorderLayout.SOUTH); // add panel to frame
 
         //Everything below is for the center panel which holds user info
 
@@ -269,7 +270,13 @@ public class Profile implements Serializable, Runnable {
         frame.setVisible(true);
     }
 
-    transient ActionListener actionListener = new ActionListener() {
+    public void viewFriendProfile() {
+        run();
+        frame.remove(topPanel);
+        frame.remove(bottomPanel);
+    }
+
+    ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //TODO add I/O aspects to edit
             if(e.getSource() == edit) {
@@ -290,20 +297,18 @@ public class Profile implements Serializable, Runnable {
             }
             if(e.getSource() == requests) {
                 //Opens the Friends List GUI
-                FriendsListGUI friends = new FriendsListGUI(getRequestsSent(), getRequestsReceived(), getFriends());
-                friends.run(); //TODO update this once the friends list GUI is more operational
+                /*Profile profile = new Profile();
+                FriendsListGUI friends = new FriendsListGUI();
+                friends.run();*/
             }
-            //TODO Utilize retrieved strings from bottom panel I/O to open and befriend the requested profiles
-            if(e.getSource() == search) {
-                String profileSearch = searchBox.getText(); //the profile name entered by the user
-                searchBox.setText("");
-            }
-            if(e.getSource() == add) {
-                String profileAdd = addBox.getText(); //the profile name entered by the user
-                addBox.setText("");
+
+            if (e.getSource() == sendFriendRequest) {
+                //TODO update user's list of sent friend requests and other user's list of received friend requests
             }
         }
     };
+
+
 
     public void writeExportFile() throws IOException {
 
@@ -499,8 +504,8 @@ public class Profile implements Serializable, Runnable {
             }
         }
     }
+
+
 }
-
-
 
 
