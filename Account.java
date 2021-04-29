@@ -19,12 +19,11 @@ public class Account implements Serializable {
     private final String email;
     private final String password;
     private ArrayList<Profile> profiles;
-  
+
     //for Network I/O functionality
     transient IOMachine ioMachine;
 
     //frame and panels
-    ArrayList<JPanel> panelList;
     JFrame frame;
     JPanel bottomBar;
     JPanel mainPanel;
@@ -38,7 +37,7 @@ public class Account implements Serializable {
         this.password = password;
         this.profiles = profiles;
     }
-  
+
     public Account(Account account, IOMachine ioMachine) throws NullPointerException {
         this.email = account.getEmail();
         this.password = account.getPassword();
@@ -114,7 +113,6 @@ public class Account implements Serializable {
             profilePanel.add(profileName);
             profilePanel.add(view);
             profilePanel.add(delete);
-            panelList.add(profilePanel);
 
             //adds the profile panel to the main panel
             mainPanel.add(profilePanel);
@@ -127,7 +125,7 @@ public class Account implements Serializable {
         frame.setVisible(true);
     }
 
-    ActionListener bottomBarListener = new ActionListener() {
+    transient ActionListener bottomBarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == deleteAcc) {
                 ioMachine.deleteAccount(ioMachine.findAccount(email));
@@ -153,7 +151,7 @@ public class Account implements Serializable {
         }
     };
 
-    ActionListener profileListener = new ActionListener() {
+    transient ActionListener profileListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
 
 
@@ -177,7 +175,6 @@ public class Account implements Serializable {
                 profiles.remove(profileIndex);
 
                 //TODO figure out how to remove the panel from GUI
-                mainPanel.remove(panelList.get(profileIndex));
 
             }
         }
