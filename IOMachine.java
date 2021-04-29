@@ -128,7 +128,7 @@ public class IOMachine extends ObjectOutputStream {
         try {
             String result; //result returned from server
 
-            dos.writeObject("CreateAccount");
+            dos.writeObject("AddAccount");
             dos.writeObject(account.getEmail());
             dos.writeObject(account.getPassword());
 
@@ -263,5 +263,152 @@ public class IOMachine extends ObjectOutputStream {
             return false;
         }
     }
+
+    /**
+     * determines whether an account with the specified input information exists
+     *
+     * @param email - the email inputted in the email field on the Login screen
+     * @param password - the password inputted in the password field on the Login screen
+     *
+     * @return whether the account exists
+     */
+
+    public boolean validateAccount(String email, String password) {
+        try {
+            String result;
+
+            dos.writeObject(new String("Validate"));
+            dos.writeObject(email);
+            dos.writeObject(password);
+
+            result = (String) dis.readObject();
+
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * determines whether an account exists that is associated with the specific email
+     *
+     * @param email - the email inputted in the email text field on the Login screen
+     * @param password - the password inputted in the password field on the Login screen
+     *
+     * @return whether a new account is created for this unique email
+     */
+    public boolean createAccount (String email, String password) {
+        try {
+            String result;
+            dos.writeObject("CreateAccount");
+            dos.writeObject(email);
+            dos.writeObject(password);
+
+            result = (String) dis.readObject();
+
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * accepts a friend request
+     *
+     * @param username - the username selected in the JComboBox when the accept button is clicked
+     *
+     * @return whether the friend was added to the friends list and removed from the pending requests list
+     * */
+    public boolean acceptFriend(String username) {
+        try {
+            String result;
+
+            dos.writeObject("Accept");
+            dos.writeObject(username);
+
+            result = (String) dis.readObject();
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * declines a friend request
+     *
+     * @param username - the username selected in the JComboBox when the decline button is clicked
+     *
+     * @return whether the friend request was denied
+     */
+    public boolean declineFriend(String username) {
+        try {
+            String result;
+
+            dos.writeObject("Decline");
+            dos.writeObject(username);
+
+            result = (String) dis.readObject();
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    /**
+     * unfriends another user
+     *
+     * @param username - the username selected in the friends JComboBox when the Unfriend button is clicked
+     *
+     * @return whether the user was unfriended
+     * */
+    public boolean unfriend(String username) {
+        try {
+            String result;
+
+            dos.writeObject("Unfriend");
+            dos.writeObject(username);
+
+            result = (String) dis.readObject();
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * rescinds friend request
+     *
+     * @param username - the username selected in the sent request JComboBox when the rescind friend request
+     *                 button is clicked
+     *
+     * @return whether the friend request was rescinded
+     * */
+    public boolean rescindRequest(String username) {
+        try {
+            String result;
+
+            dos.writeObject("Rescind");
+            dos.writeObject(username);
+
+            result = (String) dis.readObject();
+            return result.equals("True");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }

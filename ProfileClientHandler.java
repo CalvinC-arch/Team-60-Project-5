@@ -160,7 +160,7 @@ class ProfileClientHandler extends Thread {
 
                         break;
 
-                    case "CreateAccount": //Creates an account and adds it to the Account Master ArrayList
+                    case "AddAccount": //Creates an account and adds it to the Account Master ArrayList
 
                         email = (String) dis.readObject();
                         password = (String) dis.readObject();
@@ -392,6 +392,54 @@ class ProfileClientHandler extends Thread {
                         if (!objectFound) { //if account not found, send back false
                             dos.writeObject("False");
                         }
+
+                    case "Validate":
+                        /*iterates through the list of all accounts to see if there is one with the same
+                        * email and password
+                        *
+                        * Receives: "Validate", then email, then password      Sends: True or False
+                        * */
+
+
+                    case "CreateAccount":
+                        /*iterates through the list of all accounts to see if there is one with the same
+                        * email; creates account with the specified email and password
+                        *
+                        * Receives: "CreateAccount", then email, then password     Sends: True or False
+                        * */
+
+                    case "Accept":
+                        /*must add username A to the list of friends for profile B, remove
+                        * username A from the list of pending friend requests for profile B,
+                        * add username B to the list of friends for profile A, and remove username B
+                        * from the sent requests for profile A
+                        *
+                        * Receives: "Accept", then username    Sends: True or False
+                        * */
+
+
+                    case "Decline":
+                        /*must remove username A from the list of pending friend requests of
+                        * profile B and remove username B from the list of sent requests for
+                        * profile A
+                        *
+                        * Receives: "Decline", then username     Sends: True or False
+                        * */
+
+                    case "Unfriend":
+                        /*must remove username A from the friend list of profile B and remove
+                        * username B from the friend list of profile A
+                        *
+                        * Receives: "Unfriend", then username   Sends: True or False
+                        * */
+
+                    case "Rescind":
+                        /*must remove username A from the list of sent requests of Profile B and
+                        * remove username B from the list of pending friend requests received
+                        * by Profile A
+                        *
+                        * Receives: "Rescind", then username     Sends: True or False
+                        * */
 
                     default: //if no cases match the command
                         System.out.println("You sent to the server, but didn't match a case :(");

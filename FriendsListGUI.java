@@ -30,6 +30,9 @@ import java.util.ArrayList;
 
 public class FriendsListGUI implements Runnable {
 
+    //Deals with network io
+    IOMachine ioMachine;
+
     //GUI elements are global fields
     JButton backButton;
 
@@ -44,16 +47,28 @@ public class FriendsListGUI implements Runnable {
     JButton viewProfileButton;
     JButton unfriendButton;
 
-    //Create the EDT
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new FriendsListGUI());
-    }
+    JFrame frame;
 
+    private ArrayList<String> sentList;
+    private ArrayList<String> receivedList;
+    private ArrayList<String> friendList;
+
+    //Create the EDT
+    /*public static void main(String[] args) {
+        SwingUtilities.invokeLater(new FriendsListGUI());
+    }*/
+
+    public FriendsListGUI(ArrayList<String> sentList, ArrayList<String> receivedList,
+                          ArrayList<String> friendList) throws NullPointerException {
+        this.sentList = sentList;
+        this.receivedList = receivedList;
+        this.friendList = friendList;
+    }
 
     //Assemble the GUI
     public void run() {
         //Settings for the JFrame
-        JFrame frame = new JFrame("CampsGram Friends List"); //title JFrame
+        frame = new JFrame("CampsGram Friends List"); //title JFrame
         frame.setSize(600, 240); //sets size of JFrame
         frame.setResizable(false); //makes JFrame unable to be resized
 
@@ -64,12 +79,19 @@ public class FriendsListGUI implements Runnable {
         northPanel.add(backButton);
         frame.add(northPanel, BorderLayout.NORTH);
 
-        //Add List of Friend Requests, Accept Button, Decline Button to Middle of Screen
+
         JPanel centralPanel = new JPanel();
         JPanel centralPanelNorth = new JPanel();
+        JLabel sent = new JLabel("Sent Friend Requests:");
+        centralPanelNorth.add(sent);
         requestsSentList = new JComboBox<>();
         requestsSentList.setMaximumRowCount(3);
-        //TODO: Add array elements to JComboBox
+
+        //Add sent requests to JComboBox
+        for (int i = 0; i < this.sentList.size(); i++) {
+            requestsSentList.addItem(sentList.get(i));
+        }
+
         centralPanelNorth.add(requestsSentList);
         rescindRequestButton = new JButton("Rescind Friend Request");
         rescindRequestButton.addActionListener(actionListener);
@@ -84,9 +106,16 @@ public class FriendsListGUI implements Runnable {
 
 
         JPanel centralPanelSouth = new JPanel();
+        JLabel received = new JLabel("Pending Friend Requests:");
+        centralPanelSouth.add(received);
         requestsPendingList = new JComboBox<>();
         requestsPendingList.setMaximumRowCount(3);
-        //TODO: Add array elements to JComboBox
+
+        //Add pending received friend requests to JComboBox
+        for (int i = 0; i < this.receivedList.size(); i++) {
+            requestsPendingList.addItem(receivedList.get(i));
+        }
+
         centralPanelSouth.add(requestsPendingList);
         acceptButton = new JButton("Accept");
         acceptButton.addActionListener(actionListener); //add action listener to accept button
@@ -112,7 +141,12 @@ public class FriendsListGUI implements Runnable {
         southPanel.add(friendsLabel);
         friendsList = new JComboBox<>();
         friendsList.setMaximumRowCount(3);
-        //TODO: Add Array Elements to JComboBox
+
+        //Add friends to JComboBox;
+        for (int i = 0; i < this.friendList.size(); i++) {
+            friendsList.addItem(friendList.get(i));
+        }
+
         southPanel.add(friendsList);
         viewProfileButton = new JButton("View Profile");
         viewProfileButton.addActionListener(actionListener); //add action listener to view profile button
@@ -139,191 +173,44 @@ public class FriendsListGUI implements Runnable {
     ActionListener actionListener = new ActionListener() {
        public void actionPerformed(ActionEvent e) {
            if (e.getSource() == acceptButton) {
-                if (acceptFriend()) {
-                    friendsList.addItem((String) requestsPendingList.getSelectedItem());
-                    requestsPendingList.removeItemAt(requestsPendingList.getSelectedIndex());
-                    //TODO: Auto-Update other user's friend list
-                }
+               String username = (String) requestsPendingList.getSelectedItem();
+               if (ioMachine.acceptFriend(username)) {
+                   friendsList.addItem(username);
+                   requestsPendingList.removeItem(username);
+               }
            } //code that is run if accept button is clicked
            if (e.getSource() == declineButton) {
-                if (declineFriend()) {
-                    requestsPendingList.removeItemAt(requestsPendingList.getSelectedIndex());
+               String username = (String) requestsPendingList.getSelectedItem();
+               if (ioMachine.declineFriend(username)) {
+                   requestsPendingList.removeItem(username);
 
-                }
+               }
            } //code that is run if decline button is clicked
            if (e.getSource() == viewProfileButton) {
-               if (viewProfile()) {
-                   //TODO: Display Friend's Profile
-               }
+               String username = (String) friendsList.getSelectedItem();
+               Profile friend = ioMachine.findProfile(username);
+               //TODO: Display Friend's Profile
+
            } //code that is run if view profile button is clicked
            if (e.getSource() == unfriendButton) {
-                if (unfriend()) {
-                    friendsList.removeItemAt(friendsList.getSelectedIndex());
-                    //TODO: Auto-Update other user's friend list
-                }
+               String username = (String) friendsList.getSelectedItem();
+               if (ioMachine.unfriend(username)) {
+                   friendsList.removeItem(username);
+               }
            } //code that is run if unfriend button is clicked
-           if (e.getSource() == backButton) {
-                if (back()) {
-                    //TODO: Display user's profile
-
-                }
-           } //code that is run if back button is clicked
            if (e.getSource() == rescindRequestButton) {
-               rescindRequest();
+               String username = (String) requestsSentList.getSelectedItem();
+               if (ioMachine.rescindRequest(username)) {
+                   requestsSentList.removeItem(username);
+               }
            }
+           if (e.getSource() == backButton) {
+               frame.dispose();
+           }//code that is run if back button is clicked
         }
     };
 
-    //Method sends signal to server that accept button was clicked
-    //Returns true or false depending on whether the proper processing was completed
-    public boolean acceptFriend() {
-        boolean friendAccepted = false;
-        String friend = (String) requestsPendingList.getSelectedItem();
-
-        try {
-            Socket client = new Socket("localhost", 1234);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter writer = new PrintWriter(client.getOutputStream());
-
-            writer.write("Accept");
-            writer.println();
-            writer.write(friend);
-            writer.println();
-
-            writer.flush();
-
-            String verification = reader.readLine();
-            if(verification.equals("True")){
-                friendAccepted = true;
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
-        }
-        return friendAccepted;
-    }
-
-    //Method sends signal to server that decline button was clicked
-    //Returns true or false depending on whether the proper processing was completed
-    public boolean declineFriend() {
-        boolean friendDeclined = false;
-        String friend = (String) requestsPendingList.getSelectedItem();
-
-        try {
-            Socket client = new Socket("localhost", 1234);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter writer = new PrintWriter(client.getOutputStream());
-
-            writer.write("Decline");
-            writer.println();
-            writer.write(friend);
-            writer.println();
-
-            writer.flush();
-
-            String verification = reader.readLine();
-            if(verification.equals("True")){
-                friendDeclined = true;
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
-        }
-        return friendDeclined;
-    }
-
-    //Method sends signal to server that view profile button was clicked
-    //Returns true or false depending on whether the proper processing was completed
-    public boolean viewProfile() {
-        boolean profileViewed = false;
-        String friend = (String) friendsList.getSelectedItem();
-
-        try {
-            Socket client = new Socket("localhost", 1234);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter writer = new PrintWriter(client.getOutputStream());
-
-            writer.write("View");
-            writer.println();
-            writer.write(friend);
-            writer.println();
-
-            writer.flush();
-
-            String verification = reader.readLine();
-            if(verification.equals("True")){
-                profileViewed = true;
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
-        }
-        return profileViewed;
-    }
-
-    //Method sends signal to server that unfriend button was clicked
-    //Returns true or false depending on whether the proper processing was completed
-    public boolean unfriend() {
-        boolean unfriended = false;
-        String friend = (String) requestsPendingList.getSelectedItem();
-
-        try {
-            Socket client = new Socket("localhost", 1234);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter writer = new PrintWriter(client.getOutputStream());
-
-            writer.write("Unfriend");
-            writer.println();
-            writer.write(friend);
-            writer.println();
-
-            writer.flush();
-
-            String verification = reader.readLine();
-            if(verification.equals("True")){
-                unfriended = true;
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
-        }
-        return unfriended;
-    }
-
-
-    //Method sends signal to server that back button was clicked
-    //Returns true or false depending on whether the proper processing was completed
-    //TODO: Improve functionality of this method
-    public boolean back() {
-        boolean back = false;
-
-        try {
-            Socket client = new Socket("localhost", 1234);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter writer = new PrintWriter(client.getOutputStream());
-
-            writer.write("Back");
-            writer.println();
-            writer.flush();
-
-            String verification = reader.readLine();
-            if(verification.equals("True")){
-                back = true;
-            }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error Has Occurred. Try Again.",
-                    "CampsGram", JOptionPane.ERROR_MESSAGE);
-        }
-        return back;
-    }
-
-    public void rescindRequest() {
-
-    }
 }
+
+
 
