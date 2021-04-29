@@ -20,27 +20,27 @@ public class Profile implements Serializable, Runnable {
     private String aboutMe;
 
     //Frames and Panels
-    JFrame frame;
-    JPanel topPanel;
-    JPanel bottomPanel;
+    transient JFrame frame;
+    transient JPanel topPanel;
+    transient JPanel bottomPanel;
 
     //top elements
-    JButton edit; //edit button
-    JButton requests; //requests button
+    transient  JButton edit; //edit button
+    transient JButton requests; //requests button
 
     //bottom elements
-    JTextField searchBox; //text box for searching users
-    JTextField addBox; //text box for adding users
-    JButton search; //search button
-    JButton add; //add user button
+    transient JTextField searchBox; //text box for searching users
+    transient JTextField addBox; //text box for adding users
+    transient JButton search; //search button
+    transient JButton add; //add user button
 
     //Text Boxes
-    JLabel nameText;
-    JLabel phoneText;
-    JLabel emailText;
-    JLabel educationText;
-    JLabel aboutMeText;
-    JLabel interestsText;
+    transient JLabel nameText;
+    transient JLabel phoneText;
+    transient JLabel emailText;
+    transient JLabel educationText;
+    transient JLabel aboutMeText;
+    transient JLabel interestsText;
 
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
                    String email, long phoneNumber, String aboutMe, ArrayList<String> requestsSent,
@@ -267,7 +267,7 @@ public class Profile implements Serializable, Runnable {
         frame.setVisible(true);
     }
 
-    ActionListener actionListener = new ActionListener() {
+    transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //TODO add I/O aspects to edit
             if(e.getSource() == edit) {
