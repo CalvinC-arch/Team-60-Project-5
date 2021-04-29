@@ -265,21 +265,21 @@ public class IOMachine extends ObjectOutputStream {
     }
 
     /**
-     * determines whether an account with the specified input information exists
+     * sends a friend request
      *
-     * @param email - the email inputted in the email field on the Login screen
-     * @param password - the password inputted in the password field on the Login screen
+     * @param username - the username receiving the request
+     * @param requester - the username sending the request
      *
-     * @return whether the account exists
-     */
+     * @return whether the friend was added to the friends list and removed from the pending requests list
+     * */
 
-    public boolean validateAccount(String email, String password) {
+    public boolean sendRequest(String username, String requester) {
         try {
             String result;
 
-            dos.writeObject(new String("Validate"));
-            dos.writeObject(email);
-            dos.writeObject(password);
+            dos.writeObject("SendRequest");
+            dos.writeObject(username);
+            dos.writeObject(requester);
 
             result = (String) dis.readObject();
 
@@ -289,46 +289,24 @@ public class IOMachine extends ObjectOutputStream {
             e.printStackTrace();
             return false;
         }
-    }
 
-    /**
-     * determines whether an account exists that is associated with the specific email
-     *
-     * @param email - the email inputted in the email text field on the Login screen
-     * @param password - the password inputted in the password field on the Login screen
-     *
-     * @return whether a new account is created for this unique email
-     */
-    public boolean createAccount (String email, String password) {
-        try {
-            String result;
-            dos.writeObject("CreateAccount");
-            dos.writeObject(email);
-            dos.writeObject(password);
-
-            result = (String) dis.readObject();
-
-            return result.equals("True");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     /**
      * accepts a friend request
      *
-     * @param username - the username selected in the JComboBox when the accept button is clicked
+     * @param username - the person accepting the request
+     * @param requester - the person whose request is accepted
      *
      * @return whether the friend was added to the friends list and removed from the pending requests list
      * */
-    public boolean acceptFriend(String username) {
+    public boolean acceptFriend(String username, String requester) {
         try {
             String result;
 
-            dos.writeObject("Accept");
+            dos.writeObject("AcceptFriend");
             dos.writeObject(username);
+            dos.writeObject(requester);
 
             result = (String) dis.readObject();
             return result.equals("True");
@@ -346,7 +324,7 @@ public class IOMachine extends ObjectOutputStream {
      *
      * @return whether the friend request was denied
      */
-    public boolean declineFriend(String username) {
+    public boolean declineFriend(String username, String requester) {
         try {
             String result;
 
@@ -394,6 +372,7 @@ public class IOMachine extends ObjectOutputStream {
      *
      * @return whether the friend request was rescinded
      * */
+
     public boolean rescindRequest(String username) {
         try {
             String result;
