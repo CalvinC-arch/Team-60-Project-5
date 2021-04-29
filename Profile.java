@@ -424,14 +424,6 @@ public class Profile implements Serializable, Runnable {
         this.friends = friends;
     }
 
-    public void setRequestsSent(ArrayList<String> requestsSent) {
-        this.requestsSent = requestsSent;
-    }
-
-    public void setRequestsReceived(ArrayList<String> requestsReceived) {
-        this.requestsSent = requestsSent;
-    }
-
     public void addFriend(String friend) { //TODO change this
         this.friends.add(friend);
     }
@@ -472,4 +464,41 @@ public class Profile implements Serializable, Runnable {
         this.username = username;
     }
 
+    public void setRequestsSent(ArrayList<String> requestsSent) {
+        this.requestsSent = requestsSent;
+    }
+
+    public void addSentRequest(String username) {
+        this.requestsSent.add(username);
+    }
+
+    public void removeSentRequest(String username) {
+        for (int i = 0; i < requestsSent.size(); i++) {
+
+            if (requestsSent.get(i).equals(username)) {
+                requestsSent.remove(i);
+            }
+        }
+    }
+
+    public void setRequestsReceived(ArrayList<String> requestsReceived) {
+        this.requestsSent = requestsSent;
+    }
+
+    public void addReceivedRequest(String username) {
+        this.requestsReceived.add(username);
+    }
+
+    public void removeReceivedRequest(String username) {
+        for (int i = 0; i < requestsReceived.size(); i++) {
+
+            if (requestsReceived.get(i).equals(username)) {
+                requestsReceived.remove(i);
+            }
+        }
+    }
 }
+
+
+
+
