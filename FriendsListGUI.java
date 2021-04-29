@@ -49,6 +49,7 @@ public class FriendsListGUI implements Runnable {
 
     JFrame frame;
 
+    //Fields for creating FriendsListGUI object
     private ArrayList<String> sentList;
     private ArrayList<String> receivedList;
     private ArrayList<String> friendList;
@@ -58,6 +59,7 @@ public class FriendsListGUI implements Runnable {
         SwingUtilities.invokeLater(new FriendsListGUI());
     }*/
 
+    //FriendsListGUI object constructor
     public FriendsListGUI(ArrayList<String> sentList, ArrayList<String> receivedList,
                           ArrayList<String> friendList) throws NullPointerException {
         this.sentList = sentList;
@@ -79,7 +81,6 @@ public class FriendsListGUI implements Runnable {
         northPanel.add(backButton);
         frame.add(northPanel, BorderLayout.NORTH);
 
-
         JPanel centralPanel = new JPanel();
         JPanel centralPanelNorth = new JPanel();
         JLabel sent = new JLabel("Sent Friend Requests:");
@@ -94,16 +95,16 @@ public class FriendsListGUI implements Runnable {
 
         centralPanelNorth.add(requestsSentList);
         rescindRequestButton = new JButton("Rescind Friend Request");
-        rescindRequestButton.addActionListener(actionListener);
+        rescindRequestButton.addActionListener(actionListener); //add action listener to rescind friend request button
         centralPanelNorth.add(rescindRequestButton);
         centralPanel.add(centralPanelNorth, BorderLayout.NORTH);
 
+        //If no sent friend requests, disable rescind friend request button
         if(requestsSentList.getItemCount() == 0) {
             rescindRequestButton.setEnabled(false);
         } else {
             rescindRequestButton.setEnabled(true);
         }
-
 
         JPanel centralPanelSouth = new JPanel();
         JLabel received = new JLabel("Pending Friend Requests:");
@@ -126,7 +127,7 @@ public class FriendsListGUI implements Runnable {
         centralPanel.add(centralPanelSouth, BorderLayout.SOUTH);
         frame.add(centralPanel, BorderLayout.CENTER);
 
-        //If no friend requests, disable accept and decline buttons
+        //If no received friend requests, disable accept and decline buttons
         if (requestsPendingList.getItemCount() == 0) {
             acceptButton.setEnabled(false);
             declineButton.setEnabled(false);
@@ -174,38 +175,38 @@ public class FriendsListGUI implements Runnable {
        public void actionPerformed(ActionEvent e) {
            if (e.getSource() == acceptButton) {
                String username = (String) requestsPendingList.getSelectedItem();
-               if (ioMachine.acceptFriend(username)) {
-                   friendsList.addItem(username);
-                   requestsPendingList.removeItem(username);
+               if (ioMachine.acceptFriend(username)) { //changes saved in server
+                   friendsList.addItem(username); //update friends list with newly accepted friend
+                   requestsPendingList.removeItem(username); //remove newly accepted friend from list of pending friend requests
                }
            } //code that is run if accept button is clicked
            if (e.getSource() == declineButton) {
                String username = (String) requestsPendingList.getSelectedItem();
-               if (ioMachine.declineFriend(username)) {
-                   requestsPendingList.removeItem(username);
+               if (ioMachine.declineFriend(username)) { //changes saved in server
+                   requestsPendingList.removeItem(username); //remove newly denied friend from the list of pending friend requests
 
                }
            } //code that is run if decline button is clicked
            if (e.getSource() == viewProfileButton) {
                String username = (String) friendsList.getSelectedItem();
-               Profile friend = ioMachine.findProfile(username);
+               Profile friend = ioMachine.findProfile(username); //retrieve friend's profile from the server
                //TODO: Display Friend's Profile
 
            } //code that is run if view profile button is clicked
            if (e.getSource() == unfriendButton) {
                String username = (String) friendsList.getSelectedItem();
-               if (ioMachine.unfriend(username)) {
-                   friendsList.removeItem(username);
+               if (ioMachine.unfriend(username)) { //changes saved in server
+                   friendsList.removeItem(username); //remove newly unfriended user from the account's friend list
                }
            } //code that is run if unfriend button is clicked
            if (e.getSource() == rescindRequestButton) {
                String username = (String) requestsSentList.getSelectedItem();
-               if (ioMachine.rescindRequest(username)) {
-                   requestsSentList.removeItem(username);
+               if (ioMachine.rescindRequest(username)) { //changes saved in server
+                   requestsSentList.removeItem(username); //remove user from the list of pending sent friends requests
                }
            }
            if (e.getSource() == backButton) {
-               frame.dispose();
+               frame.dispose(); //close the GUI screen
            }//code that is run if back button is clicked
         }
     };
