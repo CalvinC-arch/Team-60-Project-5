@@ -105,7 +105,7 @@ public class TestProfileCSV {
          friends.add("Naia");
         friends.add("Calvin");
          Profile jeff = new Profile("chen3801", interests, friends, "Purdue University",
-                "chen3801@purdue.edu", 5167341551L, "hello, I am Jeff");
+                "chen3801@purdue.edu", 5167341551L, "hello, I am Jeff", new ArrayList<>(), new ArrayList<>());
          jeff.writeExportFile();
 
         /*

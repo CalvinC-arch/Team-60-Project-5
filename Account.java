@@ -134,7 +134,7 @@ public class Account implements Serializable {
                 String aboutMe = EnterInfoGUI.showAboutInputDialog();
 
                 //creates a new profile and adds it to the array list of profiles
-                Profile profile = new Profile(name, interests, friends, education, email, phone, aboutMe);
+                Profile profile = new Profile(name, interests, friends, education, email, phone, aboutMe, new ArrayList<>(), new ArrayList<>());
                 profiles.add(profile);
 
                 //TODO add updating functionality
