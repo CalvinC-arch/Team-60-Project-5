@@ -32,21 +32,6 @@ public class ProfileServer
 
         ServerSocket ss = new ServerSocket(1234); //server socket that the server uses to connect to clients
 
-        //TEST SECTION
-
-        //Create profiles array list for the account
-        ArrayList<Profile> profiles = new ArrayList<>();
-        Profile calvin = new Profile("testProfile.csv");
-        Profile jeff =  new Profile("chen3801Export.csv");
-        profiles.add(calvin);
-        profiles.add(jeff);
-
-        //Create account for server to use
-        Account account = new Account("ccarta@purdue.edu", "12345", profiles);
-        accounts.add(account);
-
-        //END OF TEST SECTION
-
         while (true) //loops indefinitely so that the server is always responsive to new connections
         {
             Socket s = null; //socket used by the client
