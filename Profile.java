@@ -17,6 +17,8 @@ public class Profile implements Serializable, Runnable {
     private String email;
     private long phoneNumber;
     private String aboutMe;
+    private ArrayList<String> requestSent;
+    private ArrayList<String> requestReceived;
 
     //Frames and Panels
     transient JFrame frame;
