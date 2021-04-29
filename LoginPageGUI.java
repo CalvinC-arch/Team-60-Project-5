@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class LoginPageGUI implements Runnable {
 
     // Deals with network I/O
-    IOMachine ioMachine;
+    transient IOMachine ioMachine;
 
     //Make GUI elements global fields
     JLabel instructions;
@@ -36,6 +36,9 @@ public class LoginPageGUI implements Runnable {
     JTextField passwordField;
     JButton enterButton;
     JButton makeAccountButton;
+
+    //TEST BUTTON
+    JButton testButton;
 
     public LoginPageGUI(IOMachine ioMachine) {
         this.ioMachine = ioMachine;
@@ -68,6 +71,11 @@ public class LoginPageGUI implements Runnable {
         makeAccountButton.addActionListener(actionListener); //add action listener to respond to button clicks
         panel.add(makeAccountButton);
 
+        //TEST BUTTON
+        testButton = new JButton("Test");
+        testButton.addActionListener(actionListener);
+        panel.add(testButton);
+
        
         frame.add(panel, BorderLayout.CENTER); //add JPanel to JFrame
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
@@ -77,6 +85,7 @@ public class LoginPageGUI implements Runnable {
 
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) { //detects button clicks
+;
             if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
                 //variables to use in the method
                 boolean validAccount = false;
@@ -126,63 +135,62 @@ public class LoginPageGUI implements Runnable {
                 String email;
                 String password;
 
-                while (!accountCreated) {
-                    //Checks whether input fields are empty. Display prompts user to fill out all fields
-                    if (emailField.getText() == null || passwordField.getText() == null) {
-                        JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
-                                "CampsGram", JOptionPane.ERROR_MESSAGE);
-                        //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
-                    } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
-                        emailField.setText("");
-                        JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
-                                "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+                //Checks whether input fields are empty. Display prompts user to fill out all fields
+                if (emailField.getText() == null || passwordField.getText() == null) {
+                    JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
+                            "CampsGram", JOptionPane.ERROR_MESSAGE);
+                    //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+                } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
+                    emailField.setText("");
+                    JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
+                            "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                        //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
-                    } else if (passwordField.getText().length() < 8) {
-                        passwordField.setText("");
-                        JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
-                                "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+                    //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+                } else if (passwordField.getText().length() < 8) {
+                    passwordField.setText("");
+                    JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
+                            "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                    } else {
-                        //If email and password have proper format, store them in variables
-                        email = emailField.getText(); //store email
-                        emailField.setText(""); //reset email field
-                        password = passwordField.getText(); //store password
-                        passwordField.setText(""); //reset password field
+                } else {
+                    //If email and password have proper format, store them in variables
+                    email = emailField.getText(); //store email
+                    emailField.setText(""); //reset email field
+                    password = passwordField.getText(); //store password
+                    passwordField.setText(""); //reset password field
 
-                        //Sends a new account to the server
-                        Account tempAccount = new Account(email, password, new ArrayList<Profile>());
-                        accountCreated = ioMachine.addAccount(tempAccount);
-                        if (accountCreated) {
-                            Account account = new Account(ioMachine.findAccount(email), ioMachine);
-                            account.run();
-                        }
+                    //Sends a new account to the server
+                    Account tempAccount = new Account(email, password, new ArrayList<Profile>());
+                    accountCreated = ioMachine.addAccount(tempAccount);
+                    if (accountCreated) {
+                        Account account = new Account(ioMachine.findAccount(email), ioMachine);
+                        account.run();
                     }
-
                 }
 
-                /**gets the text in the email and password fields
-                String accountName = emailField.getText();
-                String password = passwordField.getText();
+            }
+            if (e.getSource() == testButton) {
+                System.out.println("123");
 
-                //TODO removes sample profiles in final version code
                 //adds sample profiles for testing purposes
                 ArrayList<Profile> profiles = new ArrayList<>();
-                for(int i = 0; i < 7; i++) {
+                for (int i = 0; i < 7; i++) {
                     profiles.add(new Profile());
                 }
 
                 //creates a new account object
-                Account newAccount = new Account(emailField.getText(), passwordField.getText(), profiles);
+                Account newAccount = new Account("Will@purdue.edu", "12345678", profiles);
+                newAccount = new Account(newAccount, ioMachine);
 
                 //adds the account to the server
                 ioMachine.addAccount(newAccount);
 
                 //runs the new account
-                newAccount.run();*/
+                newAccount.run();
             }
+
         }
     };
+
 
 
 }
