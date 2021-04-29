@@ -297,9 +297,9 @@ public class Profile implements Serializable, Runnable {
             }
             if(e.getSource() == requests) {
                 //Opens the Friends List GUI
-                /*Profile profile = new Profile();
-                FriendsListGUI friends = new FriendsListGUI();
-                friends.run();*/
+                FriendsListGUI friends = new FriendsListGUI(getUsername(), getRequestsSent(),
+                        getRequestsReceived(), getFriends());
+                friends.run();
             }
 
             if (e.getSource() == sendFriendRequest) {
