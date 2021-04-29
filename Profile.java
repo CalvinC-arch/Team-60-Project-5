@@ -12,6 +12,8 @@ public class Profile implements Serializable, Runnable {
     private String username;
     private ArrayList<String> interests;
     private ArrayList<String> friends;
+    private ArrayList<String> requestsSent;
+    private ArrayList<String> requestsReceived;
     private String education;
     private String email;
     private long phoneNumber;
@@ -41,7 +43,8 @@ public class Profile implements Serializable, Runnable {
     JLabel interestsText;
 
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
-                   String email, long phoneNumber, String aboutMe) {
+                   String email, long phoneNumber, String aboutMe, ArrayList<String> requestsSent,
+                   ArrayList<String> requestsReceived) {
 
         this.username = username;
         this.interests = interests;
@@ -50,6 +53,8 @@ public class Profile implements Serializable, Runnable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.aboutMe = aboutMe;
+        this.requestsSent = requestsSent;
+        this.requestsReceived = requestsReceived;
     }
 
     public Profile() {
@@ -86,6 +91,8 @@ public class Profile implements Serializable, Runnable {
         //initialize new interests and friends lists so they can be added to
         this.interests = new ArrayList<>();
         this.friends = new ArrayList<>();
+        this.requestsReceived = new ArrayList<>();
+        this.requestsSent = new ArrayList<>();
 
         //read from file, runs while the boolean indicating the file has been read is false
         while (!fileRead) {
@@ -169,6 +176,7 @@ public class Profile implements Serializable, Runnable {
 
         //remove last two characters, as the aboutMe loop will leave a comma and space at the end of the process
         this.aboutMe = this.aboutMe.substring(0, this.aboutMe.length() - 2);
+        //TODO: assign requests sent and requests received
     }
     /*this constructor creates another profile object identical to the one passed to it as an argument, it will be used
     when the server send profiles back to the client to display after logging in*/
@@ -180,6 +188,8 @@ public class Profile implements Serializable, Runnable {
         this.email = profile.getEmail();
         this.phoneNumber = profile.getPhoneNumber();
         this.aboutMe = profile.getAboutMe();
+        this.requestsSent = profile.getRequestsSent();
+        this.requestsReceived = profile.getRequestsReceived();
     }
 
     public void run() {
@@ -278,7 +288,8 @@ public class Profile implements Serializable, Runnable {
             }
             if(e.getSource() == requests) {
                 //Opens the Friends List GUI
-                new FriendsListGUI().run(); //TODO update this once the friends list GUI is more operational
+                FriendsListGUI friends = new FriendsListGUI(getRequestsSent(), getRequestsReceived(), getFriends());
+                friends.run(); //TODO update this once the friends list GUI is more operational
             }
             //TODO Utilize retrieved strings from bottom panel I/O to open and befriend the requested profiles
             if(e.getSource() == search) {
@@ -389,6 +400,14 @@ public class Profile implements Serializable, Runnable {
         return this.aboutMe;
     }
 
+    public ArrayList<String> getRequestsSent() {
+        return this.requestsSent;
+    }
+
+    public ArrayList<String> getRequestsReceived() {
+        return this.requestsReceived;
+    }
+
     public void setAboutMe(String aboutMe) {
         this.aboutMe = aboutMe;
     }
@@ -403,6 +422,14 @@ public class Profile implements Serializable, Runnable {
 
     public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
+    }
+
+    public void setRequestsSent(ArrayList<String> requestsSent) {
+        this.requestsSent = requestsSent;
+    }
+
+    public void setRequestsReceived(ArrayList<String> requestsReceived) {
+        this.requestsSent = requestsSent;
     }
 
     public void addFriend(String friend) { //TODO change this
