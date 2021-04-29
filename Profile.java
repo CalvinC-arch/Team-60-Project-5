@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.Transient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
@@ -13,38 +12,39 @@ public class Profile implements Serializable, Runnable {
     private String username;
     private ArrayList<String> interests;
     private ArrayList<String> friends;
+    private ArrayList<String> requestsSent;
+    private ArrayList<String> requestsReceived;
     private String education;
     private String email;
     private long phoneNumber;
     private String aboutMe;
-    private ArrayList<String> requestSent;
-    private ArrayList<String> requestReceived;
 
     //Frames and Panels
-    transient JFrame frame;
-    transient JPanel topPanel;
-    transient JPanel bottomPanel;
+    JFrame frame;
+    JPanel topPanel;
+    JPanel bottomPanel;
 
     //top elements
-    transient JButton edit; //edit button
-    transient JButton requests; //requests button
+    JButton edit; //edit button
+    JButton requests; //requests button
 
     //bottom elements
-    transient JTextField searchBox; //text box for searching users
-    transient JTextField addBox; //text box for adding users
-    transient JButton search; //search button
-    transient JButton add; //add user button
+    JTextField searchBox; //text box for searching users
+    JTextField addBox; //text box for adding users
+    JButton search; //search button
+    JButton add; //add user button
 
     //Text Boxes
-    transient JLabel nameText;
-    transient JLabel phoneText;
-    transient JLabel emailText;
-    transient JLabel educationText;
-    transient JLabel aboutMeText;
-    transient JLabel interestsText;
+    JLabel nameText;
+    JLabel phoneText;
+    JLabel emailText;
+    JLabel educationText;
+    JLabel aboutMeText;
+    JLabel interestsText;
 
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
-                   String email, long phoneNumber, String aboutMe) {
+                   String email, long phoneNumber, String aboutMe, ArrayList<String> requestsSent,
+                   ArrayList<String> requestsReceived) {
 
         this.username = username;
         this.interests = interests;
@@ -53,6 +53,8 @@ public class Profile implements Serializable, Runnable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.aboutMe = aboutMe;
+        this.requestsSent = requestsSent;
+        this.requestsReceived = requestsReceived;
     }
 
     public Profile() {
@@ -89,6 +91,8 @@ public class Profile implements Serializable, Runnable {
         //initialize new interests and friends lists so they can be added to
         this.interests = new ArrayList<>();
         this.friends = new ArrayList<>();
+        this.requestsReceived = new ArrayList<>();
+        this.requestsSent = new ArrayList<>();
 
         //read from file, runs while the boolean indicating the file has been read is false
         while (!fileRead) {
@@ -172,6 +176,7 @@ public class Profile implements Serializable, Runnable {
 
         //remove last two characters, as the aboutMe loop will leave a comma and space at the end of the process
         this.aboutMe = this.aboutMe.substring(0, this.aboutMe.length() - 2);
+        //TODO: assign requests sent and requests received
     }
     /*this constructor creates another profile object identical to the one passed to it as an argument, it will be used
     when the server send profiles back to the client to display after logging in*/
@@ -183,6 +188,8 @@ public class Profile implements Serializable, Runnable {
         this.email = profile.getEmail();
         this.phoneNumber = profile.getPhoneNumber();
         this.aboutMe = profile.getAboutMe();
+        this.requestsSent = profile.getRequestsSent();
+        this.requestsReceived = profile.getRequestsReceived();
     }
 
     public void run() {
@@ -260,7 +267,7 @@ public class Profile implements Serializable, Runnable {
         frame.setVisible(true);
     }
 
-    transient ActionListener actionListener = new ActionListener() {
+    ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //TODO add I/O aspects to edit
             if(e.getSource() == edit) {
@@ -281,7 +288,8 @@ public class Profile implements Serializable, Runnable {
             }
             if(e.getSource() == requests) {
                 //Opens the Friends List GUI
-                new FriendsListGUI().run(); //TODO update this once the friends list GUI is more operational
+                FriendsListGUI friends = new FriendsListGUI(getRequestsSent(), getRequestsReceived(), getFriends());
+                friends.run(); //TODO update this once the friends list GUI is more operational
             }
             //TODO Utilize retrieved strings from bottom panel I/O to open and befriend the requested profiles
             if(e.getSource() == search) {
@@ -392,6 +400,14 @@ public class Profile implements Serializable, Runnable {
         return this.aboutMe;
     }
 
+    public ArrayList<String> getRequestsSent() {
+        return this.requestsSent;
+    }
+
+    public ArrayList<String> getRequestsReceived() {
+        return this.requestsReceived;
+    }
+
     public void setAboutMe(String aboutMe) {
         this.aboutMe = aboutMe;
     }
@@ -448,4 +464,41 @@ public class Profile implements Serializable, Runnable {
         this.username = username;
     }
 
+    public void setRequestsSent(ArrayList<String> requestsSent) {
+        this.requestsSent = requestsSent;
+    }
+
+    public void addSentRequest(String username) {
+        this.requestsSent.add(username);
+    }
+
+    public void removeSentRequest(String username) {
+        for (int i = 0; i < requestsSent.size(); i++) {
+
+            if (requestsSent.get(i).equals(username)) {
+                requestsSent.remove(i);
+            }
+        }
+    }
+
+    public void setRequestsReceived(ArrayList<String> requestsReceived) {
+        this.requestsSent = requestsSent;
+    }
+
+    public void addReceivedRequest(String username) {
+        this.requestsReceived.add(username);
+    }
+
+    public void removeReceivedRequest(String username) {
+        for (int i = 0; i < requestsReceived.size(); i++) {
+
+            if (requestsReceived.get(i).equals(username)) {
+                requestsReceived.remove(i);
+            }
+        }
+    }
 }
+
+
+
+
