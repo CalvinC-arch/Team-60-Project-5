@@ -69,6 +69,16 @@ public class FriendsListGUI implements Runnable {
         this.friendList = friendList;
     }
 
+    public FriendsListGUI(FriendsListGUI list, IOMachine ioMachine) throws NullPointerException {
+        this.username = list.username;
+        this.sentList = list.sentList;
+        this.receivedList = list.receivedList;
+        this.friendList = list.friendList;
+        this.ioMachine = ioMachine;
+    }
+
+
+
     public String getUsername() {
         return this.username;
     }

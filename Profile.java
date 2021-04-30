@@ -19,6 +19,8 @@ public class Profile implements Serializable, Runnable {
     private long phoneNumber;
     private String aboutMe;
 
+    IOMachine ioMachine;
+
     //Frames and Panels
     JFrame frame;
     JPanel topPanel;
@@ -179,7 +181,7 @@ public class Profile implements Serializable, Runnable {
     }
     /*this constructor creates another profile object identical to the one passed to it as an argument, it will be used
     when the server send profiles back to the client to display after logging in*/
-    public Profile(Profile profile) {
+    public Profile(Profile profile, IOMachine ioMachine) {
         this.username = profile.getUsername();
         this.interests = profile.getInterests();
         this.friends = profile.getFriends();
@@ -189,6 +191,7 @@ public class Profile implements Serializable, Runnable {
         this.aboutMe = profile.getAboutMe();
         this.requestsSent = profile.getRequestsSent();
         this.requestsReceived = profile.getRequestsReceived();
+        this.ioMachine = ioMachine;
     }
 
     public void run() {
@@ -219,8 +222,6 @@ public class Profile implements Serializable, Runnable {
         sendFriendRequest = new JButton("Send Friend Request");
         sendFriendRequest.addActionListener(actionListener); //add action listener to button
         bottomPanel.add(sendFriendRequest);
-        JLabel username = new JLabel("Enter Username");
-        bottomPanel.add(username);
 
         frame.add(bottomPanel, BorderLayout.SOUTH); // add panel to frame
 
@@ -228,33 +229,52 @@ public class Profile implements Serializable, Runnable {
 
         //name panel
         JPanel namePanel = new JPanel();
-        nameText = new JLabel("USER: " + username);
+        nameText = new JLabel("USER:          ");
         namePanel.add(nameText);
+        JTextArea usernameArea = new JTextArea(this.username, 5, 15);
+        usernameArea.setEditable(false);
+        namePanel.add(usernameArea);
 
         //phone panel
         JPanel phonePanel = new JPanel();
-        phoneText = new JLabel("PHONE: " + this.phoneNumber);
+        phoneText = new JLabel("PHONE:          ");
         phonePanel.add(phoneText);
+        JTextArea phoneArea = new JTextArea(formatPhoneString(this.phoneNumber), 5, 15);
+        phoneArea.setEditable(false);
+        phonePanel.add(phoneArea);
 
         //email panel
         JPanel emailPanel = new JPanel();
-        emailText = new JLabel("EMAIL: " + this.email);
+        emailText = new JLabel("EMAIL:         ");
         emailPanel.add(emailText);
+        JTextArea emailArea = new JTextArea(this.email, 5,15);
+        emailArea.setEditable(false);
+        emailPanel.add(emailArea);
 
         //education panel
         JPanel educationPanel = new JPanel();
-        educationText = new JLabel("EDUCATION: " + this.education);
+        educationText = new JLabel("EDUCATION: ");
         educationPanel.add(educationText);
+        JTextArea educationArea = new JTextArea(this.education, 5, 15);
+        educationArea.setEditable(false);
+        educationPanel.add(educationArea);
 
         //about me panel
         JPanel aboutMePanel = new JPanel();
-        aboutMeText = new JLabel("ABOUT ME:\n" + formatAboutString(aboutMe));
+        aboutMeText = new JLabel("ABOUT ME:");
         aboutMePanel.add(aboutMeText);
+        JTextArea aboutMeArea = new JTextArea(formatAboutString(this.aboutMe), 8, 15);
+        aboutMeArea.setEditable(false);
+        aboutMePanel.add(aboutMeArea);
+
 
         //interests panel
         JPanel interestsPanel = new JPanel();
-        interestsText = new JLabel("INTERESTS:\n" + formatInterestsString(interests));
+        interestsText = new JLabel("INTERESTS:  ");
         interestsPanel.add(interestsText);
+        JTextArea interestArea = new JTextArea(formatInterestsString(this.interests), 8, 15);
+        interestArea.setEditable(false);
+        interestsPanel.add(interestArea);
 
         //Combines the above three panels in grid layout
         JPanel profilePanel = new JPanel();
@@ -297,13 +317,14 @@ public class Profile implements Serializable, Runnable {
             }
             if(e.getSource() == requests) {
                 //Opens the Friends List GUI
-                FriendsListGUI friends = new FriendsListGUI(getUsername(), getRequestsSent(),
-                        getRequestsReceived(), getFriends());
-                friends.run();
+                FriendsListGUI friend = new FriendsListGUI(username, requestsSent,
+                        requestsReceived, friends);
+                friend.run();
             }
 
             if (e.getSource() == sendFriendRequest) {
-                //TODO update user's list of sent friend requests and other user's list of received friend requests
+                String requestedUser = (String) users.getSelectedItem();
+                //TODO:ioMachine.sendRequest(username, requestedUser);
             }
         }
     };

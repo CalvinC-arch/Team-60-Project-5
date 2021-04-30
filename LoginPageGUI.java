@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @version May 03, 2021
  * */
 
-public class LoginPageGUI implements Runnable {
+public class  LoginPageGUI implements Runnable {
 
     // Deals with network I/O
     transient IOMachine ioMachine;
@@ -93,46 +93,49 @@ public class LoginPageGUI implements Runnable {
                 String email;
                 String password;
 
-                while (!validAccount) {
-                    //Checks whether input fields are empty. Display prompts user to fill out all fields if not.
-                    if (emailField.getText() == null || passwordField.getText() == null) {
-                        JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
-                                "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                        //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
-                    } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
-                        emailField.setText("");
-                        JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
-                                "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+                //Checks whether input fields are empty. Display prompts user to fill out all fields if not.
+                if (emailField.getText().equals("") || passwordField.getText().equals("")) {
+                    emailField.setText("");
+                    passwordField.setText("");
+                    JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
+                            "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                        //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
-                    } else if (passwordField.getText().length() < 8) {
-                        passwordField.setText("");
-                        JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
-                                "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
+                    //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+                } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
+                    emailField.setText("");
+                    passwordField.setText("");
+                    JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
+                            "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                    } else {
-                        //If inputs are in the proper format, they are stored as variables
-                        email = emailField.getText(); //store email field input in variable
-                        emailField.setText(""); //reset the text field to empty
-                        password = passwordField.getText(); //store password field input in variable
-                        passwordField.setText(""); //reset the text field to empty
+                    //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+                } else if (passwordField.getText().length() < 8) {
+                    emailField.setText("");
+                    passwordField.setText("");
+                    JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
+                            "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                        //Tries to connect to server and send inputs
+                } else {
+                    //If inputs are in the proper format, they are stored as variables
+                    email = emailField.getText(); //store email field input in variable
+                    emailField.setText(""); //reset the text field to empty
+                    password = passwordField.getText(); //store password field input in variable
+                    passwordField.setText(""); //reset the text field to empty
+
+                    //Tries to connect to server and send inputs
                       
-                        validate = ioMachine.findAccount(email);
+                    validate = ioMachine.findAccount(email);
                         
-                        if (validate.getPassword().equals(password)) {
-                            validAccount = true;
-                        }
-                        
-                        if (validAccount) {
-                            Account account = new Account(ioMachine.findAccount(email), ioMachine);
-                            account.run();
-                        }
+                    if (validate.getPassword().equals(password)) {
+                        validAccount = true;
                     }
-
+                        
+                    if (validAccount) {
+                        Account account = new Account(ioMachine.findAccount(email), ioMachine);
+                        account.run();
+                    }
                 }
+
 
             }
             if (e.getSource() == makeAccountButton) { //Code to perform when Make Account Button is clicked
