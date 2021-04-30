@@ -337,6 +337,7 @@ public class Profile implements Serializable, Runnable {
             //creating new file and printWriter for this profile
             File f = new File(this.username + "Export.csv");
             PrintWriter pw = new PrintWriter(new FileWriter(f, false));
+
             pw.print(this.username + ',' + interests.size() + ',');
 
             //loop to write each element of interests list to file
@@ -353,6 +354,21 @@ public class Profile implements Serializable, Runnable {
             }
 
             pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
+            
+            pw.print(this.getRequestsReceived().size());
+
+            //loop to write each element of friend requests received list to file
+            for (int x = 0; x < requestsReceived.size(); x++) {
+                pw.print(requestsReceived.get(x) + ',');
+            }
+
+            pw.print(this.getRequestsSent().size());
+
+            //loop to write each element of friend requests sent list to file
+            for (int x = 0; x < requestsSent.size(); x++) {
+                pw.print(requestsSent.get(x) + ',');
+            }
+            
             pw.close();
 
         } catch (IOException e) { //If the file is open or another error occurs, display this error message
