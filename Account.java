@@ -32,6 +32,8 @@ public class Account implements Serializable {
     //bottom bar buttons
     JButton deleteAcc; //deletes the account
     JButton addProfile; //creates a new profile when pushed
+    JTextField importFileField; //field where user may enter a file name
+    JButton importButton; //if the file is valid, the profile is imported
 
     public Account(String email, String password, ArrayList<Profile> profiles) throws NullPointerException {
         this.email = email;
@@ -90,8 +92,15 @@ public class Account implements Serializable {
         deleteAcc.addActionListener(bottomBarListener);
         addProfile = new JButton("Add Profile");
         addProfile.addActionListener(bottomBarListener);
+        JLabel importProfile = new JLabel("Import Profile:");
+        importFileField = new JTextField("", 10);
+        importButton = new JButton("Import");
+        importButton.addActionListener(bottomBarListener);
         bottomBar.add(deleteAcc);
         bottomBar.add(addProfile);
+        bottomBar.add(importProfile);
+        bottomBar.add(importFileField);
+        bottomBar.add(importButton);
 
         //The profiles will be laid out like a grid with 2 columns
         mainPanel = new JPanel(new GridLayout(profiles.size() / 2 + 1, 2));
@@ -167,6 +176,9 @@ public class Account implements Serializable {
                 mainPanel.revalidate();
                 mainPanel.repaint();
 
+            }
+            if (e.getSource() == importButton) {
+                //TODO:
             }
         }
     };
