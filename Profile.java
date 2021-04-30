@@ -22,26 +22,26 @@ public class Profile implements Serializable, Runnable {
     IOMachine ioMachine;
 
     //Frames and Panels
-    JFrame frame;
-    JPanel topPanel;
-    JPanel bottomPanel;
+    transient JFrame frame;
+    transient JPanel topPanel;
+    transient JPanel bottomPanel;
 
     //top elements
-    JButton edit; //edit button
-    JButton requests; //requests button
+    transient JButton edit; //edit button
+    transient JButton requests; //requests button
 
     //bottom elements
-    JComboBox<String> users; //all the users on the app
-    JButton sendFriendRequest; //sends friend request
+    transient JComboBox<String> users; //all the users on the app
+    transient JButton sendFriendRequest; //sends friend request
 
 
     //Text Boxes
-    JLabel nameText;
-    JLabel phoneText;
-    JLabel emailText;
-    JLabel educationText;
-    JLabel aboutMeText;
-    JLabel interestsText;
+    transient JLabel nameText;
+    transient JLabel phoneText;
+    transient JLabel emailText;
+    transient JLabel educationText;
+    transient JLabel aboutMeText;
+    transient JLabel interestsText;
 
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
                    String email, long phoneNumber, String aboutMe, ArrayList<String> requestsSent,
@@ -296,7 +296,7 @@ public class Profile implements Serializable, Runnable {
         frame.remove(bottomPanel);
     }
 
-    ActionListener actionListener = new ActionListener() {
+    transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //TODO add I/O aspects to edit
             if(e.getSource() == edit) {
@@ -528,5 +528,3 @@ public class Profile implements Serializable, Runnable {
 
 
 }
-
-
