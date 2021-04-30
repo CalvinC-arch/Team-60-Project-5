@@ -155,6 +155,26 @@ public class Profile implements Serializable, Runnable {
             index++;
         }
 
+        listLength = Integer.parseInt(profileInfo[index]);
+        index++;
+
+        tempIndex = index;
+
+        while (index < listLength + tempIndex) {
+            requestsReceived.add(profileInfo[index]);
+            index++;
+        }
+
+        listLength = Integer.parseInt(profileInfo[index]);
+        index++;
+
+        tempIndex = index;
+
+        while (index < listLength + tempIndex) {
+            requestsSent.add(profileInfo[index]);
+            index++;
+        }
+
         //set fields to indexes from the .csv as appropriate for the remaining fields
         this.education = profileInfo[index];
         index++;
@@ -331,7 +351,7 @@ public class Profile implements Serializable, Runnable {
 
 
 
-     public void writeExportFile() throws IOException {
+    public void writeExportFile() throws IOException {
 
         try {
             //creating new file and printWriter for this profile
@@ -354,6 +374,7 @@ public class Profile implements Serializable, Runnable {
             }
 
             pw.print(this.getRequestsReceived().size());
+            pw.print(",");
 
             //loop to write each element of friend requests received list to file
             for (int x = 0; x < requestsReceived.size(); x++) {
@@ -361,6 +382,7 @@ public class Profile implements Serializable, Runnable {
             }
 
             pw.print(this.getRequestsSent().size());
+            pw.print(",");
 
             //loop to write each element of friend requests sent list to file
             for (int x = 0; x < requestsSent.size(); x++) {
@@ -368,7 +390,7 @@ public class Profile implements Serializable, Runnable {
             }
 
             pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
-            
+
             pw.close();
 
         } catch (IOException e) { //If the file is open or another error occurs, display this error message
