@@ -60,6 +60,7 @@ class ProfileClientHandler extends Thread {
         boolean objectFound; //whether or not an object was found for a search (usually profile or account)
         Profile profile; //profile sent by the client
         ArrayList<Profile> profiles; //profile arraylist sent by client
+        ArrayList<String> usernames; //string arraylist, generally of usernames, passed to the client
 
         try {
             while (true) {
@@ -135,6 +136,31 @@ class ProfileClientHandler extends Thread {
 
                         if (!objectFound) {
                             dos.writeObject("False");
+                        }
+
+                        break;
+
+                    case "SendAllProfiles": //Sends a profile specific by username to the client.
+
+                        //read in and initialize variables
+                        objectFound = false; //if profiles exist on the server
+                        usernames = new ArrayList<>();
+
+                        for (int i = 0; i < accounts.size(); i++) { //search accounts
+
+                            for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                usernames.add(accounts.get(i).getProfiles().get(j).getUsername());
+                                objectFound = true;
+                                dos.writeObject("True");
+
+                            }
+                        }
+
+                        if (!objectFound) {
+                            dos.writeObject("False");
+                        } else {
+                            dos.writeObject(usernames);
                         }
 
                         break;

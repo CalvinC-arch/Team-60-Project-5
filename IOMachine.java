@@ -465,4 +465,27 @@ public class IOMachine extends ObjectOutputStream {
             return false;
         }
     }
+
+    public ArrayList<String> viewAllProfiles() {
+        try {
+
+            String result; //result returned from the server
+
+
+            dos.writeObject("SendAllProfiles");
+
+            result = (String) dis.readObject();
+
+            if (result.equals("True")) {
+                return (ArrayList<String>) dis.readObject();
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 }
