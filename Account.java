@@ -19,7 +19,8 @@ public class Account implements Serializable {
     private final String email;
     private final String password;
     private ArrayList<Profile> profiles;
-
+    private ArrayList<Integer> profileIndexes = new ArrayList<>();
+    private int counter = 0;
     //for Network I/O functionality
     transient IOMachine ioMachine;
 
@@ -116,6 +117,7 @@ public class Account implements Serializable {
 
             //adds the profile panel to the main panel
             mainPanel.add(profilePanel);
+            profileIndexes.add(i);
         }
 
         //adds the main panel and bottom bar to the frame
@@ -169,11 +171,27 @@ public class Account implements Serializable {
             {
                 /*retrieves the integer in the action command, which represents the index of the profile in the
                 profiles array*/
-                int profileIndex = Integer.parseInt(e.getActionCommand().substring(4));
+                int profileIndex = Integer.parseInt(e.getActionCommand().substring(6));
 
                 //removes the profile from the arraylist of profiles
+                if (profiles.size() == 1) {
+                    profileIndex = 0;
+                } else {
+                    System.out.println("prosize: " + profiles.size() + "proind: " + profileIndex);
+                    if (profiles.size() - 1 < profileIndex) {
+                        System.out.println("pi:" + profileIndex + " c:" + counter);
+                        counter = counter + 1;
+                        profileIndex = profileIndex - counter;
+                    } else {
+                        profileIndex = profileIndex - counter;
+                    }
+                }
+                System.out.println(profileIndex);
                 profiles.remove(profileIndex);
-
+                System.out.println("PROFILES: " + profiles);
+                mainPanel.remove(profileIndex);
+                mainPanel.revalidate();
+                mainPanel.repaint();
                 //TODO figure out how to remove the panel from GUI
 
             }
