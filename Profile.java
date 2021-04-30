@@ -331,7 +331,7 @@ public class Profile implements Serializable, Runnable {
 
 
 
-    public void writeExportFile() throws IOException {
+     public void writeExportFile() throws IOException {
 
         try {
             //creating new file and printWriter for this profile
@@ -353,8 +353,6 @@ public class Profile implements Serializable, Runnable {
                 pw.print(friends.get(x) + ',');
             }
 
-            pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
-            
             pw.print(this.getRequestsReceived().size());
 
             //loop to write each element of friend requests received list to file
@@ -368,6 +366,8 @@ public class Profile implements Serializable, Runnable {
             for (int x = 0; x < requestsSent.size(); x++) {
                 pw.print(requestsSent.get(x) + ',');
             }
+
+            pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
             
             pw.close();
 
