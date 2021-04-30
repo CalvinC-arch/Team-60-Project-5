@@ -219,6 +219,10 @@ public class Account implements Serializable {
                 //removes the profile from the server
                 ioMachine.deleteProfile(profileHashMap.get(profileIndex).getUsername());
 
+                //removes the profile's gui
+                mainPanel.remove(profilePanes.get(profileIndex));
+                mainPanel.revalidate();
+                mainPanel.repaint();
             }
         }
     };
