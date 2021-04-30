@@ -136,10 +136,10 @@ public class Account implements Serializable {
             if(e.getSource() == addProfile) {
                 //Uses EnterInfo GUI to create fields for a profile
                 String name = EnterInfoGUI.showNameInputDialog();
-                ArrayList<String> interests = new ArrayList<>(); //TODO
+                ArrayList<String> interests = EnterInfoGUI.showInterestsInputDialog();
                 ArrayList<String> friends = new ArrayList<>();
                 String education = EnterInfoGUI.showEducationInputDialog();
-                String email = EnterInfoGUI.showEmailInputDialog();
+                String email = getEmail();
                 Long phone =  EnterInfoGUI.showPhoneInputDialog();
                 String aboutMe = EnterInfoGUI.showAboutInputDialog();
 
@@ -147,7 +147,25 @@ public class Account implements Serializable {
                 Profile profile = new Profile(name, interests, friends, education, email, phone, aboutMe, new ArrayList<>(), new ArrayList<>());
                 profiles.add(profile);
 
-                //TODO add updating functionality
+                //Adds the profile to the server
+                ioMachine.addProfile(profile, getEmail());
+
+                //Updates the GUI
+                JPanel profilePanel = new JPanel();
+                JLabel profileName = new JLabel(profile.getUsername());
+                JButton view = new JButton("View");
+                view.addActionListener(profileListener);
+                view.setActionCommand("view" + profileIndexes.size());
+                JButton delete = new JButton("Delete");
+                delete.addActionListener(profileListener);
+                delete.setActionCommand("delete" + profileIndexes.size());
+                profilePanel.add(profileName);
+                profilePanel.add(view);
+                profilePanel.add(delete);
+
+                mainPanel.add(profilePanel);
+                mainPanel.revalidate();
+                mainPanel.repaint();
 
             }
         }
