@@ -27,7 +27,6 @@ public class Profile implements Serializable, Runnable {
     transient JPanel bottomPanel;
 
     //top elements
-    transient JButton export; //export button
     transient JButton edit; //edit button
     transient JButton requests; //requests button
 
@@ -222,9 +221,6 @@ public class Profile implements Serializable, Runnable {
 
         //top panel
         topPanel = new JPanel();
-        export = new JButton("Export Profile");
-        export.addActionListener(actionListener);
-        topPanel.add(export);
         edit = new JButton("Edit Profile");
         edit.addActionListener(actionListener);
         topPanel.add(edit);
@@ -323,10 +319,7 @@ public class Profile implements Serializable, Runnable {
     transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //TODO add I/O aspects to edit
-            if (e.getSource() == export) {
-                //TODO
-            }
-            if (e.getSource() == edit) {
+            if(e.getSource() == edit) {
                 //Uses the EnterInfoGUI methods to edit the fields of the object
                 username = EnterInfoGUI.showNameInputDialog();
                 email = EnterInfoGUI.showEmailInputDialog();
