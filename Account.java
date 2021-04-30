@@ -19,8 +19,12 @@ public class Account implements Serializable {
     private final String email;
     private final String password;
     private ArrayList<Profile> profiles;
-    private ArrayList<Integer> profileIndexes = new ArrayList<>();
+    
+    //Hashmaps and a counter used to keep track of which profiles are associated with which panels
+    private HashMap<Integer, Profile> profileHashMap = new HashMap();
+    private HashMap<Integer, JPanel> profilePanes = new HashMap();
     private int counter = 0;
+  
     //for Network I/O functionality
     transient IOMachine ioMachine;
 
@@ -104,8 +108,10 @@ public class Account implements Serializable {
 
         //The profiles will be laid out like a grid with 2 columns
         mainPanel = new JPanel(new GridLayout(profiles.size() / 2 + 1, 2));
+        
+        //sets the counter equal to the amount of profiles
+        counter = profiles.size();
 
-        //TODO Network I/O for profiles
         for(int i = 0; i < profiles.size(); i++) {
 
             //Creates a panel with a view and delete button
@@ -126,7 +132,10 @@ public class Account implements Serializable {
 
             //adds the profile panel to the main panel
             mainPanel.add(profilePanel);
-            profileIndexes.add(i);
+            
+            //Adds the profile and its panes to the hashmaps
+            profileHashMap.put(i, profiles.get(i));
+            profilePanes.put(i, profilePanel);
         }
 
         //adds the main panel and bottom bar to the frame
@@ -164,13 +173,18 @@ public class Account implements Serializable {
                 JLabel profileName = new JLabel(profile.getUsername());
                 JButton view = new JButton("View");
                 view.addActionListener(profileListener);
-                view.setActionCommand("view" + profileIndexes.size());
+                view.setActionCommand("view" + counter);
                 JButton delete = new JButton("Delete");
                 delete.addActionListener(profileListener);
-                delete.setActionCommand("delete" + profileIndexes.size());
+                delete.setActionCommand("delete" +  counter);
                 profilePanel.add(profileName);
                 profilePanel.add(view);
                 profilePanel.add(delete);
+
+                //Adds the profile and its panes to the hashmaps
+                profileHashMap.put(counter, profile);
+                profilePanes.put(counter, profilePanel);
+                counter++;
 
                 mainPanel.add(profilePanel);
                 mainPanel.revalidate();
@@ -193,36 +207,17 @@ public class Account implements Serializable {
                 profiles array*/
                 int profileIndex = Integer.parseInt(e.getActionCommand().substring(4));
 
-                //runs the GUI for the given profile
-                //profiles.get(profileIndex).run();
-                //TODO deal with the nonexistent run function in Profile.java later
+                profileHashMap.get(profileIndex).run();
             }
             else if (e.getActionCommand().contains("delete")) //Runs if the received action command contains delete
             {
-                /*retrieves the integer in the action command, which represents the index of the profile in the
-                profiles array*/
                 int profileIndex = Integer.parseInt(e.getActionCommand().substring(6));
 
                 //removes the profile from the arraylist of profiles
-                if (profiles.size() == 1) {
-                    profileIndex = 0;
-                } else {
-                    System.out.println("prosize: " + profiles.size() + "proind: " + profileIndex);
-                    if (profiles.size() - 1 < profileIndex) {
-                        System.out.println("pi:" + profileIndex + " c:" + counter);
-                        counter = counter + 1;
-                        profileIndex = profileIndex - counter;
-                    } else {
-                        profileIndex = profileIndex - counter;
-                    }
-                }
-                System.out.println(profileIndex);
-                profiles.remove(profileIndex);
-                System.out.println("PROFILES: " + profiles);
-                mainPanel.remove(profileIndex);
-                mainPanel.revalidate();
-                mainPanel.repaint();
-                //TODO figure out how to remove the panel from GUI
+                profiles.remove(profileHashMap.get(profileIndex));
+
+                //removes the profile from the server
+                ioMachine.deleteProfile(profileHashMap.get(profileIndex).getUsername());
 
             }
         }
