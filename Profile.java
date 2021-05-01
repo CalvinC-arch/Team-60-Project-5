@@ -336,10 +336,13 @@ public class Profile implements Serializable, Runnable {
     transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == export) {
-                //TODO: Verify Code
+                //TODO: Verify Code, Add IoMachine Method
                 try {
                     writeExportFile();
-                } catch IOException()
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Oops! There was a problem exporting" +
+                            " file. Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
+                }
 
             }
             if (e.getSource() == edit) {
@@ -353,22 +356,39 @@ public class Profile implements Serializable, Runnable {
 
                 //Updates the JLabels to the current fields
                 usernameArea.setText(username);
-                emailArea.setText(email);
-                phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
-                educationArea.setText(education);
-                aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
+                if (ioMachine.editProfile(username, "Email", email)) {
+                    emailArea.setText(email);
+                }
+                if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
+                    phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
+                }
+                if (ioMachine.editProfile(username, "Education", education)) {
+                    educationArea.setText(education);
+                }
+                if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
+                    aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
+                }
+                //TODO: Add IOMachine Method for Interests
                 interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
             }
             if(e.getSource() == requests) {
-                //Opens the Friends List GUI
+                //TODO: Interact with server to get most recent versions of all lists
                 FriendsListGUI friend = new FriendsListGUI(username, requestsSent,
                         requestsReceived, friends);
-                friend.run();
+                FriendsListGUI usableFriend = new FriendsListGUI(friend, ioMachine);
+                usableFriend.run();
             }
 
             if (e.getSource() == sendFriendRequest) {
                 String requestedUser = (String) users.getSelectedItem();
-                //TODO:ioMachine.sendRequest(username, requestedUser);
+                if (ioMachine.sendRequest(getUsername(), requestedUser)) {
+                    JOptionPane.showMessageDialog(null, "Friend Request Sent!",
+                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Unable to send Friend Request." +
+                            "Please Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         }
     };
