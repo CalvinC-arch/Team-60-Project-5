@@ -46,6 +46,7 @@ public class ProfileServer
         ArrayList<Profile> profiles = new ArrayList<>(); //Arraylist of profiles associated with the account
         String[] splitLine; //Array containing the line, split by commas
         String line = "banana"; //The line from the .csv server backup file, initialized as a random word
+        boolean backupEmpty = true; //indicates whether the backup file is empty or not if it exists
 
         try { //Server Reboot try/catch, using a backup file created when the server shuts down. The backup file
                 //contains the email, password, and associated profile usernames for every account on the server
@@ -62,6 +63,7 @@ public class ProfileServer
 
                 if (!(line == null)) {
                     serverBackup.add(line);
+                    backupEmpty = false;
                 }
             }
 
@@ -85,10 +87,11 @@ public class ProfileServer
                 // saved email, password, and newly created profile arrayList
 
                 System.out.println("Server reset from backup");
+
             }
 
-        } catch (IOException e) { //if IO Exception, likely due to the backup file not existing
-            System.out.println("There was no server backup");
+        } catch (Exception e) { //if IO Exception, likely due to the backup file not existing
+            System.out.println("There was no valid server backup");
         }
 
         while (true) //loops indefinitely so that the server is always responsive to new connections
