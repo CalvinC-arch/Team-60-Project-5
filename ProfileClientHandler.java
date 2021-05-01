@@ -526,7 +526,7 @@ class ProfileClientHandler extends Thread {
             }
         } catch(IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
+            //JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -536,7 +536,7 @@ class ProfileClientHandler extends Thread {
             this.dos.close();
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
+            //JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);
         }
     }
