@@ -247,15 +247,20 @@ public class Profile implements Serializable, Runnable {
         JLabel userLabel = new JLabel("Find Other Users: ");
         bottomPanel.add(userLabel);
 
-        //creates the drop down menu
-        String[] usernames = (String[]) ioMachine.viewAllProfiles().toArray();
-        users = new JComboBox<String>(usernames);
-        users.setMaximumRowCount(6);
+        //creates the drop down menu with usernames assuming there are any other profiles
+        if (ioMachine.viewAllProfiles().size() > 0) {
+            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
+            users = new JComboBox<String>(usernames);
+            users.setMaximumRowCount(6);
+        } else {
+            users = new JComboBox<>();
+        }
+
         bottomPanel.add(users);
 
         view = new JButton("View");
         view.addActionListener(actionListener);
-        bottomPanel.add(sendFriendRequest);
+        bottomPanel.add(view);
 
         //creates send Friend Request button
         sendFriendRequest = new JButton("Send Friend Request");
@@ -286,7 +291,7 @@ public class Profile implements Serializable, Runnable {
         JPanel emailPanel = new JPanel();
         emailText = new JLabel("EMAIL:         ");
         emailPanel.add(emailText);
-        emailArea = new JTextArea(this.email, 5, 15);
+        emailArea = new JTextArea(this.email, 5,15);
         emailArea.setEditable(false);
         emailPanel.add(emailArea);
 
@@ -329,10 +334,77 @@ public class Profile implements Serializable, Runnable {
 
         frame.setVisible(true);
     }
-    public void viewFriendProfile() {
-        run();
-        frame.remove(topPanel);
-        frame.remove(bottomPanel);
+    
+    //this method runs when you are viewing another users profile
+    public void viewOtherProfile() {
+        frame = new JFrame(username);
+        frame.setSize(640, 480);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        //Everything below is for the center panel which holds user info
+
+        //name panel
+        JPanel namePanel = new JPanel();
+        nameText = new JLabel("USER:          ");
+        namePanel.add(nameText);
+        usernameArea = new JTextArea(this.username, 5, 15);
+        usernameArea.setEditable(false);
+        namePanel.add(usernameArea);
+
+        //phone panel
+        JPanel phonePanel = new JPanel();
+        phoneText = new JLabel("PHONE:          ");
+        phonePanel.add(phoneText);
+        phoneArea = new JTextArea(EnterInfoGUI.formatPhoneString(this.phoneNumber), 5, 15);
+        phoneArea.setEditable(false);
+        phonePanel.add(phoneArea);
+
+        //email panel
+        JPanel emailPanel = new JPanel();
+        emailText = new JLabel("EMAIL:         ");
+        emailPanel.add(emailText);
+        emailArea = new JTextArea(this.email, 5,15);
+        emailArea.setEditable(false);
+        emailPanel.add(emailArea);
+
+        //education panel
+        JPanel educationPanel = new JPanel();
+        educationText = new JLabel("EDUCATION: ");
+        educationPanel.add(educationText);
+        educationArea = new JTextArea(this.education, 5, 15);
+        educationArea.setEditable(false);
+        educationPanel.add(educationArea);
+
+        //about me panel
+        JPanel aboutMePanel = new JPanel();
+        aboutMeText = new JLabel("ABOUT ME:");
+        aboutMePanel.add(aboutMeText);
+        aboutMeArea = new JTextArea(EnterInfoGUI.formatAboutString(this.aboutMe), 8, 15);
+        aboutMeArea.setEditable(false);
+        aboutMePanel.add(aboutMeArea);
+
+
+        //interests panel
+        JPanel interestsPanel = new JPanel();
+        interestsText = new JLabel("INTERESTS:  ");
+        interestsPanel.add(interestsText);
+        interestArea = new JTextArea(EnterInfoGUI.formatInterestsString(this.interests),
+                8, 15);
+        interestArea.setEditable(false);
+        interestsPanel.add(interestArea);
+
+        //Combines the above panels in grid layout
+        JPanel profilePanel = new JPanel();
+        profilePanel.setLayout(new GridLayout(3, 2));
+        profilePanel.add(namePanel);
+        profilePanel.add(phonePanel);
+        profilePanel.add(emailPanel);
+        profilePanel.add(educationPanel);
+        profilePanel.add(aboutMePanel);
+        profilePanel.add(interestsPanel);
+        frame.add(profilePanel, BorderLayout.CENTER);
+
+        frame.setVisible(true);
     }
 
     transient ActionListener actionListener = new ActionListener() {
@@ -398,7 +470,15 @@ public class Profile implements Serializable, Runnable {
                     usableFriend.run();
                 }
 
-                if (e.getSource() == sendFriendRequest) {
+                if (e.getSource() == view) { //view another users profile
+                    //takes the username in users drop down box
+                    String requestedUser = (String) users.getSelectedItem();
+
+                    Profile profile = ioMachine.findProfile(requestedUser);
+
+                    profile.viewOtherProfile();
+                }
+                if (e.getSource() == sendFriendRequest) { //send a friend request to another user
                     String requestedUser = (String) users.getSelectedItem();
                     if (ioMachine.sendRequest(getUsername(), requestedUser)) {
                         JOptionPane.showMessageDialog(null, "Friend Request Sent!",
