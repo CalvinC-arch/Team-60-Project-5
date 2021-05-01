@@ -222,6 +222,7 @@ public class EnterInfoGUI {
                 interest = JOptionPane.showInputDialog(null,
                         "Enter personal interests separated by commas: ", "CampsGram",
                         JOptionPane.QUESTION_MESSAGE); //asks user to input interests
+                interest = interest.toLowerCase();
                 if(interest == null) {
                     checking = false;
                     break;
