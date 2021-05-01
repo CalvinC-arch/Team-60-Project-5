@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  * This class contains the server side processing and user interface logic for the project. It is created from a thread
  * created by the ProfileServer class. The constructor allows multiple objects of this type to be created, allowing for
- * multiple clients to connect to the server
+ * multiple clients to connect to the server.
  *
  * Geeksforgeeks was referenced to determine how to utilize threads for multiple client-server connections
  *
@@ -39,10 +39,8 @@ class ProfileClientHandler extends Thread {
     }
 
     /**
-     * Runs functionality for the server
+     * Runs functionality for the server. This involves a case/switch structure that reads a command from the client
      *
-     * Current cases: AddProfile, DeleteProfile, SendProfile, SendAccount, AddAccount, DeleteAccount,
-     * AddInterest, RemoveInterest, AddFriend, RemoveFriend, EditEducation, EditEmail, EditPhoneNumber, EditAboutMe
      */
 
     @Override
@@ -142,7 +140,7 @@ class ProfileClientHandler extends Thread {
 
                         //read in and initialize variables
                         objectFound = false; //if profiles exist on the server
-                        usernames = new ArrayList<>();
+                        usernames = new ArrayList<String>();
 
                         for (int i = 0; i < accounts.size(); i++) { //search accounts
 
@@ -150,7 +148,6 @@ class ProfileClientHandler extends Thread {
 
                                 usernames.add(accounts.get(i).getProfiles().get(j).getUsername());
                                 objectFound = true;
-                                dos.writeObject("True");
 
                             }
                         }
@@ -158,6 +155,7 @@ class ProfileClientHandler extends Thread {
                         if (!objectFound) {
                             dos.writeObject("False");
                         } else {
+                            dos.writeObject("True");
                             dos.writeObject(usernames);
                         }
 
@@ -528,21 +526,25 @@ class ProfileClientHandler extends Thread {
                    // "Campsgram", JOptionPane.ERROR_MESSAGE);
 
             try {
+                //Create or overwrite backup file to save the server if there is an exception
                 File f = new File("ServerBackupFile.csv");
                 PrintWriter pw = new PrintWriter(new FileWriter(f, false));
 
-                for(int i = 0; i < accounts.size(); i++) {
+                for(int i = 0; i < accounts.size(); i++) { //iterates through every account on the server
 
+                    //write the email and password for each account to a CSV file
                     pw.print(accounts.get(i).getEmail() + ",");
                     pw.print(accounts.get(i).getPassword());
 
+                    //loops through the profiles associated with an account, exports them using the
+                    // writeExportFile() method in Profile.java, and writes the username of the profile to the CSV file
                     for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) {
                         accounts.get(i).getProfiles().get(j).writeExportFile();
                         pw.print("," + accounts.get(i).getProfiles().get(j).getUsername());
                     }
 
+                    //prints a new line for the next account to be written
                     pw.println();
-
                 }
 
                 pw.close();
@@ -551,7 +553,6 @@ class ProfileClientHandler extends Thread {
             } catch (Exception f) {
                 f.printStackTrace();
                 System.out.println("The server was not backed up");
-
             }
 
         }
