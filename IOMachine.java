@@ -192,6 +192,8 @@ public class IOMachine extends ObjectOutputStream {
         try {
             String result; //result returned from server
 
+            //TODO: Must still remove this account's profiles from the list of sent requests, received requests, and friends of other profiles
+
             dos.writeObject("DeleteAccount");
             dos.writeObject(account.getEmail());
 
@@ -488,4 +490,8 @@ public class IOMachine extends ObjectOutputStream {
         }
 
     }
+
+    //TODO: Add method to show Import Button Clicked
+    //TODO: Add method to show Export Button Clicked
+
 }

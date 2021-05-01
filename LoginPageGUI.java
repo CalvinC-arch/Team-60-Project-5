@@ -33,7 +33,7 @@ public class  LoginPageGUI implements Runnable {
     JLabel emailLabel;
     JTextField emailField;
     JLabel passwordLabel;
-    JTextField passwordField;
+    JPasswordField passwordField;
     JButton enterButton;
     JButton makeAccountButton;
 
@@ -62,7 +62,7 @@ public class  LoginPageGUI implements Runnable {
         panel.add(emailField);
         passwordLabel = new JLabel("Enter your Password:       ");
         panel.add(passwordLabel);
-        passwordField = new JTextField("", 20);
+        passwordField = new JPasswordField("", 20);
         panel.add(passwordField);
         enterButton = new JButton("            Enter             ");
         enterButton.addActionListener(actionListener); //add action listener to respond to button clicks
@@ -124,16 +124,23 @@ public class  LoginPageGUI implements Runnable {
 
                     //Tries to connect to server and send inputs
                       
-                    validate = ioMachine.findAccount(email);
-                        
-                    if (validate.getPassword().equals(password)) {
-                        validAccount = true;
+                    try {
+                        validate = ioMachine.findAccount(email);
+
+                        if (validate.getPassword().equals(password)) {
+                            validAccount = true;
+                        }
+
+                        if (validAccount) {
+                            Account account = new Account(ioMachine.findAccount(email), ioMachine);
+                            account.run();
+                        }
+
+                    } catch(Exception x) {
+                        JOptionPane.showMessageDialog(null, "No account matches the " +
+                                "email and password!", "CampsGram", JOptionPane.ERROR_MESSAGE);
                     }
-                        
-                    if (validAccount) {
-                        Account account = new Account(ioMachine.findAccount(email), ioMachine);
-                        account.run();
-                    }
+
                 }
 
 

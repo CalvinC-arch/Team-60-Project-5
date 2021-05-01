@@ -44,6 +44,14 @@ public class Profile implements Serializable, Runnable {
     transient JLabel aboutMeText;
     transient JLabel interestsText;
 
+    //Text Areas
+    transient JTextArea usernameArea;
+    transient JTextArea phoneArea;
+    transient JTextArea emailArea;
+    transient JTextArea educationArea;
+    transient JTextArea aboutMeArea;
+    transient JTextArea interestArea;
+
     public Profile(String username, ArrayList<String> interests, ArrayList<String> friends, String education,
                    String email, long phoneNumber, String aboutMe, ArrayList<String> requestsSent,
                    ArrayList<String> requestsReceived) {
@@ -198,7 +206,6 @@ public class Profile implements Serializable, Runnable {
 
         //remove last two characters, as the aboutMe loop will leave a comma and space at the end of the process
         this.aboutMe = this.aboutMe.substring(0, this.aboutMe.length() - 2);
-        //TODO: assign requests sent and requests received
     }
     /*this constructor creates another profile object identical to the one passed to it as an argument, it will be used
     when the server send profiles back to the client to display after logging in*/
@@ -240,7 +247,12 @@ public class Profile implements Serializable, Runnable {
         users = new JComboBox<>();
         users.setMaximumRowCount(3);
 
-        //TODO: Add users to JComboBox from Array of all users
+        //TODO: Verify functionality of this code
+        for (int i = 0; i < ProfileServer.getAccounts().size(); i++) {
+            for (int j = 0; j < ProfileServer.getAccounts().get(i).getProfiles().size(); j++) {
+                users.addItem(ProfileServer.getAccounts().get(i).getProfiles().get(j).getUsername());
+            }
+        }
 
         bottomPanel.add(users);
         sendFriendRequest = new JButton("Send Friend Request");
@@ -255,7 +267,7 @@ public class Profile implements Serializable, Runnable {
         JPanel namePanel = new JPanel();
         nameText = new JLabel("USER:          ");
         namePanel.add(nameText);
-        JTextArea usernameArea = new JTextArea(this.username, 5, 15);
+        usernameArea = new JTextArea(this.username, 5, 15);
         usernameArea.setEditable(false);
         namePanel.add(usernameArea);
 
@@ -263,7 +275,7 @@ public class Profile implements Serializable, Runnable {
         JPanel phonePanel = new JPanel();
         phoneText = new JLabel("PHONE:          ");
         phonePanel.add(phoneText);
-        JTextArea phoneArea = new JTextArea(formatPhoneString(this.phoneNumber), 5, 15);
+        phoneArea = new JTextArea(EnterInfoGUI.formatPhoneString(this.phoneNumber), 5, 15);
         phoneArea.setEditable(false);
         phonePanel.add(phoneArea);
 
@@ -271,7 +283,7 @@ public class Profile implements Serializable, Runnable {
         JPanel emailPanel = new JPanel();
         emailText = new JLabel("EMAIL:         ");
         emailPanel.add(emailText);
-        JTextArea emailArea = new JTextArea(this.email, 5,15);
+        emailArea = new JTextArea(this.email, 5,15);
         emailArea.setEditable(false);
         emailPanel.add(emailArea);
 
@@ -279,7 +291,7 @@ public class Profile implements Serializable, Runnable {
         JPanel educationPanel = new JPanel();
         educationText = new JLabel("EDUCATION: ");
         educationPanel.add(educationText);
-        JTextArea educationArea = new JTextArea(this.education, 5, 15);
+        educationArea = new JTextArea(this.education, 5, 15);
         educationArea.setEditable(false);
         educationPanel.add(educationArea);
 
@@ -287,7 +299,7 @@ public class Profile implements Serializable, Runnable {
         JPanel aboutMePanel = new JPanel();
         aboutMeText = new JLabel("ABOUT ME:");
         aboutMePanel.add(aboutMeText);
-        JTextArea aboutMeArea = new JTextArea(formatAboutString(this.aboutMe), 8, 15);
+        aboutMeArea = new JTextArea(EnterInfoGUI.formatAboutString(this.aboutMe), 8, 15);
         aboutMeArea.setEditable(false);
         aboutMePanel.add(aboutMeArea);
 
@@ -296,7 +308,8 @@ public class Profile implements Serializable, Runnable {
         JPanel interestsPanel = new JPanel();
         interestsText = new JLabel("INTERESTS:  ");
         interestsPanel.add(interestsText);
-        JTextArea interestArea = new JTextArea(formatInterestsString(this.interests), 8, 15);
+        interestArea = new JTextArea(EnterInfoGUI.formatInterestsString(this.interests),
+                8, 15);
         interestArea.setEditable(false);
         interestsPanel.add(interestArea);
 
@@ -322,9 +335,12 @@ public class Profile implements Serializable, Runnable {
 
     transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            //TODO add I/O aspects to edit
             if (e.getSource() == export) {
-                //TODO
+                //TODO: Verify Code
+                try {
+                    writeExportFile();
+                } catch IOException()
+
             }
             if (e.getSource() == edit) {
                 //Uses the EnterInfoGUI methods to edit the fields of the object
@@ -336,11 +352,12 @@ public class Profile implements Serializable, Runnable {
                 interests = EnterInfoGUI.showInterestsInputDialog();
 
                 //Updates the JLabels to the current fields
-                nameText.setText(username);
-                emailText.setText(email);
-                phoneText.setText(formatPhoneString(phoneNumber)); //format phone (update enter info gui)
-                educationText.setText(formatAboutString(aboutMe));
-                interestsText.setText(formatInterestsString(interests));
+                usernameArea.setText(username);
+                emailArea.setText(email);
+                phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
+                educationArea.setText(education);
+                aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
+                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
             }
             if(e.getSource() == requests) {
                 //Opens the Friends List GUI
@@ -407,43 +424,6 @@ public class Profile implements Serializable, Runnable {
 
     }
 
-    public static String formatAboutString(String about) { //organizes the About information as a small paragraph
-        String about2 = ""; //initializes about2 as empty
-        String newAbout = about; //duplicates the String about
-        boolean checking = false; //checker that notifies become true if while loop runs
-        while (newAbout.length() > 30) { //while-loop runs if line is too long
-            checking = true; //updates checker
-            if (newAbout.charAt(30) == ' ') { //checks if where the text cuts has a space
-                newAbout = newAbout.substring(0,30) + newAbout.substring(31); //deletes the extra space
-                about = about2 + newAbout.substring(0, 30) + "\n"; //formats the String
-            } else {
-                about = about2 + newAbout.substring(0, 30) + "-\n"; //formats the String
-            } //end if
-            about2 = about; //updates about2
-            newAbout = newAbout.substring(30); //updates NewAbout
-        }
-        if (checking) { //checks if while loop ran
-            return "\n" + about + newAbout; //returns formatted About Info String
-        } else {
-            return "\n" + about; //returns normal About Info String
-        } //end if
-    } //formatAboutString
-
-    public static String formatInterestsString(ArrayList<String> interests) { //converts array to formatted String
-        String newInterests =  ""; //initializes String to be empty
-        for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
-            newInterests = newInterests + "\n    "+ interests.get(i); //formats elements into a vertical list
-        } //for-loop
-        return newInterests; //returns Interests as formatted String
-    } //formatInterestsString
-
-    public static String formatPhoneString(long phone) {
-        String phoneS = String.valueOf(phone);
-        String phoneFormat = ""; //declares phone number formatted
-        phoneFormat = "(" + phoneS.substring(0, 3)+ ") " + phoneS.substring(3,6) + "-" + phoneS.substring(6, 10);
-        //formats the phone number correctly
-        return phoneFormat; //returns phone String in correct format
-    } //formatPoneString
 
     public String getUsername() {
         return this.username;
