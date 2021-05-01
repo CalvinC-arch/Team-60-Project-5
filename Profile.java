@@ -329,6 +329,11 @@ public class Profile implements Serializable, Runnable {
 
         frame.setVisible(true);
     }
+    public void viewFriendProfile() {
+        run();
+        frame.remove(topPanel);
+        frame.remove(bottomPanel);
+    }
 
     transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -587,6 +592,6 @@ public class Profile implements Serializable, Runnable {
         }
 
 
-    
+
 }
 
