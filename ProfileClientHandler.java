@@ -1,7 +1,5 @@
 import javax.swing.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -527,7 +525,35 @@ class ProfileClientHandler extends Thread {
         } catch(IOException | ClassNotFoundException e) {
             e.printStackTrace();
             //JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
-                    //"Campsgram", JOptionPane.ERROR_MESSAGE);
+                   // "Campsgram", JOptionPane.ERROR_MESSAGE);
+
+            try {
+                File f = new File("ServerBackupFile.csv");
+                PrintWriter pw = new PrintWriter(new FileWriter(f, false));
+
+                for(int i = 0; i < accounts.size(); i++) {
+
+                    pw.print(accounts.get(i).getEmail() + ",");
+                    pw.print(accounts.get(i).getPassword());
+
+                    for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) {
+                        accounts.get(i).getProfiles().get(j).writeExportFile();
+                        pw.print("," + accounts.get(i).getProfiles().get(j).getUsername());
+                    }
+
+                    pw.println();
+
+                    pw.close();
+
+                    System.out.println("The server was backed up");
+                }
+            } catch (Exception f) {
+                f.printStackTrace();
+                System.out.println("The server was not backed up");
+
+            }
+
+
         }
 
         try {
@@ -537,7 +563,9 @@ class ProfileClientHandler extends Thread {
 
         } catch (IOException e) {
             //JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
-                    //"Campsgram", JOptionPane.ERROR_MESSAGE);
+                   // "Campsgram", JOptionPane.ERROR_MESSAGE);
+
+
         }
     }
 }

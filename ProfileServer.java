@@ -68,6 +68,7 @@ public class ProfileServer
 
                 accounts.add(new Account(splitLine[0], splitLine[1], profiles));
 
+                System.out.println("Server reset from backup");
             }
 
         } catch (IOException e) { //if IO Exception, likely due to incorrect file name
@@ -111,6 +112,8 @@ public class ProfileServer
                     }
 
                     pw.println();
+
+                    pw.close();
                 }
 
                 s.close();
