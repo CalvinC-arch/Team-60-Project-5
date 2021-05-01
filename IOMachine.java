@@ -481,17 +481,14 @@ public class IOMachine extends ObjectOutputStream {
             if (result.equals("True")) {
                 return (ArrayList<String>) dis.readObject();
             } else {
-                return null;
+                return new ArrayList<String>();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<String>();
         }
 
     }
-
-    //TODO: Add method to show Import Button Clicked
-    //TODO: Add method to show Export Button Clicked
 
 }
