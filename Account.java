@@ -193,12 +193,13 @@ public class Account implements Serializable {
 
             }
             if (e.getSource() == importButton) {
-                //TODO: Verify that this works.
-                try {
+                 try {
                     //If Import
                     String filename = importFileField.getText();
                     Profile profile = new Profile(filename);
-                    ioMachine.addProfile(profile, getEmail());
+                    if (ioMachine.addProfile(profile, getEmail())) {
+                        //TODO: Add profile to account GUI
+                    }
                     importFileField.setText("");
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error! Invalid File", "CampsGram",
