@@ -244,17 +244,18 @@ public class Profile implements Serializable, Runnable {
         bottomPanel = new JPanel();
         JLabel userLabel = new JLabel("Find Other Users: ");
         bottomPanel.add(userLabel);
-        users = new JComboBox<>();
-        users.setMaximumRowCount(3);
 
-        //TODO: Verify functionality of this code
-        for (int i = 0; i < ProfileServer.getAccounts().size(); i++) {
-            for (int j = 0; j < ProfileServer.getAccounts().get(i).getProfiles().size(); j++) {
-                users.addItem(ProfileServer.getAccounts().get(i).getProfiles().get(j).getUsername());
-            }
-        }
-
+        //creates the drop down menu
+        String[] usernames = (String[]) ioMachine.viewAllProfiles().toArray();
+        users = new JComboBox<String>(usernames);
+        users.setMaximumRowCount(6);
         bottomPanel.add(users);
+
+        view = new JButton("View");
+        view.addActionListener(actionListener);
+        bottomPanel.add(sendFriendRequest);
+
+        //creates send Friend Request button
         sendFriendRequest = new JButton("Send Friend Request");
         sendFriendRequest.addActionListener(actionListener); //add action listener to button
         bottomPanel.add(sendFriendRequest);
@@ -313,7 +314,7 @@ public class Profile implements Serializable, Runnable {
         interestArea.setEditable(false);
         interestsPanel.add(interestArea);
 
-        //Combines the above three panels in grid layout
+        //Combines the above panels in grid layout
         JPanel profilePanel = new JPanel();
         profilePanel.setLayout(new GridLayout(3, 2));
         profilePanel.add(namePanel);
@@ -325,12 +326,6 @@ public class Profile implements Serializable, Runnable {
         frame.add(profilePanel, BorderLayout.CENTER);
 
         frame.setVisible(true);
-    }
-
-    public void viewFriendProfile() {
-        run();
-        frame.remove(topPanel);
-        frame.remove(bottomPanel);
     }
 
     transient ActionListener actionListener = new ActionListener() {
