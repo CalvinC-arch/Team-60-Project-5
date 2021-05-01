@@ -186,12 +186,13 @@ public class  LoginPageGUI implements Runnable {
 
             }
             if (e.getSource() == testButton) {
-                System.out.println("123");
 
                 //adds sample profiles for testing purposes
                 ArrayList<Profile> profiles = new ArrayList<>();
                 for (int i = 0; i < 7; i++) {
-                    profiles.add(new Profile());
+                    Profile p = new Profile();
+                    p.setUsername(p.getUsername() + i);
+                    profiles.add(p);
                 }
 
                 //creates a new account object
