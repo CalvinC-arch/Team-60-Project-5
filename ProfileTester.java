@@ -12,6 +12,7 @@ public class ProfileTester {
         friends.add("Joe");
         friends.add("Eric");
         friends.add("Naia");
+        friends.add("girvinn");
         Profile jeff = new Profile("chen3801", interests, friends, "Purdue University",
                 "chen3801@purdue.edu", 5167341551L, "hello, I am Jeff");
         jeff.writeExportFile();
