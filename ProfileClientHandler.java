@@ -543,16 +543,16 @@ class ProfileClientHandler extends Thread {
 
                     pw.println();
 
-                    pw.close();
-
-                    System.out.println("The server was backed up");
                 }
+
+                pw.close();
+                System.out.println("The server was backed up");
+
             } catch (Exception f) {
                 f.printStackTrace();
                 System.out.println("The server was not backed up");
 
             }
-
 
         }
 
@@ -564,7 +564,6 @@ class ProfileClientHandler extends Thread {
         } catch (IOException e) {
             //JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
                    // "Campsgram", JOptionPane.ERROR_MESSAGE);
-
 
         }
     }
