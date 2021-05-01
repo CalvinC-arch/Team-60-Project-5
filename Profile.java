@@ -339,21 +339,18 @@ public class Profile implements Serializable, Runnable {
                             " file. Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
                 }
 
-            }
             if (e.getSource() == edit) {
                 //Uses the EnterInfoGUI methods to edit the fields of the object
-                username = EnterInfoGUI.showNameInputDialog();
-                email = EnterInfoGUI.showEmailInputDialog();
                 phoneNumber = EnterInfoGUI.showPhoneInputDialog();
-                education = EnterInfoGUI.showEducationInputDialog();
-                aboutMe = EnterInfoGUI.showAboutInputDialog();
-                interests = EnterInfoGUI.showInterestsInputDialog();
-
-                //Updates the JLabels to the current fields
-                usernameArea.setText(username);
-                if (ioMachine.editProfile(username, "Email", email)) {
-                    emailArea.setText(email);
+                education = JOptionPane.showInputDialog(null, "Input Education:",
+                        "CampsGram", JOptionPane.QUESTION_MESSAGE);
+                if (education == null) {
+                    education = "Education Not Specified";
                 }
+                aboutMe = EnterInfoGUI.showAboutInputDialog();
+
+
+                //Updates the JTextAreas to the current fields
                 if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
                     phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
                 }
@@ -363,8 +360,28 @@ public class Profile implements Serializable, Runnable {
                 if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
                     aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
                 }
-                //TODO: Add IOMachine Method for Interests
-                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                String interest;
+                do {
+                    interest = JOptionPane.showInputDialog(null, "Add Interest",
+                            "CampsGram", JOptionPane.QUESTION_MESSAGE);
+                    if (interest != null) {
+                        if (ioMachine.editProfileList("Add", username, "Interest", interest)){
+                            interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                        }
+                    }
+                } while (interest != null);
+                do {
+                    interest = JOptionPane.showInputDialog(null, "Remove Interest",
+                            "CampsGram", JOptionPane.QUESTION_MESSAGE);
+                    if (interest != null) {
+                        if (ioMachine.editProfileList("Remove", username, "Interest", interest)) {
+                            interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Cannot remove that interets",
+                                    "CampsGram", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } while (interest != null);
             }
             if(e.getSource() == requests) {
                 //TODO: Interact with server to get most recent versions of all lists
