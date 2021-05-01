@@ -206,7 +206,7 @@ public class FriendsListGUI implements Runnable {
            if (e.getSource() == viewProfileButton) {
                String username = (String) friendsList.getSelectedItem();
                Profile friend = ioMachine.findProfile(username); //retrieve friend's profile from the server
-               friend.viewFriendProfile();
+               friend.viewOtherProfile();
 
            } //code that is run if view profile button is clicked
            if (e.getSource() == unfriendButton) {
