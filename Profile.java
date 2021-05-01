@@ -89,6 +89,8 @@ public class Profile implements Serializable, Runnable {
         this.email = "jwstoneb@purdue.edu";
         this.phoneNumber = 8476360377L;
         this.aboutMe = "Why are we here, Just to suffer?";
+        this.requestsReceived = new ArrayList<>();
+        this.requestsSent = new ArrayList<>();
     }
 
     public Profile(String filename) throws IOException {
