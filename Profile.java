@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 
+
 public class Profile implements Serializable, Runnable {
 
     //Profile Fields
@@ -30,10 +31,10 @@ public class Profile implements Serializable, Runnable {
     transient JButton export; //export button
     transient JButton edit; //edit button
     transient JButton requests; //requests button
-    transient JButton view;
 
     //bottom elements
     transient JComboBox<String> users; //all the users on the app
+    transient JButton view; //view another users profile
     transient JButton sendFriendRequest; //sends friend request
 
 
@@ -311,7 +312,6 @@ public class Profile implements Serializable, Runnable {
         aboutMeArea.setEditable(false);
         aboutMePanel.add(aboutMeArea);
 
-
         //interests panel
         JPanel interestsPanel = new JPanel();
         interestsText = new JLabel("INTERESTS:  ");
@@ -333,9 +333,14 @@ public class Profile implements Serializable, Runnable {
         frame.add(profilePanel, BorderLayout.CENTER);
 
         frame.setVisible(true);
+
+        //begins a timer that automatically updates the user list
+        Timer timer = new Timer(5000, taskPerformer);
+        timer.setRepeats(true);
+        timer.start();
+
     }
-    
-    //this method runs when you are viewing another users profile
+
     public void viewOtherProfile() {
         frame = new JFrame(username);
         frame.setSize(640, 480);
@@ -418,260 +423,250 @@ public class Profile implements Serializable, Runnable {
                             " file. Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
                 }
 
-                if (e.getSource() == edit) {
-                    //Uses the EnterInfoGUI methods to edit the fields of the object
-                    phoneNumber = EnterInfoGUI.showPhoneInputDialog();
-                    education = JOptionPane.showInputDialog(null, "Input Education:",
-                            "CampsGram", JOptionPane.QUESTION_MESSAGE);
-                    if (education == null) {
-                        education = "Education Not Specified";
-                    }
-                    aboutMe = EnterInfoGUI.showAboutInputDialog();
+            }
+            if (e.getSource() == edit) {
+                //Uses the EnterInfoGUI methods to edit the fields of the object
+                username = EnterInfoGUI.showNameInputDialog();
+                email = EnterInfoGUI.showEmailInputDialog();
+                phoneNumber = EnterInfoGUI.showPhoneInputDialog();
+                education = EnterInfoGUI.showEducationInputDialog();
+                aboutMe = EnterInfoGUI.showAboutInputDialog();
+                interests = EnterInfoGUI.showInterestsInputDialog();
 
-
-                    //Updates the JTextAreas to the current fields
-                    if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
-                        phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
-                    }
-                    if (ioMachine.editProfile(username, "Education", education)) {
-                        educationArea.setText(education);
-                    }
-                    if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
-                        aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
-                    }
-                    String interest;
-                    do {
-                        interest = JOptionPane.showInputDialog(null, "Add Interest",
-                                "CampsGram", JOptionPane.QUESTION_MESSAGE);
-                        if (interest != null) {
-                            if (ioMachine.editProfileList("Add", username, "Interest", interest)) {
-                                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
-                            }
-                        }
-                    } while (interest != null);
-                    do {
-                        interest = JOptionPane.showInputDialog(null, "Remove Interest",
-                                "CampsGram", JOptionPane.QUESTION_MESSAGE);
-                        if (interest != null) {
-                            if (ioMachine.editProfileList("Remove", username, "Interest", interest)) {
-                                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Cannot remove that interets",
-                                        "CampsGram", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                    } while (interest != null);
+                //Updates the JLabels to the current fields
+                usernameArea.setText(username);
+                if (ioMachine.editProfile(username, "Email", email)) {
+                    emailArea.setText(email);
                 }
-                if (e.getSource() == requests) {
-                    //TODO: Interact with server to get most recent versions of all lists
-                    FriendsListGUI friend = new FriendsListGUI(username, requestsSent,
-                            requestsReceived, friends);
-                    FriendsListGUI usableFriend = new FriendsListGUI(friend, ioMachine);
-                    usableFriend.run();
+                if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
+                    phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
+                }
+                if (ioMachine.editProfile(username, "Education", education)) {
+                    educationArea.setText(education);
+                }
+                if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
+                    aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
+                }
+                //TODO: Add IOMachine Method for Interests
+                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+            }
+            if(e.getSource() == requests) {
+                //TODO: Interact with server to get most recent versions of all lists
+                FriendsListGUI friend = new FriendsListGUI(username, requestsSent,
+                        requestsReceived, friends);
+                FriendsListGUI usableFriend = new FriendsListGUI(friend, ioMachine);
+                usableFriend.run();
+            }
+
+            //Bottom Buttons
+            if (e.getSource() == view) { //view another users profile
+                //takes the username in users drop down box
+                String requestedUser = (String) users.getSelectedItem();
+
+                Profile profile = ioMachine.findProfile(requestedUser);
+
+                profile.viewOtherProfile();
+            }
+            if (e.getSource() == sendFriendRequest) {
+                String requestedUser = (String) users.getSelectedItem();
+                if (ioMachine.sendRequest(getUsername(), requestedUser)) {
+                    JOptionPane.showMessageDialog(null, "Friend Request Sent!",
+                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Unable to send Friend Request." +
+                            "Please Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
                 }
 
-                if (e.getSource() == view) { //view another users profile
-                    //takes the username in users drop down box
-                    String requestedUser = (String) users.getSelectedItem();
-
-                    Profile profile = ioMachine.findProfile(requestedUser);
-
-                    profile.viewOtherProfile();
-                }
-                if (e.getSource() == sendFriendRequest) { //send a friend request to another user
-                    String requestedUser = (String) users.getSelectedItem();
-                    if (ioMachine.sendRequest(getUsername(), requestedUser)) {
-                        JOptionPane.showMessageDialog(null, "Friend Request Sent!",
-                                "CampsGram", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Unable to send Friend Request." +
-                                "Please Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                }
             }
         }
-
     };
 
+    transient ActionListener taskPerformer = new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            //resets the usernames to the current list
+            String[] usernames = ioMachine.viewAllProfiles().toArray
+                    (new String[ioMachine.viewAllProfiles().size()]);
+            users = new JComboBox<>(usernames);
 
-        public void writeExportFile() throws IOException {
-
-            try {
-                //creating new file and printWriter for this profile
-                File f = new File(this.username + "Export.csv");
-                PrintWriter pw = new PrintWriter(new FileWriter(f, false));
-
-                pw.print(this.username + ',' + interests.size() + ',');
-
-                //loop to write each element of interests list to file
-                for (int i = 0; i < interests.size(); i++) {
-                    pw.print(this.interests.get(i) + ',');
-                }
-
-                pw.print(this.friends.size());
-                pw.print(",");
-
-                //loop to write each element of friends list to file
-                for (int x = 0; x < friends.size(); x++) {
-                    pw.print(friends.get(x) + ',');
-                }
-
-                pw.print(this.getRequestsReceived().size());
-                pw.print(",");
-
-                //loop to write each element of friend requests received list to file
-                for (int x = 0; x < requestsReceived.size(); x++) {
-                    pw.print(requestsReceived.get(x) + ',');
-                }
-
-                pw.print(this.getRequestsSent().size());
-                pw.print(",");
-
-                //loop to write each element of friend requests sent list to file
-                for (int x = 0; x < requestsSent.size(); x++) {
-                    pw.print(requestsSent.get(x) + ',');
-                }
-
-                pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
-
-                pw.close();
-
-            } catch (IOException e) { //If the file is open or another error occurs, display this error message
-                JOptionPane.showMessageDialog(null, "There was an error exporting your file, please " +
-                        "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
-            }
-
+            //updates the UI
+            users.updateUI();
         }
+    };
 
+    public void writeExportFile() throws IOException {
 
-        public String getUsername() {
-            return this.username;
-        }
+        try {
+            //creating new file and printWriter for this profile
+            File f = new File(this.username + "Export.csv");
+            PrintWriter pw = new PrintWriter(new FileWriter(f, false));
 
-        public ArrayList<String> getInterests() {
-            return this.interests;
-        }
+            pw.print(this.username + ',' + interests.size() + ',');
 
-        public ArrayList<String> getFriends() {
-            return this.friends;
-        }
-
-        public String getEducation() {
-            return this.education;
-        }
-
-        public String getEmail() {
-            return this.email;
-        }
-
-        public long getPhoneNumber() {
-            return this.phoneNumber;
-        }
-
-        public String getAboutMe() {
-            return this.aboutMe;
-        }
-
-        public ArrayList<String> getRequestsSent() {
-            return this.requestsSent;
-        }
-
-        public ArrayList<String> getRequestsReceived() {
-            return this.requestsReceived;
-        }
-
-        public void setAboutMe(String aboutMe) {
-            this.aboutMe = aboutMe;
-        }
-
-        public void setEducation(String education) {
-            this.education = education;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public void setFriends(ArrayList<String> friends) {
-            this.friends = friends;
-        }
-
-        public void addFriend(String friend) { //TODO change this
-            this.friends.add(friend);
-        }
-
-        public void removeFriends(String friend) { //TODO change this
-
-            for (int i = 0; i < friends.size(); i++) {
-
-                if (friends.get(i).equals(friend)) {
-                    friends.remove(i);
-                }
-            }
-        }
-
-        public void setInterests(ArrayList<String> interests) {
-            this.interests = interests;
-        }
-
-        public void addInterest(String interest) {
-            this.interests.add(interest);
-        }
-
-        public void removeInterest(String interest) {
-
+            //loop to write each element of interests list to file
             for (int i = 0; i < interests.size(); i++) {
+                pw.print(this.interests.get(i) + ',');
+            }
 
-                if (interests.get(i).equals(interest)) {
-                    interests.remove(i);
-                }
+            pw.print(this.friends.size());
+            pw.print(",");
+
+            //loop to write each element of friends list to file
+            for (int x = 0; x < friends.size(); x++) {
+                pw.print(friends.get(x) + ',');
+            }
+
+            pw.print(this.getRequestsReceived().size());
+            pw.print(",");
+
+            //loop to write each element of friend requests received list to file
+            for (int x = 0; x < requestsReceived.size(); x++) {
+                pw.print(requestsReceived.get(x) + ',');
+            }
+
+            pw.print(this.getRequestsSent().size());
+            pw.print(",");
+
+            //loop to write each element of friend requests sent list to file
+            for (int x = 0; x < requestsSent.size(); x++) {
+                pw.print(requestsSent.get(x) + ',');
+            }
+
+            pw.print(this.education + ',' + this.email + ',' + this.phoneNumber + ',' + this.aboutMe);
+
+            pw.close();
+
+        } catch (IOException e) { //If the file is open or another error occurs, display this error message
+            JOptionPane.showMessageDialog(null, "There was an error exporting your file, please " +
+                    "close the file if it is open on your device", "CamsGram", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public ArrayList<String> getInterests() {
+        return this.interests;
+    }
+
+    public ArrayList<String> getFriends() {
+        return this.friends;
+    }
+
+    public String getEducation() {
+        return this.education;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public long getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public String getAboutMe() {
+        return this.aboutMe;
+    }
+
+    public ArrayList<String> getRequestsSent() {
+        return this.requestsSent;
+    }
+
+    public ArrayList<String> getRequestsReceived() {
+        return this.requestsReceived;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFriends(ArrayList<String> friends) {
+        this.friends = friends;
+    }
+
+    public void addFriend(String friend) { //TODO change this
+        this.friends.add(friend);
+    }
+
+    public void removeFriends(String friend) { //TODO change this
+
+        for (int i = 0; i < friends.size(); i++) {
+
+            if (friends.get(i).equals(friend)) {
+                friends.remove(i);
             }
         }
+    }
 
-        public void setPhoneNumber(long phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
 
-        public void setUsername(String username) {
-            this.username = username;
-        }
+    public void addInterest(String interest) {
+        this.interests.add(interest);
+    }
 
-        public void setRequestsSent(ArrayList<String> requestsSent) {
-            this.requestsSent = requestsSent;
-        }
+    public void removeInterest(String interest) {
 
-        public void addSentRequest(String username) {
-            this.requestsSent.add(username);
-        }
+        for (int i = 0; i < interests.size(); i++) {
 
-        public void removeSentRequest(String username) {
-            for (int i = 0; i < requestsSent.size(); i++) {
-
-                if (requestsSent.get(i).equals(username)) {
-                    requestsSent.remove(i);
-                }
+            if (interests.get(i).equals(interest)) {
+                interests.remove(i);
             }
         }
+    }
 
-        public void setRequestsReceived(ArrayList<String> requestsReceived) {
-            this.requestsSent = requestsSent;
-        }
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-        public void addReceivedRequest(String username) {
-            this.requestsReceived.add(username);
-        }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-        public void removeReceivedRequest(String username) {
-            for (int i = 0; i < requestsReceived.size(); i++) {
+    public void setRequestsSent(ArrayList<String> requestsSent) {
+        this.requestsSent = requestsSent;
+    }
 
-                if (requestsReceived.get(i).equals(username)) {
-                    requestsReceived.remove(i);
-                }
+    public void addSentRequest(String username) {
+        this.requestsSent.add(username);
+    }
+
+    public void removeSentRequest(String username) {
+        for (int i = 0; i < requestsSent.size(); i++) {
+
+            if (requestsSent.get(i).equals(username)) {
+                requestsSent.remove(i);
             }
         }
+    }
 
+    public void setRequestsReceived(ArrayList<String> requestsReceived) {
+        this.requestsSent = requestsSent;
+    }
+
+    public void addReceivedRequest(String username) {
+        this.requestsReceived.add(username);
+    }
+
+    public void removeReceivedRequest(String username) {
+        for (int i = 0; i < requestsReceived.size(); i++) {
+
+            if (requestsReceived.get(i).equals(username)) {
+                requestsReceived.remove(i);
+            }
+        }
+    }
 
 
 }
-
