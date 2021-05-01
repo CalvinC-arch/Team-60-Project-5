@@ -219,7 +219,11 @@ public class Account implements Serializable {
                 profiles array*/
                 int profileIndex = Integer.parseInt(e.getActionCommand().substring(4));
 
-                profileHashMap.get(profileIndex).run();
+                //grants the profile net I/O access
+                Profile profile = new Profile(profileHashMap.get(profileIndex), ioMachine);
+
+                //runs the profiles GUI
+                profile.run();
             }
             else if (e.getActionCommand().contains("delete")) //Runs if the received action command contains delete
             {
