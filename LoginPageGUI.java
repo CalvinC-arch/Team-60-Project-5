@@ -125,15 +125,20 @@ public class  LoginPageGUI implements Runnable {
                     //Tries to connect to server and send inputs
                       
                     try {
+                        //gets the account associated with the requested email
                         validate = ioMachine.findAccount(email);
 
-                        if (validate.getPassword().equals(password)) {
+                        if (validate.getPassword().equals(password)) { //checks if the password is correct
                             validAccount = true;
                         }
 
-                        if (validAccount) {
+                        if (validAccount) { //runs the account GUI if the login is validated
                             Account account = new Account(ioMachine.findAccount(email), ioMachine);
                             account.run();
+                        } else { //Sends the user an error message otherwise
+                            JOptionPane.showMessageDialog(null,
+                                    "No account matches the email and password!", "CampsGram",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
 
                     } catch(Exception x) {
