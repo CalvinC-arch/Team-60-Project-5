@@ -248,10 +248,19 @@ public class Profile implements Serializable, Runnable {
         bottomPanel = new JPanel();
         JLabel userLabel = new JLabel("Find Other Users: ");
         bottomPanel.add(userLabel);
+        
+        //Drop down box of usernames
+
+        //retrieves the complete list of users, remove the current users name from the list
+        ArrayList<String> usernameList = ioMachine.viewAllProfiles();
+        usernameList.remove(getUsername());
 
         //creates the drop down menu with usernames assuming there are any other profiles
-        if (ioMachine.viewAllProfiles().size() > 0) {
-            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
+        if (usernameList.size() > 0) {
+            //turns username list into a usable array
+            String[] usernames = usernameList.toArray(new String[usernameList.size()]);
+
+            //initializes the Drop down menu of usernames
             users = new JComboBox<String>(usernames);
             users.setMaximumRowCount(6);
         } else {
@@ -411,6 +420,11 @@ public class Profile implements Serializable, Runnable {
         frame.add(profilePanel, BorderLayout.CENTER);
 
         frame.setVisible(true);
+        
+        //begins a timer that automatically updates the user list every 3 seconds
+        Timer timer = new Timer(3000, viewRefresher);
+        timer.setRepeats(true);
+        timer.start();
     }
 
     transient ActionListener actionListener = new ActionListener() {
@@ -523,14 +537,41 @@ public class Profile implements Serializable, Runnable {
     //Code that Runs every 3 seconds, updating the profile list
     transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
+            //retrieves the complete list of users, remove the current users name from the list
+            ArrayList<String> usernameList = ioMachine.viewAllProfiles();
+            usernameList.remove(getUsername());
+
             //sets the usernames to the current list of users
-            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
+            String[] usernames = usernameList.toArray(new String[usernameList.size()]);
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(usernames);
             users.setModel(model);
 
             //updates the GUI
             frame.revalidate();
             bottomPanel.repaint();
+        }
+    };
+    
+    //Code that Runs every 3 seconds, updating the view of another profile list
+    transient ActionListener viewRefresher = new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            //gets the most recent version of the profile
+            Profile updatedProfile = ioMachine.findProfile(getUsername());
+            
+            //updates the text areas
+            phoneArea.setText(EnterInfoGUI.formatPhoneString(updatedProfile.getPhoneNumber()));
+            emailArea.setText(updatedProfile.getEmail());
+            educationArea.setText(updatedProfile.getEducation());
+            aboutMeArea.setText(EnterInfoGUI.formatAboutString(updatedProfile.getAboutMe()));
+            interestArea.setText(EnterInfoGUI.formatInterestsString(updatedProfile.getInterests()));
+
+            //updates the GUI
+            phoneArea.repaint();
+            emailArea.repaint();
+            educationArea.repaint();
+            aboutMeArea.repaint();
+            interestArea.repaint();
+            frame.revalidate();
         }
     };
 
