@@ -313,6 +313,8 @@ class ProfileClientHandler extends Thread {
                             dos.writeObject("False");
                         }
 
+                        break;
+
                     case "EditEmail":  //edits the email of a profile found based on username
 
                         objectFound = false;
@@ -336,6 +338,8 @@ class ProfileClientHandler extends Thread {
                         if (!objectFound) {  //if account not found, send back false
                             dos.writeObject("False");
                         }
+
+                        break;
 
                     case "EditPhoneNumber":  //edits the phone number of a profile found based on username
 
@@ -362,6 +366,8 @@ class ProfileClientHandler extends Thread {
                             dos.writeObject("False");
                         }
 
+                        break;
+
                     case "EditAboutMe":  //edits the about me section of a profile found based on username
 
                         //read in and initialize parameters
@@ -387,6 +393,8 @@ class ProfileClientHandler extends Thread {
                             dos.writeObject("False");
                         }
 
+                        break;
+
                     case "AddFriend":  //Accepts a friend request
 
                         objectFound = false;
@@ -410,6 +418,8 @@ class ProfileClientHandler extends Thread {
                         if (!objectFound) {  //if account not found, send back false
                             dos.writeObject("False");
                         }
+
+                        break;
 
                     case "RemoveFriend":  //removes a friend from a profile
 
@@ -465,10 +475,14 @@ class ProfileClientHandler extends Thread {
 
                         if (!objectFound) {  //if the profile is not found
                             dos.writeObject("False");
-                            break;
+
+                        } else {
+
+                            dos.writeObject("True");
+
                         }
 
-                        dos.writeObject("True");
+                        break;
 
                     case "RemoveRequestsSent":  //removes a sent friend request
 
@@ -497,7 +511,11 @@ class ProfileClientHandler extends Thread {
 
                         dos.writeObject("True");
 
+                        break;
+
                     case "AddRequestsReceived":  //add a friend request received
+
+                        System.out.println("In AddRequestsReceived");
 
                         //read in and initialize parameters
                         objectFound = false;
@@ -508,6 +526,8 @@ class ProfileClientHandler extends Thread {
                         for (int i = 0; i < accounts.size(); i++) { //search accounts
 
                             for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
+
+                                System.out.println(accounts.get(i).getProfiles().get(j).getUsername());
 
                                 if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) { //if profile
                                     // found
@@ -523,6 +543,8 @@ class ProfileClientHandler extends Thread {
                         }
 
                         dos.writeObject("True");
+
+                        break;
 
                     case "RemoveRequestsReceived":  //removes a received friend request
 
@@ -551,8 +573,11 @@ class ProfileClientHandler extends Thread {
 
                         dos.writeObject("True");
 
+                        break;
+
                     default:  //if no cases match the command
-                        System.out.println("You sent to the server, but didn't match a case :(");
+                        System.out.println("You sent to the server, but didn't match a case. Command was: " + command);
+
 
                 }
 
