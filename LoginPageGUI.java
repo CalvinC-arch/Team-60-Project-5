@@ -130,6 +130,9 @@ public class  LoginPageGUI implements Runnable {
 
                         if (validate.getPassword().equals(password)) { //checks if the password is correct
                             validAccount = true;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No account matches the " +
+                                    "email and password!", "CampsGram", JOptionPane.ERROR_MESSAGE);
                         }
 
                         if (validAccount) { //runs the account GUI if the login is validated

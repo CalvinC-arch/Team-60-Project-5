@@ -164,15 +164,16 @@ public class EnterInfoGUI {
                     phoneLong = Long.parseLong(phone); //throws exception is phone number is not a Long
                     checking = false; //makes loop stop if no exception is thrown
                     if (phone.length() != 10) { //checks if phone number has more than 10 digits
-                        JOptionPane.showMessageDialog(null, "Please enter a valid phone number!",
-                            "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                        JOptionPane.showMessageDialog(null, "Please enter a valid phone number! " +
+                                "It should be 10 digits long!", "CampsGram",
+                                JOptionPane.ERROR_MESSAGE); //shows error
                         checking = true; //makes loop run again which asks user to input again
                     } //end if
                 }
 
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Please enter a valid phone number!",
-                        "CamsGram", JOptionPane.ERROR_MESSAGE); //shows error
+                        "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //try-catch block
         } while (checking); //do-while runs while 'checking' is true
         //formats the phone number correctly
@@ -182,8 +183,12 @@ public class EnterInfoGUI {
     public static String formatPhoneString(long phone) {
         String phoneS = String.valueOf(phone);
         String phoneFormat = ""; //declares phone number formatted
-        phoneFormat = "(" + phoneS.substring(0, 3)+ ") " + phoneS.substring(3,6) + "-" + phoneS.substring(6, 10);
-        //formats the phone number correctly
+        if (phone == 1111111111) {
+            phoneFormat = "Phone Number Not Specified";
+        } else {
+            phoneFormat = "(" + phoneS.substring(0, 3)+ ") " + phoneS.substring(3,6) + "-" + phoneS.substring(6, 10);
+            //formats the phone number correctly
+        }
         return phoneFormat; //returns phone String in correct format
     } //formatPoneString
 
@@ -222,6 +227,8 @@ public class EnterInfoGUI {
                 interest = JOptionPane.showInputDialog(null,
                         "Enter personal interests separated by commas: ", "CampsGram",
                         JOptionPane.QUESTION_MESSAGE); //asks user to input interests
+                interest = interest.replace(" ", "");
+
                 interest = interest.toLowerCase();
                 if(interest == null) {
                     checking = false;
@@ -230,16 +237,14 @@ public class EnterInfoGUI {
                     JOptionPane.showMessageDialog(null, "Please enter your interests!",
                             "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
                 } else {
-                    do {
-                        if (interest.contains(" ")) { //checks if there are any spaces
-                            interest = interest.replace(" ", ""); //removes all spaces
-                        }//end if
-
-                        int comma = interest.indexOf(","); //finds comma separating interests
-                        interests.add(interest.substring(0, comma)); //adds the first interest to the ArrayList
-                        interest = interest.substring(comma + 1); //updates the String by removing the first interest
-                    } while (interest.contains(",")); //do-while loops runs until there are no commas in the String
-                    interests.add(interest); //adds remaining interest to the ArrayList
+                    if (!interest.contains(",")) {
+                        interests.add(interest);
+                    } else {
+                        String [] array = interest.split(",");
+                        for (int i = 0; i < array.length; i++) {
+                            interests.add(array[i]);
+                        }
+                    }
                     checking = false; //stops loops since interests format is valid
                 }
             } catch (Exception e) {
@@ -256,7 +261,7 @@ public class EnterInfoGUI {
                         "(Leave empty if you do not wish to add this to your profile) : ", "CampsGram",
                 JOptionPane.QUESTION_MESSAGE); //asks user to input information about themselves
         if (about == null) {
-            about = "User decided not to share info"; //displays when user leaves input empty
+            about = "User decided not to share info!"; //displays when user leaves input empty
         } else if (about.equals("")) {
             about = "User decided not to share info"; //displays when user leaves input empty
         }
@@ -275,7 +280,7 @@ public class EnterInfoGUI {
                 state = "State not specified";
                 break;
             } else if (state.equals("")) { //checks if state choice is null
-                JOptionPane.showMessageDialog(null, "Choice cannot be empty!", "CampsGram",
+                JOptionPane.showMessageDialog(null, "Select a State!", "CampsGram",
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
 
@@ -290,7 +295,7 @@ public class EnterInfoGUI {
             if (university == null) {
                 university = "University not Specified";
             } else if (university.equals("")) { //checks if university is empty
-                JOptionPane.showMessageDialog(null, "Choice cannot be empty!", "CampsGram",
+                JOptionPane.showMessageDialog(null, "Select a University!", "CampsGram",
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
         } else if (state.equals("Indiana")) { //if user selects Indiana as their state
@@ -300,7 +305,7 @@ public class EnterInfoGUI {
             if (university == null) {
                 university = "University not Specified";
             } else if (university.equals("")) { //checks if university choice is empty
-                JOptionPane.showMessageDialog(null, "Choice cannot be empty!", "CampsGram",
+                JOptionPane.showMessageDialog(null, "Select a University!", "CampsGram",
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
         } else if (state.equals("Ohio")) { //if user selects Ohio as their state
@@ -310,7 +315,7 @@ public class EnterInfoGUI {
             if (university == null) {
                 university = "University not Specified";
             } else if (university.equals("")) { //checks if university choice is empty
-                JOptionPane.showMessageDialog(null, "Choice cannot be empty!", "CampsGram",
+                JOptionPane.showMessageDialog(null, "Select a University!", "CampsGram",
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
         } else if (state.equals("Virginia")) { //if user selects Virgina as their state
@@ -320,7 +325,7 @@ public class EnterInfoGUI {
             if (university == null) {
                 university = "University not Specified";
             } else if (university.equals("")) { //checks if university choice is empty
-                JOptionPane.showMessageDialog(null, "Choice cannot be empty!", "CampsGram",
+                JOptionPane.showMessageDialog(null, "Select a University!", "CampsGram",
                         JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
         } //end else if

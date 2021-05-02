@@ -42,12 +42,21 @@ public class ProfileClient {
             //Runs the Login GUI
             LoginPageGUI Login = new LoginPageGUI(ioMachine);
             Login.run();
+            //ArrayList<String> sent = new ArrayList<>();
+            //ArrayList<String> received = new ArrayList<>();
+            //ArrayList<String> friend = new ArrayList<>();
+            //Profile profile = new Profile();
+            //Profile usable = new Profile(profile, ioMachine);
+            //usable.run();
+
+
 
         } catch (IOException e) { //display error message is connection not established
             JOptionPane.showMessageDialog(null, "Error: Connection Cannot be Established",
                     "Campsgram", JOptionPane.ERROR_MESSAGE);
 
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: There was an Error in the code " +
                             "somewhere", "Campsgram", JOptionPane.ERROR_MESSAGE);
         }

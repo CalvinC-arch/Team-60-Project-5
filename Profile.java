@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
+import java.util.Locale;
 
 
 public class Profile implements Serializable, Runnable {
@@ -89,8 +90,6 @@ public class Profile implements Serializable, Runnable {
         this.email = "jwstoneb@purdue.edu";
         this.phoneNumber = 8476360377L;
         this.aboutMe = "Why are we here, Just to suffer?";
-        this.requestsReceived = new ArrayList<>();
-        this.requestsSent = new ArrayList<>();
     }
 
     public Profile(String filename) throws IOException {
@@ -245,18 +244,14 @@ public class Profile implements Serializable, Runnable {
         topPanel.add(requests);
         frame.add(topPanel, BorderLayout.NORTH);
 
-        //Drop down box of usernames
-
-        //retrieves the complete list of users, remove the current users name from the list
-        ArrayList<String> usernameList = ioMachine.viewAllProfiles();
-        usernameList.remove(getUsername());
+        //bottom panel
+        bottomPanel = new JPanel();
+        JLabel userLabel = new JLabel("Find Other Users: ");
+        bottomPanel.add(userLabel);
 
         //creates the drop down menu with usernames assuming there are any other profiles
-        if (usernameList.size() > 0) {
-            //turns username list into a usable array
-            String[] usernames = usernameList.toArray(new String[usernameList.size()]);
-
-            //initializes the Drop down menu of usernames
+        if (ioMachine.viewAllProfiles().size() > 0) {
+            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
             users = new JComboBox<String>(usernames);
             users.setMaximumRowCount(6);
         } else {
@@ -424,6 +419,8 @@ public class Profile implements Serializable, Runnable {
                 //TODO: Verify Code, Add IoMachine Method
                 try {
                     writeExportFile();
+                    JOptionPane.showMessageDialog(null, "Successfully Exported Profile!",
+                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Oops! There was a problem exporting" +
                             " file. Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
@@ -432,32 +429,68 @@ public class Profile implements Serializable, Runnable {
             }
             if (e.getSource() == edit) {
                 //Uses the EnterInfoGUI methods to edit the fields of the object
-                username = EnterInfoGUI.showNameInputDialog();
-                email = EnterInfoGUI.showEmailInputDialog();
                 phoneNumber = EnterInfoGUI.showPhoneInputDialog();
-                education = EnterInfoGUI.showEducationInputDialog();
+                if (phoneNumber != 1111111111) {
+                    if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
+                        phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
+                    }
+                }
                 aboutMe = EnterInfoGUI.showAboutInputDialog();
-                interests = EnterInfoGUI.showInterestsInputDialog();
+                if (!aboutMe.equals("User decided not to share info!")) {
+                    if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
+                        aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
+                    }
+                }
+                education = JOptionPane.showInputDialog(null, "Enter your education:",
+                        "CampsGram", JOptionPane.QUESTION_MESSAGE);
+                if (education == null || education.equals("")) {
+                    //do nothing
+                } else {
+                    if (ioMachine.editProfile(username, "Education", education)) {
+                        educationArea.setText(education);
+                    }
+                }
+                String action;
+                do {
+                    String [] options = {"add", "remove"};
+                    action = (String) JOptionPane.showInputDialog(null, "Add or Remove Interest?",
+                            "CampsGram", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                    if(action == null) {
+                        //do nothing
+                    } else if (action.equals("add")) {
+                        String addInterest = JOptionPane.showInputDialog(null, "Add Interest",
+                                "CampsGram", JOptionPane.QUESTION_MESSAGE);
+                        addInterest = addInterest.replace(" ", "");
+                        addInterest = addInterest.toLowerCase();
+                        if (addInterest == null || addInterest.equals("")) {
+                            //do nothing
+                        } else {
+                            if (ioMachine.editProfileList("Add", username, "Interest", addInterest)) {
+                                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                            }
+                        }
+                    } else if (action.equals("remove")) {
+                        String removeInterest = JOptionPane.showInputDialog(null, "Remove Interest",
+                                "CampsGram", JOptionPane.QUESTION_MESSAGE);
+                        removeInterest = removeInterest.replace(" ", "");
+                        removeInterest = removeInterest.toLowerCase();
+                        if (removeInterest == null || removeInterest.equals("")) {
+                            //do nothing
+                        } else {
+                            //TODO: Check whether it is updating interests
+                            if (ioMachine.editProfileList("Remove", username, "Interest", removeInterest)) {
+                                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Cannot remove interest",
+                                        "CampsGram", JOptionPane.ERROR_MESSAGE);
 
-                //Updates the JLabels to the current fields
-                usernameArea.setText(username);
-                if (ioMachine.editProfile(username, "Email", email)) {
-                    emailArea.setText(email);
-                }
-                if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
-                    phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
-                }
-                if (ioMachine.editProfile(username, "Education", education)) {
-                    educationArea.setText(education);
-                }
-                if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
-                    aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
-                }
-                //TODO: Add IOMachine Method for Interests
-                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                            }
+                        }
+                    }
+                } while (action != null);
             }
             if(e.getSource() == requests) {
-                //TODO: Interact with server to get most recent versions of all lists
+                //TODO: Figure out why it doesn't match a case in the server
                 FriendsListGUI friend = new FriendsListGUI(username, requestsSent,
                         requestsReceived, friends);
                 FriendsListGUI usableFriend = new FriendsListGUI(friend, ioMachine);
@@ -480,7 +513,7 @@ public class Profile implements Serializable, Runnable {
                             "CampsGram", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "Unable to send Friend Request." +
-                            "Please Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
+                            " Please Try Again.", "CampsGram", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
@@ -490,12 +523,8 @@ public class Profile implements Serializable, Runnable {
     //Code that Runs every 3 seconds, updating the profile list
     transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
-            //retrieves the complete list of users, remove the current users name from the list
-            ArrayList<String> usernameList = ioMachine.viewAllProfiles();
-            usernameList.remove(getUsername());
-
             //sets the usernames to the current list of users
-            String[] usernames = usernameList.toArray(new String[usernameList.size()]);
+            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(usernames);
             users.setModel(model);
 
