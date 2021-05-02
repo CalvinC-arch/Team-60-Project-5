@@ -151,8 +151,14 @@ class ProfileClientHandler extends Thread {
                                 usernames.add(accounts.get(i).getProfiles().get(j).getUsername());
                                 objectFound = true;
 
+                                //TODO REMOVE
+                                //System.out.println(accounts.get(i).getProfiles().get(j).getUsername());
+
                             }
                         }
+
+                        //TODO REMOVE
+                        //System.out.println(objectFound);
 
                         if (!objectFound) { //if a matching profile is not found
                             dos.writeObject("False");
@@ -596,6 +602,36 @@ class ProfileClientHandler extends Thread {
         } catch (IOException e) {
             //JOptionPane.showMessageDialog(null, "Error: There was a connection issue",
                    // "Campsgram", JOptionPane.ERROR_MESSAGE);
+
+            try {
+                //Create or overwrite backup file to save the server if there is an exception
+                File f = new File("ServerBackupFile.csv");
+                PrintWriter pw = new PrintWriter(new FileWriter(f, false));
+
+                for(int i = 0; i < accounts.size(); i++) { //iterates through every account on the server
+
+                    //write the email and password for each account to a CSV file
+                    pw.print(accounts.get(i).getEmail() + ",");
+                    pw.print(accounts.get(i).getPassword());
+
+                    //loops through the profiles associated with an account, exports them using the
+                    // writeExportFile() method in Profile.java, and writes the username of the profile to the CSV file
+                    for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) {
+                        accounts.get(i).getProfiles().get(j).writeExportFile();
+                        pw.print("," + accounts.get(i).getProfiles().get(j).getUsername());
+                    }
+
+                    //prints a new line for the next account to be written
+                    pw.println();
+                }
+
+                pw.close();
+                System.out.println("The server was backed up");
+
+            } catch (Exception f) {
+                f.printStackTrace();
+                System.out.println("The server was not backed up");
+            }
 
         }
     }

@@ -473,7 +473,6 @@ public class IOMachine extends ObjectOutputStream {
 
             String result; //result returned from the server
 
-
             dos.writeObject("SendAllProfiles");
 
             result = (String) dis.readObject();
