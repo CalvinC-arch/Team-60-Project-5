@@ -154,7 +154,14 @@ public class Account implements Serializable {
             }
             if(e.getSource() == addProfile) {
                 //Uses EnterInfo GUI to create fields for a profile
-                String name = EnterInfoGUI.showNameInputDialog();
+                boolean usernameTaken = true;
+                String username;
+                do {
+                    username = EnterInfoGUI.showUsernameInputDialog();
+                    if(ioMachine.findProfile(username) == null){
+                        usernameTaken = false;
+                    }
+                } while (usernameTaken);
                 ArrayList<String> interests = EnterInfoGUI.showInterestsInputDialog();
                 ArrayList<String> friends = new ArrayList<>();
                 String education = EnterInfoGUI.showEducationInputDialog();
@@ -163,7 +170,7 @@ public class Account implements Serializable {
                 String aboutMe = EnterInfoGUI.showAboutInputDialog();
 
                 //creates a new profile and adds it to the array list of profiles
-                Profile profile = new Profile(name, interests, friends, education, email, phone, aboutMe, new ArrayList<>(), new ArrayList<>());
+                Profile profile = new Profile(username, interests, friends, education, email, phone, aboutMe, new ArrayList<>(), new ArrayList<>());
                 profiles.add(profile);
 
                 //Adds the profile to the server
