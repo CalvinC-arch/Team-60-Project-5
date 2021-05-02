@@ -245,14 +245,18 @@ public class Profile implements Serializable, Runnable {
         topPanel.add(requests);
         frame.add(topPanel, BorderLayout.NORTH);
 
-        //bottom panel
-        bottomPanel = new JPanel();
-        JLabel userLabel = new JLabel("Find Other Users: ");
-        bottomPanel.add(userLabel);
+        //Drop down box of usernames
+
+        //retrieves the complete list of users, remove the current users name from the list
+        ArrayList<String> usernameList = ioMachine.viewAllProfiles();
+        usernameList.remove(getUsername());
 
         //creates the drop down menu with usernames assuming there are any other profiles
-        if (ioMachine.viewAllProfiles().size() > 0) {
-            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
+        if (usernameList.size() > 0) {
+            //turns username list into a usable array
+            String[] usernames = usernameList.toArray(new String[usernameList.size()]);
+
+            //initializes the Drop down menu of usernames
             users = new JComboBox<String>(usernames);
             users.setMaximumRowCount(6);
         } else {
@@ -486,8 +490,12 @@ public class Profile implements Serializable, Runnable {
     //Code that Runs every 3 seconds, updating the profile list
     transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
+            //retrieves the complete list of users, remove the current users name from the list
+            ArrayList<String> usernameList = ioMachine.viewAllProfiles();
+            usernameList.remove(getUsername());
+
             //sets the usernames to the current list of users
-            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
+            String[] usernames = usernameList.toArray(new String[usernameList.size()]);
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(usernames);
             users.setModel(model);
 
