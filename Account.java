@@ -89,6 +89,7 @@ public class Account implements Serializable {
         //Creates the frame
         frame = new JFrame("Account: " + email);
         frame.setSize(640, 480);
+        frame.setLocationRelativeTo(null); //sets the location of the frame
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         //Sets up the bottom bar and its buttons
