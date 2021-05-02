@@ -178,17 +178,30 @@ public class  LoginPageGUI implements Runnable {
 
                 } else {
                     //If email and password have proper format, store them in variables
-                    email = emailField.getText(); //store email
-                    emailField.setText(""); //reset email field
-                    password = passwordField.getText(); //store password
-                    passwordField.setText(""); //reset password field
+                    try {
+                        email = emailField.getText(); //store email
+                        emailField.setText(""); //reset email field
+                        password = passwordField.getText(); //store password
+                        passwordField.setText(""); //reset password field
 
-                    //Sends a new account to the server
-                    Account tempAccount = new Account(email, password, new ArrayList<Profile>());
-                    accountCreated = ioMachine.addAccount(tempAccount);
-                    if (accountCreated) {
-                        Account account = new Account(ioMachine.findAccount(email), ioMachine);
-                        account.run();
+                        //Sends a new account to the server
+                        //check whether an account associated with that email exists
+                        if(ioMachine.findAccount(email) == null) { 
+                            //if not, create new account
+                            Account tempAccount = new Account(email, password, new ArrayList<Profile>()); 
+                            accountCreated = ioMachine.addAccount(tempAccount);
+                        } else {                          
+                            JOptionPane.showMessageDialog(null, "An account associated " +
+                                    "with that email already exists!", "CampsGram", JOptionPane.ERROR_MESSAGE);
+                        }
+                        //Check whether account is properly created
+                        if (accountCreated) {
+                            Account account = new Account(ioMachine.findAccount(email), ioMachine);
+                            account.run();
+                        }
+                    } catch (Exception ee) {
+                        JOptionPane.showMessageDialog(null, "Could not make new account!", 
+                                "CampsGram", JOptionPane.ERROR_MESSAGE);
                     }
                 }
 
