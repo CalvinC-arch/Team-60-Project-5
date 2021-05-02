@@ -537,6 +537,9 @@ public class Profile implements Serializable, Runnable {
     //Code that Runs every 3 seconds, updating the profile list
     transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
+            //saves the current selection
+            String currentSelection = (String) users.getSelectedItem();
+
             //retrieves the complete list of users, remove the current users name from the list
             ArrayList<String> usernameList = ioMachine.viewAllProfiles();
             usernameList.remove(getUsername());
@@ -545,6 +548,9 @@ public class Profile implements Serializable, Runnable {
             String[] usernames = usernameList.toArray(new String[usernameList.size()]);
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(usernames);
             users.setModel(model);
+
+            //sets the selection what it was previously
+            users.setSelectedItem(currentSelection);
 
             //updates the GUI
             frame.revalidate();
