@@ -168,7 +168,12 @@ public class EnterInfoGUI {
                                 "It should be 10 digits long!", "CampsGram",
                                 JOptionPane.ERROR_MESSAGE); //shows error
                         checking = true; //makes loop run again which asks user to input again
-                    } //end if
+                    } else if (phone.substring(0, 1).equals("0")) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid phone number!" +
+                                        " Phone number cannot start with 0!", "CampsGram",
+                                JOptionPane.ERROR_MESSAGE); //shows error
+                        checking = true; //makes loop run again which asks user to input again
+                    }
                 }
 
             } catch (NumberFormatException e) {
