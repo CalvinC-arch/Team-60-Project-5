@@ -335,8 +335,8 @@ public class Profile implements Serializable, Runnable {
 
         frame.setVisible(true);
 
-        //begins a timer that automatically updates the user list
-        Timer timer = new Timer(5000, taskPerformer);
+        //begins a timer that automatically updates the user list every 3 seconds
+        Timer timer = new Timer(3000, refresher);
         timer.setRepeats(true);
         timer.start();
 
@@ -520,15 +520,17 @@ public class Profile implements Serializable, Runnable {
         }
     };
 
-    transient ActionListener taskPerformer = new ActionListener() {
+    //Code that Runs every 3 seconds, updating the profile list
+    transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
-            //resets the usernames to the current list
-            String[] usernames = ioMachine.viewAllProfiles().toArray
-                    (new String[ioMachine.viewAllProfiles().size()]);
-            users = new JComboBox<>(usernames);
+            //sets the usernames to the current list of users
+            String[] usernames = ioMachine.viewAllProfiles().toArray(new String[ioMachine.viewAllProfiles().size()]);
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(usernames);
+            users.setModel(model);
 
-            //updates the UI
-            users.updateUI();
+            //updates the GUI
+            frame.revalidate();
+            bottomPanel.repaint();
         }
     };
 
