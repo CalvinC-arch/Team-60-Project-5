@@ -420,6 +420,11 @@ public class Profile implements Serializable, Runnable {
         frame.add(profilePanel, BorderLayout.CENTER);
 
         frame.setVisible(true);
+        
+        //begins a timer that automatically updates the user list every 3 seconds
+        Timer timer = new Timer(3000, viewRefresher);
+        timer.setRepeats(true);
+        timer.start();
     }
 
     transient ActionListener actionListener = new ActionListener() {
@@ -544,6 +549,29 @@ public class Profile implements Serializable, Runnable {
             //updates the GUI
             frame.revalidate();
             bottomPanel.repaint();
+        }
+    };
+    
+    //Code that Runs every 3 seconds, updating the view of another profile list
+    transient ActionListener viewRefresher = new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            //gets the most recent version of the profile
+            Profile updatedProfile = ioMachine.findProfile(getUsername());
+            
+            //updates the text areas
+            phoneArea.setText(EnterInfoGUI.formatPhoneString(updatedProfile.getPhoneNumber()));
+            emailArea.setText(updatedProfile.getEmail());
+            educationArea.setText(updatedProfile.getEducation());
+            aboutMeArea.setText(EnterInfoGUI.formatAboutString(updatedProfile.getAboutMe()));
+            interestArea.setText(EnterInfoGUI.formatInterestsString(updatedProfile.getInterests()));
+
+            //updates the GUI
+            phoneArea.repaint();
+            emailArea.repaint();
+            educationArea.repaint();
+            aboutMeArea.repaint();
+            interestArea.repaint();
+            frame.revalidate();
         }
     };
 
