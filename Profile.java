@@ -517,8 +517,9 @@ public class Profile implements Serializable, Runnable {
                 String requestedUser = (String) users.getSelectedItem();
 
                 Profile profile = ioMachine.findProfile(requestedUser);
+                ViewProfile viewProfile = new ViewProfile(profile, ioMachine);
 
-                profile.viewOtherProfile();
+                viewProfile.run();
             }
             if (e.getSource() == sendFriendRequest) {
                 String requestedUser = (String) users.getSelectedItem();
