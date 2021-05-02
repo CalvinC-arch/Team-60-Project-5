@@ -515,8 +515,6 @@ class ProfileClientHandler extends Thread {
 
                     case "AddRequestsReceived":  //add a friend request received
 
-                        System.out.println("In AddRequestsReceived");
-
                         //read in and initialize parameters
                         objectFound = false;
                         username = (String) dis.readObject(); //profile being edited
@@ -526,8 +524,6 @@ class ProfileClientHandler extends Thread {
                         for (int i = 0; i < accounts.size(); i++) { //search accounts
 
                             for (int j = 0; j < accounts.get(i).getProfiles().size(); j++) { //search profiles
-
-                                System.out.println(accounts.get(i).getProfiles().get(j).getUsername());
 
                                 if (accounts.get(i).getProfiles().get(j).getUsername().equals(username)) { //if profile
                                     // found

@@ -285,6 +285,7 @@ public class IOMachine extends ObjectOutputStream {
             result = (String) dis.readObject();
 
             if (result.equals("True")) {
+
                 dos.writeObject("AddRequestsReceived");
                 dos.writeObject(requester);
                 dos.writeObject(username);
@@ -300,7 +301,8 @@ public class IOMachine extends ObjectOutputStream {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false; }
+            return false;
+        }
 
     }
 
@@ -321,6 +323,9 @@ public class IOMachine extends ObjectOutputStream {
             dos.writeObject(requester);
 
             result = (String) dis.readObject();
+
+            //TODO Remove
+            System.out.println(result);
 
             if (result.equals("True")) {
                 dos.writeObject("RemoveRequestsReceived");
