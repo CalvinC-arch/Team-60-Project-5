@@ -324,9 +324,6 @@ public class IOMachine extends ObjectOutputStream {
 
             result = (String) dis.readObject();
 
-            //TODO Remove
-            System.out.println(result);
-
             if (result.equals("True")) {
                 dos.writeObject("RemoveRequestsReceived");
                 dos.writeObject(requester);
