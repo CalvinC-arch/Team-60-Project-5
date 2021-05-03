@@ -157,17 +157,21 @@ public class Account implements Serializable {
                     //gets a profile in the account
                     Profile toDelete = profiles.get(i);
 
-                    //unfriends that profile from all of its friends and recinds its requests
+                    //unfriends that profile from all of its friends and recinds/declines its requests
                     for (int r = 0; r < toDelete.getFriends().size(); r++) {
                         ioMachine.unfriend(toDelete.getFriends().get(r), toDelete.getUsername());
                     }
                     for(int r = 0; r < toDelete.getRequestsSent().size(); r++) {
                         ioMachine.rescindRequest(toDelete.getRequestsSent().get(r), toDelete.getUsername());
                     }
+                    for(int r = 0; r < toDelete.getRequestsReceived().size(); r++) {
+                        ioMachine.declineFriend(toDelete.getRequestsReceived().get(r), toDelete.getUsername());
+                    }
 
                     ioMachine.deleteProfile(toDelete.getUsername());
                 }
 
+                //deletes the account
                 ioMachine.deleteAccount(ioMachine.findAccount(email));
                 frame.dispose();
             }
@@ -256,13 +260,16 @@ public class Account implements Serializable {
             {
                 int profileIndex = Integer.parseInt(e.getActionCommand().substring(6));
 
-                //unfriends the user from everyone in its friends list and rescinds all its requests
+                //unfriends the user from everyone in its friends list and rescinds/declines all its requests
                 Profile toDelete =  profileHashMap.get(profileIndex);
                 for(int i = 0; i < toDelete.getFriends().size(); i++) {
                     ioMachine.unfriend(toDelete.getFriends().get(i), toDelete.getUsername());
                 }
                 for(int i = 0; i < toDelete.getFriends().size(); i++) {
                     ioMachine.rescindRequest(toDelete.getFriends().get(i), toDelete.getUsername());
+                }
+                for(int r = 0; r < toDelete.getRequestsReceived().size(); r++) {
+                    ioMachine.declineFriend(toDelete.getRequestsReceived().get(r), toDelete.getUsername());
                 }
 
                 //removes the profile from the arraylist of profiles
