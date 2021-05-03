@@ -22,6 +22,7 @@ Class Descriptions and Testing:
 Account Class:  
 The account class has two purposes; to allow the creation and modification of account objects, and to run the GUI related to the account object. There are two constructors, one
 to...
+Test Cases for non GUI methods in Account may be found in the class AccountTestCases.
 
 
 EnterInfoGUI Class:
@@ -82,6 +83,7 @@ Testing for the GUI components of Profile.java was done by using all the element
 •	We then made sure that the JComboBox at the bottom of the screen was automatically updated as the number of existing profiles changed in response to users interacting with the program and changes being saved on the server.
 •	We then chose one of the usernames in the JComboBox and pressed the view button. The result was for the Profile GUI for this username to appear, but with the buttons and other interactive elements removed. Since we would not want one user to be able to change another user’s profile, this was the desired functionality.
 •	We then pressed the Send Friend Request button. The result was an information dialog appearing saying that the friend request was successfully sent. Additionally, the list of sent friend requests for the user who sent the request was updated to include the username of the user requested, and the list of received friend requests for the user who received the request was updated to include the username of the user who sent the request. This was the desired functionality.
+- Non GUI method Testing can be found in the class Profile Test Cases
 
 
 FriendsListGUI.java
