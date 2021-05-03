@@ -28,11 +28,14 @@ public class  LoginPageGUI implements Runnable {
     transient IOMachine ioMachine;
 
     //Make GUI elements global fields
+    //Labels and Text Fields
     JLabel instructions;
     JLabel emailLabel;
     JTextField emailField;
     JLabel passwordLabel;
     JPasswordField passwordField;
+
+    //Buttons
     JButton enterButton;
     JButton makeAccountButton;
 
@@ -45,37 +48,37 @@ public class  LoginPageGUI implements Runnable {
 
     //Creates the GUI
     public void run() {
-        //Set Up JFrame
+        //Set JFrame Settings
         JFrame frame = new JFrame("Welcome to CampsGram!"); //sets new frame
         frame.setSize(480,200); //sets frame size
         frame.setLocationRelativeTo(null); //sets the location of the frame
         frame.setResizable(false); //sets the frame as unresizable
 
         //Create Elements and add them to JPanel
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(); //create a panel
         instructions = new JLabel("Insert E-mail and Password to Login or Create a New Account");
-        panel.add(instructions);
-        emailLabel = new JLabel("Enter your Email:     ");
-        panel.add(emailLabel);
-        emailField = new JTextField("", 20);
-        panel.add(emailField);
-        passwordLabel = new JLabel("Enter your Password:       ");
-        panel.add(passwordLabel);
-        passwordField = new JPasswordField("", 20);
-        panel.add(passwordField);
-        enterButton = new JButton("            Enter             ");
-        enterButton.addActionListener(actionListener); //add action listener to respond to button clicks
-        panel.add(enterButton);
-        makeAccountButton = new JButton("    Make New Account    ");
-        makeAccountButton.addActionListener(actionListener); //add action listener to respond to button clicks
-        panel.add(makeAccountButton);
+        panel.add(instructions); //add label to panel
+        emailLabel = new JLabel("Enter your Email:     "); //set email label text
+        panel.add(emailLabel); //add label to panel
+        emailField = new JTextField("", 20); //create text field
+        panel.add(emailField); //add text field to panel
+        passwordLabel = new JLabel("Enter your Password:       "); //set password label text
+        panel.add(passwordLabel); //add label to panel
+        passwordField = new JPasswordField("", 20); //create password field
+        panel.add(passwordField); //add password field to panel
+        enterButton = new JButton("            Enter             "); //create enter button
+        enterButton.addActionListener(actionListener); //add action listener to enter button
+        panel.add(enterButton); //add enter button to panel
+        makeAccountButton = new JButton("    Make New Account    "); //create make account button
+        makeAccountButton.addActionListener(actionListener); //add action listener to make account button
+        panel.add(makeAccountButton); //add make account button to panel
 
         //TEST BUTTON
         testButton = new JButton("Test");
         testButton.addActionListener(actionListener);
         panel.add(testButton);
 
-
+        //Add panel to frame and make frame visible
         frame.add(panel, BorderLayout.CENTER); //add JPanel to JFrame
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
         frame.setVisible(true); //makes the frame visible to the user
@@ -87,7 +90,7 @@ public class  LoginPageGUI implements Runnable {
             ;
             if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
                 //variables to use in the method
-                boolean validAccount = false;
+                boolean validAccount = false; //set initial value of boolean to false
                 Account validate; //Account passed by server to check if the account exists
                 String email;
                 String password;
@@ -95,22 +98,24 @@ public class  LoginPageGUI implements Runnable {
 
                 //Checks whether input fields are empty. Display prompts user to fill out all fields if not.
                 if (emailField.getText().equals("") || passwordField.getText().equals("")) {
-                    emailField.setText("");
-                    passwordField.setText("");
+                    emailField.setText(""); //resets email text field
+                    passwordField.setText(""); //resets password text field
                     JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
                             "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                    //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+                    /*Checks whether the email field input contains special characters '@' and '.'. Display prompts
+                     user to input a valid email if not.*/
                 } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
-                    emailField.setText("");
-                    passwordField.setText("");
+                    emailField.setText(""); //resets email text field
+                    passwordField.setText(""); //resets password text field
                     JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
                             "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                    //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+                    /*Checks whether the password field contains at least 8 characters. Display prompts user to
+                    make an adequately long password if not.*/
                 } else if (passwordField.getText().length() < 8) {
-                    emailField.setText("");
-                    passwordField.setText("");
+                    emailField.setText(""); //resets email text field
+                    passwordField.setText(""); //resets password text field
                     JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
                             "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
@@ -119,7 +124,7 @@ public class  LoginPageGUI implements Runnable {
                     email = emailField.getText(); //store email field input in variable
                     emailField.setText(""); //reset the text field to empty
                     password = passwordField.getText(); //store password field input in variable
-                    passwordField.setText(""); //reset the text field to empty
+                    passwordField.setText(""); //reset the password field to empty
 
                     //Tries to connect to server and send inputs
 
@@ -128,8 +133,8 @@ public class  LoginPageGUI implements Runnable {
                         validate = ioMachine.findAccount(email);
 
                         if (validate.getPassword().equals(password)) { //checks if the password is correct
-                            validAccount = true;
-                        } else {
+                            validAccount = true; //update boolean
+                        } else { //Displays an error message otherwise
                             JOptionPane.showMessageDialog(null, "No account matches the " +
                                     "email and password!", "CampsGram", JOptionPane.ERROR_MESSAGE);
                         }
@@ -143,7 +148,7 @@ public class  LoginPageGUI implements Runnable {
                                     JOptionPane.ERROR_MESSAGE);
                         }
 
-                    } catch(Exception x) {
+                    } catch(Exception x) { //if an exception occurs, an error message is displayed
                         JOptionPane.showMessageDialog(null, "No account matches the " +
                                 "email and password!", "CampsGram", JOptionPane.ERROR_MESSAGE);
                     }
@@ -155,7 +160,7 @@ public class  LoginPageGUI implements Runnable {
             if (e.getSource() == makeAccountButton) { //Code to perform when Make Account Button is clicked
 
                 //variables used in method
-                boolean accountCreated = false;
+                boolean accountCreated = false; //initially set boolean to false
                 String email;
                 String password;
 
@@ -163,15 +168,18 @@ public class  LoginPageGUI implements Runnable {
                 if (emailField.getText() == null || passwordField.getText() == null) {
                     JOptionPane.showMessageDialog(null, "Please Enter Both an Email AND a Password!",
                             "CampsGram", JOptionPane.ERROR_MESSAGE);
-                    //Checks whether the email field input contains special characters '@' and '.'. Display prompts user to input a valid email if not.
+                    /*Checks whether the email field input contains special characters '@' and '.'.
+                    Display prompts user to input a valid email if not.
+                     */
                 } else if (!emailField.getText().contains("@") || !emailField.getText().contains(".")) {
-                    emailField.setText("");
+                    emailField.setText(""); //resets email text field
                     JOptionPane.showMessageDialog(null, "Please Enter a Valid Email Address",
                             "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
-                    //Checks whether the password field contains at least 8 characters. Display prompts user to make an adequately long password if not.
+                    /*Checks whether the password field contains at least 8 characters. Display prompts user to
+                    make an adequately long password if not.*/
                 } else if (passwordField.getText().length() < 8) {
-                    passwordField.setText("");
+                    passwordField.setText(""); //resets password text field
                     JOptionPane.showMessageDialog(null, "The Password Must Be At Least 8 " +
                             "Characters Long!", "CampsGram Login", JOptionPane.ERROR_MESSAGE);
 
@@ -189,7 +197,7 @@ public class  LoginPageGUI implements Runnable {
                             //if not, create new account
                             Account tempAccount = new Account(email, password, new ArrayList<Profile>());
                             accountCreated = ioMachine.addAccount(tempAccount);
-                        } else {
+                        } else { //if account exists, display error message
                             JOptionPane.showMessageDialog(null, "An account associated " +
                                     "with that email already exists!", "CampsGram", JOptionPane.ERROR_MESSAGE);
                         }
@@ -197,8 +205,9 @@ public class  LoginPageGUI implements Runnable {
                         if (accountCreated) {
                             Account account = new Account(ioMachine.findAccount(email), ioMachine);
                             account.run();
-                        }
+                        } //displays account if it is created
                     } catch (Exception ee) {
+                        //if an exception occurs, an error message is displayed
                         JOptionPane.showMessageDialog(null, "Could not make new account!",
                                 "CampsGram", JOptionPane.ERROR_MESSAGE);
                     }

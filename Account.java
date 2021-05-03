@@ -262,8 +262,6 @@ public class Account implements Serializable {
                     }
                     importFileField.setText("");
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error! Invalid File", "CampsGram",
-                            JOptionPane.ERROR_MESSAGE);
                     importFileField.setText("");
                 }
             }

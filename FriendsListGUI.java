@@ -60,12 +60,9 @@ public class FriendsListGUI implements Runnable {
     private ArrayList<String> friendList;
     private String username;
 
-    //Create the EDT
-    /*public static void main(String[] args) {
-        SwingUtilities.invokeLater(new FriendsListGUI());
-    }*/
 
     //FriendsListGUI object constructor
+    //Uses fields from profile
     public FriendsListGUI(String username, ArrayList<String> sentList, ArrayList<String> receivedList,
                           ArrayList<String> friendList) throws NullPointerException {
         this.username = username;
@@ -83,7 +80,7 @@ public class FriendsListGUI implements Runnable {
     }
 
 
-
+    //Accessor method for username of profile associated with these friend lists
     public String getUsername() {
         return this.username;
     }
@@ -95,20 +92,20 @@ public class FriendsListGUI implements Runnable {
         //Settings for the JFrame
         frame = new JFrame("CampsGram Friends List"); //title JFrame
         frame.setSize(600, 240); //sets size of JFrame
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(null); //sets frame to appear in the middle of the screen
         frame.setResizable(false); //makes JFrame unable to be resized
 
         //Add Back Button to Top of Screen
-        northPanel = new JPanel();
-        backButton = new JButton("Back");
+        northPanel = new JPanel(); //create north panel
+        backButton = new JButton("Back"); //create back button
         backButton.addActionListener(actionListener); //add action listener to back button
-        northPanel.add(backButton);
-        frame.add(northPanel, BorderLayout.NORTH);
+        northPanel.add(backButton); //add back button to  panel
+        frame.add(northPanel, BorderLayout.NORTH); //add north panel to frame
 
-        centralPanel = new JPanel();
-        centralPanelNorth = new JPanel();
-        JLabel sentLabel = new JLabel("Sent Friend Requests:");
-        centralPanelNorth.add(sentLabel);
+        centralPanel = new JPanel(); //create  panel
+        centralPanelNorth = new JPanel(); //create  panel
+        JLabel sentLabel = new JLabel("Sent Friend Requests:"); //create label
+        centralPanelNorth.add(sentLabel); //add label to panel
 
 
         //creates the drop down menu with usernames assuming there are any other profiles
@@ -123,17 +120,17 @@ public class FriendsListGUI implements Runnable {
             requestsSentList = new JComboBox<>();
         }
 
-        centralPanelNorth.add(requestsSentList);
-        rescindRequestButton = new JButton("Rescind Friend Request");
+        centralPanelNorth.add(requestsSentList); //adds drop down menu to panel
+        rescindRequestButton = new JButton("Rescind Friend Request"); //create rescind request button
         rescindRequestButton.addActionListener(actionListener); //add action listener to rescind friend request button
-        centralPanelNorth.add(rescindRequestButton);
-        centralPanel.add(centralPanelNorth, BorderLayout.NORTH);
+        centralPanelNorth.add(rescindRequestButton); //add rescind request button to panel
+        centralPanel.add(centralPanelNorth, BorderLayout.NORTH); //add panel to frame
 
 
 
-        centralPanelSouth = new JPanel();
-        JLabel received = new JLabel("Pending Friend Requests:");
-        centralPanelSouth.add(received);
+        centralPanelSouth = new JPanel(); //create new panel
+        JLabel received = new JLabel("Pending Friend Requests:"); //create label
+        centralPanelSouth.add(received); //add label to panel
 
         //creates the drop down menu with usernames assuming there are any other profiles
         if (this.receivedList.size() > 0) {
@@ -148,22 +145,22 @@ public class FriendsListGUI implements Runnable {
         }
 
 
-        centralPanelSouth.add(requestsPendingList);
-        acceptButton = new JButton("Accept");
+        centralPanelSouth.add(requestsPendingList); //add drop down menu to panel
+        acceptButton = new JButton("Accept"); //create accept button
         acceptButton.addActionListener(actionListener); //add action listener to accept button
-        centralPanelSouth.add(acceptButton);
-        declineButton = new JButton("Decline"); 
+        centralPanelSouth.add(acceptButton); //add accept button to panel
+        declineButton = new JButton("Decline");  //create decline button
         declineButton.addActionListener(actionListener); //add action listener to decline button
-        centralPanelSouth.add(declineButton);
-        centralPanel.add(centralPanelSouth, BorderLayout.SOUTH);
-        frame.add(centralPanel, BorderLayout.CENTER);
+        centralPanelSouth.add(declineButton); //add decline button to panel
+        centralPanel.add(centralPanelSouth, BorderLayout.SOUTH); //add panel to panel
+        frame.add(centralPanel, BorderLayout.CENTER); //add panel to frame
 
         
 
         //Add friend list, view profile button, and unfriend button to screen
-        southPanel = new JPanel();
-        JLabel friendsLabel = new JLabel("Current Friends: ");
-        southPanel.add(friendsLabel);
+        southPanel = new JPanel(); //create new panel
+        JLabel friendsLabel = new JLabel("Current Friends: "); //create label
+        southPanel.add(friendsLabel); //add label to panel
 
 
         //creates the drop down menu with usernames assuming there are any other profiles
@@ -179,20 +176,22 @@ public class FriendsListGUI implements Runnable {
         }
 
 
-        southPanel.add(friendsList);
-        viewProfileButton = new JButton("View Profile");
+        southPanel.add(friendsList); //add drop down menu to panel
+        viewProfileButton = new JButton("View Profile"); //create view profile button
         viewProfileButton.addActionListener(actionListener); //add action listener to view profile button
-        southPanel.add(viewProfileButton);
-        unfriendButton = new JButton("Unfriend");
+        southPanel.add(viewProfileButton); //add view profile button to panel
+        unfriendButton = new JButton("Unfriend"); //create unfriend button
         unfriendButton.addActionListener(actionListener); //add action listener to unfriend button
-        southPanel.add(unfriendButton);
-        frame.add(southPanel, BorderLayout.SOUTH);
+        southPanel.add(unfriendButton); //add unfriend button to panel
+        frame.add(southPanel, BorderLayout.SOUTH); //add panel to frame
 
         
         
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
         frame.setVisible(true); //make the frame visible
 
+
+        //Create timer object. Object has 3-second delay and uses refresher listener
         Timer timer = new Timer(3000, refresher);
         timer.setRepeats(true);
         timer.start();
@@ -202,8 +201,8 @@ public class FriendsListGUI implements Runnable {
     ActionListener actionListener = new ActionListener() {
        public void actionPerformed(ActionEvent e) {
            if (e.getSource() == acceptButton) {
-               String username = (String) requestsPendingList.getSelectedItem();
-               if (ioMachine.acceptFriend(getUsername(), username)){ //changes saved in server
+               String username = (String) requestsPendingList.getSelectedItem(); //get user
+               if (ioMachine.acceptFriend(getUsername(), username)){ //changes saved in server (request accepted)
                    JOptionPane.showMessageDialog(null, "Friend Accepted!",
                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
                }
@@ -211,31 +210,31 @@ public class FriendsListGUI implements Runnable {
 
            } //code that is run if accept button is clicked
            if (e.getSource() == declineButton) {
-               String username = (String) requestsPendingList.getSelectedItem();
-               if (ioMachine.declineFriend(getUsername(), username)) { //changes saved in server
+               String username = (String) requestsPendingList.getSelectedItem(); //get user
+               if (ioMachine.declineFriend(getUsername(), username)) { //changes saved in server (request declined)
                     JOptionPane.showMessageDialog(null, "Request Declined!",
                             "CampsGram", JOptionPane.INFORMATION_MESSAGE);
                }
 
            } //code that is run if decline button is clicked
            if (e.getSource() == viewProfileButton) {
-               String username = (String) friendsList.getSelectedItem();
+               String username = (String) friendsList.getSelectedItem(); //get username from drop down menu
                Profile friend = ioMachine.findProfile(username); //retrieve friend's profile from the server
                ViewProfile view = new ViewProfile(friend, ioMachine);
-               view.run();
+               view.run(); //view auto-updating profile
 
            } //code that is run if view profile button is clicked
            if (e.getSource() == unfriendButton) {
-               String username = (String) friendsList.getSelectedItem();
-               if (ioMachine.unfriend(getUsername(), username)) { //changes saved in server
+               String username = (String) friendsList.getSelectedItem(); //get user
+               if (ioMachine.unfriend(getUsername(), username)) { //changes saved in server (unfriended)
                    JOptionPane.showMessageDialog(null, "Unfriended!",
                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
                }
 
            } //code that is run if unfriend button is clicked
            if (e.getSource() == rescindRequestButton) {
-               String username = (String) requestsSentList.getSelectedItem();
-               if (ioMachine.rescindRequest(getUsername(), username)) { //changes saved in server
+               String username = (String) requestsSentList.getSelectedItem(); //get user
+               if (ioMachine.rescindRequest(getUsername(), username)) { //changes saved in server (request rescinded)
                    JOptionPane.showMessageDialog(null, "Request Rescinded!",
                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
                }
