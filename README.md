@@ -90,7 +90,7 @@ Testing for the GUI components of FriendsListGUI.java was done by using all the 
 •	Next, we clicked on the username of a friend and clicked the view profile button. The result was to display a profile GUI for the user whose username was clicked on. The profile GUI is modified so that none of the interactive elements, specifically buttons and drop-down menus, are included. This is the desired functionality.
 •	Next, for the friend who was selected, we clicked the unfriend button. The result was an information dialog appearing saying the user was unfriended. Additionally, the list of friends for each user was updated to exclude the username of the other user. This was desired functionality.
 •	Finally, we clicked the back button. This disposed of the GUI, which was the expected functionality.
-•	Note: The test case for the accessor method for this class is at the bottom of FriendsListGUI in the main method.
+
 
 
 
