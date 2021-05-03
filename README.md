@@ -20,9 +20,9 @@ Jeff Chen - Submitted Presentation on Brightspace.
 Class Descriptions and Testing:
 
 Account Class:  
-The account class has two purposes; to allow the creation and modification of account objects, and to run the GUI related to the account object. There are two constructors, one
-to...
-Test Cases for non GUI methods in Account may be found in the class AccountTestCases.
+
+The account class has two purposes; to allow the creation and modification of account objects, and to run the GUI related to the account object. The class has get and set
+methods related to all of its fields, and construcors that allow new instances of the object to be created. The GUI portion of the class provides an interface through which the user can manage the profiles associated with the account, import new profiles, create a new profile, and delete the account. The class interafaces directly with IOMachine to provide client-server interaction, allowing changes made to the account to be saved to the server and visible to other users. Furthermore, the class stores instances of the Profile class. The GUI portion of this class is also called by LoginPageGUI, as this allows the user to log into certain accoutns and prevents anyone from logging into any account or profile. Test Cases for non GUI methods in Account may be found in the class AccountTestCases, while the testing done for the GUI is described in detail below.
 
 
 EnterInfoGUI Class:
