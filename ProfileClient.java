@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * ProfileClient
  *
  * The .java file that the a user will run to connect to the server and access the social media functionality. It
- * contains a main method that automatically connects the user to the server.
+ * contains a main method that automatically connects the user to the server, and then runs the GUI to interact.
  *
  * N/A
  *
@@ -23,7 +23,7 @@ public class ProfileClient {
         try { //runs client side stuff
 
             // getting localhost ip
-            InetAddress ip = InetAddress.getByName("localhost");
+            InetAddress ip = InetAddress.getByName("localhost");  //"10.186.29.62"
 
             // establish the connection with server port 1234
             Socket s = new Socket(ip, 1234);   //CHANGE FOR USE WITH UNITY TO 5555
@@ -42,14 +42,6 @@ public class ProfileClient {
             //Runs the Login GUI
             LoginPageGUI Login = new LoginPageGUI(ioMachine);
             Login.run();
-            //ArrayList<String> sent = new ArrayList<>();
-            //ArrayList<String> received = new ArrayList<>();
-            //ArrayList<String> friend = new ArrayList<>();
-            //Profile profile = new Profile();
-            //Profile usable = new Profile(profile, ioMachine);
-            //usable.run();
-
-
 
         } catch (IOException e) { //display error message is connection not established
             JOptionPane.showMessageDialog(null, "Error: Connection Cannot be Established",
@@ -58,7 +50,7 @@ public class ProfileClient {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error: There was an Error in the code " +
-                            "somewhere", "Campsgram", JOptionPane.ERROR_MESSAGE);
+                    "somewhere", "Campsgram", JOptionPane.ERROR_MESSAGE);
         }
 
     }
