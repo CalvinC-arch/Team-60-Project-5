@@ -254,7 +254,8 @@ public class FriendsListGUI implements Runnable {
 
             //retrieves the complete list of users, remove the current users name from the list
             ArrayList<String> receivedRequests = ioMachine.findProfile(getUsername()).getRequestsReceived();
-
+            System.out.println(receivedRequests.toString());
+            System.out.println("!");
             //sets the usernames to the current list of users
             String[] received = receivedRequests.toArray(new String[receivedRequests.size()]);
             DefaultComboBoxModel<String> modelReceived = new DefaultComboBoxModel<>(received);
@@ -323,6 +324,9 @@ public class FriendsListGUI implements Runnable {
             }
 
             //updates the GUI
+            requestsPendingList.repaint();
+            friendsList.repaint();
+            requestsSentList.repaint();
             frame.revalidate();
 
 
