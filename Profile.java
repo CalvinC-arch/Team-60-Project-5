@@ -229,6 +229,7 @@ public class Profile implements Serializable, Runnable {
     public void run() {
         frame = new JFrame(username);
         frame.setSize(640, 480);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         //top panel
@@ -354,7 +355,6 @@ public class Profile implements Serializable, Runnable {
     transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == export) {
-                //TODO: Verify Code, Add IoMachine Method
                 try {
                     writeExportFile();
                     JOptionPane.showMessageDialog(null, "Successfully Exported Profile!",
@@ -389,7 +389,6 @@ public class Profile implements Serializable, Runnable {
                 frame.revalidate();
             }
             if(e.getSource() == requests) {
-                //TODO: Figure out why it doesn't match a case in the server
                 FriendsListGUI friend = new FriendsListGUI(username, requestsSent,
                         requestsReceived, friends);
                 FriendsListGUI usableFriend = new FriendsListGUI(friend, ioMachine);

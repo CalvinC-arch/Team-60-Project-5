@@ -108,8 +108,4 @@ public class ViewProfile extends Profile{
         }
     };
 }
-<<<<<<< HEAD
 
-
-=======
->>>>>>> origin/main

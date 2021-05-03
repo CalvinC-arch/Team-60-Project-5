@@ -78,7 +78,7 @@ public class EnterInfoGUI {
     public static String formatInterestsString(ArrayList<String> interests) { //converts array to formatted String
         String newInterests =  ""; //initializes String to be empty
         //returns Interests as formatted String
-        if (interests == null) {
+        if (interests.size() == 0) {
             newInterests = "User did not include any interests.";
         } else {
             for(int i = 0; i < interests.size(); i++) { //for-loop that updates 'elements' with all the interests
@@ -194,9 +194,7 @@ public class EnterInfoGUI {
                 interest = JOptionPane.showInputDialog(null,
                         "Enter personal interests separated by commas: ", "CampsGram",
                         JOptionPane.QUESTION_MESSAGE); //asks user to input interests
-                interest = interest.replace(" ", "");
 
-                interest = interest.toLowerCase();
                 if(interest == null) {
                     checking = false;
                     break;

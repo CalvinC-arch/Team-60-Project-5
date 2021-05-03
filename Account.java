@@ -230,7 +230,27 @@ public class Account implements Serializable {
                     String filename = importFileField.getText();
                     Profile profile = new Profile(filename);
                     if (ioMachine.addProfile(profile, getEmail())) {
-                        //TODO: Add profile to account GUI
+                        //Updates the GUI
+                        JPanel profilePanel = new JPanel();
+                        JLabel profileName = new JLabel(profile.getUsername());
+                        JButton view = new JButton("View");
+                        view.addActionListener(profileListener);
+                        view.setActionCommand("view" + counter);
+                        JButton delete = new JButton("Delete");
+                        delete.addActionListener(profileListener);
+                        delete.setActionCommand("delete" +  counter);
+                        profilePanel.add(profileName);
+                        profilePanel.add(view);
+                        profilePanel.add(delete);
+
+                        //Adds the profile and its panes to the hashmaps
+                        profileHashMap.put(counter, profile);
+                        profilePanes.put(counter, profilePanel);
+                        counter++;
+
+                        mainPanel.add(profilePanel);
+                        mainPanel.revalidate();
+                        mainPanel.repaint();
                     }
                     importFileField.setText("");
                 } catch (Exception ex) {

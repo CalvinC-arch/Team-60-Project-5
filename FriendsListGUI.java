@@ -94,11 +94,14 @@ public class FriendsListGUI implements Runnable {
         return this.username;
     }
 
+
+
     //Assemble the GUI
     public void run() {
         //Settings for the JFrame
         frame = new JFrame("CampsGram Friends List"); //title JFrame
         frame.setSize(600, 240); //sets size of JFrame
+        frame.setLocationRelativeTo(null);
         frame.setResizable(false); //makes JFrame unable to be resized
 
         //Add Back Button to Top of Screen
@@ -110,12 +113,21 @@ public class FriendsListGUI implements Runnable {
 
         centralPanel = new JPanel();
         centralPanelNorth = new JPanel();
-        JLabel sent = new JLabel("Sent Friend Requests:");
-        centralPanelNorth.add(sent);
-        requestsSentList = new JComboBox<>();
-        requestsSentList.setMaximumRowCount(3);
+        JLabel sentLabel = new JLabel("Sent Friend Requests:");
+        centralPanelNorth.add(sentLabel);
 
 
+        //creates the drop down menu with usernames assuming there are any other profiles
+        if (this.sentList.size() > 0) {
+            //turns username list into a usable array
+            String[] usernames = this.sentList.toArray(new String[this.sentList.size()]);
+
+            //initializes the Drop down menu of usernames
+            requestsSentList = new JComboBox<String>(usernames);
+            requestsSentList.setMaximumRowCount(6);
+        } else {
+            requestsSentList = new JComboBox<>();
+        }
 
         centralPanelNorth.add(requestsSentList);
         rescindRequestButton = new JButton("Rescind Friend Request");
@@ -123,14 +135,23 @@ public class FriendsListGUI implements Runnable {
         centralPanelNorth.add(rescindRequestButton);
         centralPanel.add(centralPanelNorth, BorderLayout.NORTH);
 
-        
+
 
         centralPanelSouth = new JPanel();
         JLabel received = new JLabel("Pending Friend Requests:");
         centralPanelSouth.add(received);
-        requestsPendingList = new JComboBox<>();
-        requestsPendingList.setMaximumRowCount(3);
 
+        //creates the drop down menu with usernames assuming there are any other profiles
+        if (this.receivedList.size() > 0) {
+            //turns username list into a usable array
+            String[] usernames = this.receivedList.toArray(new String[this.receivedList.size()]);
+
+            //initializes the Drop down menu of usernames
+            requestsPendingList = new JComboBox<String>(usernames);
+            requestsPendingList.setMaximumRowCount(6);
+        } else {
+            requestsPendingList = new JComboBox<>();
+        }
 
 
         centralPanelSouth.add(requestsPendingList);
@@ -149,9 +170,19 @@ public class FriendsListGUI implements Runnable {
         southPanel = new JPanel();
         JLabel friendsLabel = new JLabel("Current Friends: ");
         southPanel.add(friendsLabel);
-        friendsList = new JComboBox<>();
-        friendsList.setMaximumRowCount(3);
 
+
+        //creates the drop down menu with usernames assuming there are any other profiles
+        if (this.friendList.size() > 0) {
+            //turns username list into a usable array
+            String[] usernames = this.friendList.toArray(new String[this.friendList.size()]);
+
+            //initializes the Drop down menu of usernames
+            friendsList = new JComboBox<String>(usernames);
+            friendsList.setMaximumRowCount(6);
+        } else {
+            friendsList = new JComboBox<>();
+        }
 
 
         southPanel.add(friendsList);
@@ -178,12 +209,19 @@ public class FriendsListGUI implements Runnable {
        public void actionPerformed(ActionEvent e) {
            if (e.getSource() == acceptButton) {
                String username = (String) requestsPendingList.getSelectedItem();
-               ioMachine.acceptFriend(getUsername(), username); //changes saved in server
+               if (ioMachine.acceptFriend(getUsername(), username)){ //changes saved in server
+                   JOptionPane.showMessageDialog(null, "Friend Accepted!",
+                           "CampsGram", JOptionPane.INFORMATION_MESSAGE);
+               }
+
 
            } //code that is run if accept button is clicked
            if (e.getSource() == declineButton) {
                String username = (String) requestsPendingList.getSelectedItem();
-               ioMachine.declineFriend(getUsername(), username); //changes saved in server
+               if (ioMachine.declineFriend(getUsername(), username)) { //changes saved in server
+                    JOptionPane.showMessageDialog(null, "Request Declined!",
+                            "CampsGram", JOptionPane.INFORMATION_MESSAGE);
+               }
 
            } //code that is run if decline button is clicked
            if (e.getSource() == viewProfileButton) {
@@ -195,12 +233,18 @@ public class FriendsListGUI implements Runnable {
            } //code that is run if view profile button is clicked
            if (e.getSource() == unfriendButton) {
                String username = (String) friendsList.getSelectedItem();
-               ioMachine.unfriend(getUsername(), username); //changes saved in server
+               if (ioMachine.unfriend(getUsername(), username)) { //changes saved in server
+                   JOptionPane.showMessageDialog(null, "Unfriended!",
+                           "CampsGram", JOptionPane.INFORMATION_MESSAGE);
+               }
 
            } //code that is run if unfriend button is clicked
            if (e.getSource() == rescindRequestButton) {
                String username = (String) requestsSentList.getSelectedItem();
-               ioMachine.rescindRequest(getUsername(), username); //changes saved in server
+               if (ioMachine.rescindRequest(getUsername(), username)) { //changes saved in server
+                   JOptionPane.showMessageDialog(null, "Request Rescinded!",
+                           "CampsGram", JOptionPane.INFORMATION_MESSAGE);
+               }
 
            }
            if (e.getSource() == backButton) {
@@ -223,7 +267,7 @@ public class FriendsListGUI implements Runnable {
             DefaultComboBoxModel<String> modelReceived = new DefaultComboBoxModel<>(received);
             requestsPendingList.setModel(modelReceived);
 
-            //If no received friend requests, disable accept and decline buttons
+            //if no pending requests, then disable view and unfriend buttons
             if (requestsPendingList.getItemCount() == 0) {
                 acceptButton.setEnabled(false);
                 declineButton.setEnabled(false);
@@ -231,7 +275,7 @@ public class FriendsListGUI implements Runnable {
                 acceptButton.setEnabled(true);
                 declineButton.setEnabled(true);
             }
-            
+
             //sets the selection what it was previously
             requestsPendingList.setSelectedItem(currentSelectionReceived);
 
@@ -249,7 +293,7 @@ public class FriendsListGUI implements Runnable {
             DefaultComboBoxModel<String> modelFriend = new DefaultComboBoxModel<>(friend);
             friendsList.setModel(modelFriend);
 
-            //If no friends, disable view profile and unfriend buttons
+            //if no friends, then disable view and unfriend buttons
             if (friendsList.getItemCount() == 0) {
                 viewProfileButton.setEnabled(false);
                 unfriendButton.setEnabled(false);
@@ -257,7 +301,7 @@ public class FriendsListGUI implements Runnable {
                 viewProfileButton.setEnabled(true);
                 unfriendButton.setEnabled(true);
             }
-            
+
             //sets the selection what it was previously
             friendsList.setSelectedItem(currentSelectionFriend);
 
@@ -274,24 +318,20 @@ public class FriendsListGUI implements Runnable {
             String[] sent = sentRequests.toArray(new String[sentRequests.size()]);
             DefaultComboBoxModel<String> modelSent = new DefaultComboBoxModel<>(sent);
             requestsSentList.setModel(modelSent);
+            
+            //sets the selection what it was previously
+            requestsSentList.setSelectedItem(currentSelectionSent);
 
-            //If no sent friend requests, disable rescind friend request button
-            if(requestsSentList.getItemCount() == 0) {
+            //if no friends, then disable view and unfriend buttons
+            if (requestsSentList.getItemCount() == 0) {
                 rescindRequestButton.setEnabled(false);
             } else {
                 rescindRequestButton.setEnabled(true);
             }
-            
-            //sets the selection what it was previously
-            requestsSentList.setSelectedItem(currentSelectionReceived);
-
-
 
             //updates the GUI
             frame.revalidate();
-            centralPanelNorth.repaint();
-            centralPanelSouth.repaint();
-            southPanel.repaint();
+
 
         }
     };
