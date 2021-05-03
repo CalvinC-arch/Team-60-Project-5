@@ -12,6 +12,7 @@ ProfileServer.java. For the client, edit line 26 of ProfileClient.java to contai
 
 
 Submission Locations:
+
 Naia Echevarria - Submitted Report on Brightspace.
 
 Class Descriptions and Testing:
