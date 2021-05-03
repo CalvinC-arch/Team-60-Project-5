@@ -59,7 +59,9 @@ This class contains the main logic that manages the server. There are two method
 ViewProfile Class:
 
 GUI TESTING ON EACH CLASS
-LoginPageGUI.java
+
+LoginPageGUI Class:
+
 Testing for the LoginPageGUI was done by changing the email and password inputs and comparing the result of button clicks to our expected functionality.
 •	We first tried leaving one, or both, of the input fields empty. The result was an error message dialog saying to enter both an email and a password and the input fields being reset, so the program failed correctly.
 •	Then we tried inputting emails that did not contain a an ‘@’ or a ‘.’ character. Once again, the result was an error message dialog instructing us to enter a valid email and the input fields being reset, so the program failed correctly. 
@@ -72,6 +74,7 @@ Testing for the LoginPageGUI was done by changing the email and password inputs 
 •	Then we tried inputting a new valid email and password and clicking make new account. The result was the account GUI titled with the new inputted email being displayed, so the program worked properly.
 
 Account Class:
+
 Testing for the GUI components of Account.java was done by using all the elements that were supposed to be capable of functionality and comparing the result to our expected functionality.
 •	We first clicked the add profile button. This caused numerous successive input dialogs to appear. If an input was invalid, an error message dialog appeared describing the problem appeared, and we had to submit different until the input was accepted as valid. For all the dialogs excluding the username input dialog, we could cancel or exit without making an input. However, clicking cancel or exit on the username dialog resulted in an error message dialog being displayed; we had to submit a username. Every time we clicked add profile, a profile was created. It appeared on the account GUI screen. The username for the profile appeared in the list of all profiles displayed in the profile GUI. We determined this was suitable functionality.
 •	We then clicked the delete button at the bottom of the screen. This caused the account GUI frame to be disposed. The profiles associated with the account were removed from the list of all profiles in the profile GUI and the friends list, friend requests sent list, and friend requests received list in the FriendsListGUI. This was the desired functionality.
@@ -82,6 +85,7 @@ Testing for the GUI components of Account.java was done by using all the element
 
 
 Profile Class:
+
 Testing for the GUI components of Profile.java was done by using all the elements that were supposed to be capable of functionality and comparing the result to our expected functionality.
 •	We first pressed on export. The result was an information dialog appearing that said the file was successfully exported and a CSV file appearing in my folder. This is the desired functionality.
 •	We then pressed on edit. A series of input dialogs appeared. If an input was invalid, an error message dialog appeared describing the problem appeared, and we had to submit different until the input was accepted as valid. Whatever input was accepted appeared in the appropriate text areas of the profile GUI. If cancel or exit was clicked, the corresponding text areas updated to say that the specific input was not specified. This functionality is usable but could still be improved.
@@ -93,6 +97,7 @@ Testing for the GUI components of Profile.java was done by using all the element
 
 
 FriendsListGUI Class:
+
 Testing for the GUI components of FriendsListGUI.java was done by using all the elements that were supposed to be capable of functionality and comparing the result to our expected functionality.
 •	Having sent a friend request from one user to the other, we first checked the rescind friend request button. The result was an information dialog appearing saying the request was rescinded. Additionally, the list of sent friend requests for the user who rescinded the friend request was updated to exclude the username whose friend request he rescinded, and the list of received friend requests for the user whose friend request was rescinded is updated to exclude the username of the user who rescinded the friend request. This is the desired functionality, but it is not always achieved due to issues with the auto update.
 •	Next, after sending a new friend request from one user to the other, we clicked the accept button. The result was an information dialog appearing saying the friend was accepted. Additionally, the list of received friend requests for the user who accepted the request was updated to exclude the username of the user whose request he accepted. That user was added to his friends list. Likewise, the list of sent friend requests for the user whose request was accepted was updated to exclude the username of the user who accepted his friend request. That user is added to his friends list. This was the desired functionality, but it is not always achieved due to issues with the auto update.
