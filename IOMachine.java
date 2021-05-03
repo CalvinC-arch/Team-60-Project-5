@@ -385,7 +385,9 @@ public class IOMachine extends ObjectOutputStream {
                 dos.writeObject(requester);
                 dos.writeObject(username);
 
-                return true;
+                result = (String) dis.readObject();
+
+                return result.equals("True");
 
             } else {
                 return false;
