@@ -150,6 +150,23 @@ public class Account implements Serializable {
     transient ActionListener bottomBarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == deleteAcc) {
+                
+                //deletes every profile in the account
+                for (int i = 0; i < profiles.size(); i++) {
+                    
+                    //gets a profile in the account
+                    Profile toDelete = profiles.get(i);
+                    
+                    //unfriends that profile from all of its friends
+                    for (int r = 0; r < toDelete.getFriends().size(); r++) {
+                        ioMachine.unfriend(toDelete.getFriends().get(r), toDelete.getUsername());
+                    }
+                    
+                    //deletes the given profile
+                    ioMachine.deleteProfile(toDelete.getUsername());
+                }
+              
+                //deletes the account shuts down the frame
                 ioMachine.deleteAccount(ioMachine.findAccount(email));
                 frame.dispose();
             }
