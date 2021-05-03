@@ -123,6 +123,7 @@ public class FriendsListGUI implements Runnable {
         centralPanelNorth.add(rescindRequestButton);
         centralPanel.add(centralPanelNorth, BorderLayout.NORTH);
 
+        
 
         centralPanelSouth = new JPanel();
         JLabel received = new JLabel("Pending Friend Requests:");
@@ -136,13 +137,13 @@ public class FriendsListGUI implements Runnable {
         acceptButton = new JButton("Accept");
         acceptButton.addActionListener(actionListener); //add action listener to accept button
         centralPanelSouth.add(acceptButton);
-        declineButton = new JButton("Decline");
+        declineButton = new JButton("Decline"); 
         declineButton.addActionListener(actionListener); //add action listener to decline button
         centralPanelSouth.add(declineButton);
         centralPanel.add(centralPanelSouth, BorderLayout.SOUTH);
         frame.add(centralPanel, BorderLayout.CENTER);
 
-
+        
 
         //Add friend list, view profile button, and unfriend button to screen
         southPanel = new JPanel();
@@ -162,7 +163,8 @@ public class FriendsListGUI implements Runnable {
         southPanel.add(unfriendButton);
         frame.add(southPanel, BorderLayout.SOUTH);
 
-
+        
+        
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
         frame.setVisible(true); //make the frame visible
 
@@ -173,41 +175,41 @@ public class FriendsListGUI implements Runnable {
 
     //Create action listener to respond to button clicks
     ActionListener actionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == acceptButton) {
-                String username = (String) requestsPendingList.getSelectedItem();
-                ioMachine.acceptFriend(getUsername(), username); //changes saved in server
+       public void actionPerformed(ActionEvent e) {
+           if (e.getSource() == acceptButton) {
+               String username = (String) requestsPendingList.getSelectedItem();
+               ioMachine.acceptFriend(getUsername(), username); //changes saved in server
 
-            } //code that is run if accept button is clicked
-            if (e.getSource() == declineButton) {
-                String username = (String) requestsPendingList.getSelectedItem();
-                ioMachine.declineFriend(getUsername(), username); //changes saved in server
+           } //code that is run if accept button is clicked
+           if (e.getSource() == declineButton) {
+               String username = (String) requestsPendingList.getSelectedItem();
+               ioMachine.declineFriend(getUsername(), username); //changes saved in server
 
-            } //code that is run if decline button is clicked
-            if (e.getSource() == viewProfileButton) {
-                String username = (String) friendsList.getSelectedItem();
-                Profile friend = ioMachine.findProfile(username); //retrieve friend's profile from the server
-                ViewProfile view = new ViewProfile(friend, ioMachine);
-                view.run();
+           } //code that is run if decline button is clicked
+           if (e.getSource() == viewProfileButton) {
+               String username = (String) friendsList.getSelectedItem();
+               Profile friend = ioMachine.findProfile(username); //retrieve friend's profile from the server
+               ViewProfile view = new ViewProfile(friend, ioMachine);
+               view.run();
 
-            } //code that is run if view profile button is clicked
-            if (e.getSource() == unfriendButton) {
-                String username = (String) friendsList.getSelectedItem();
-                ioMachine.unfriend(getUsername(), username); //changes saved in server
+           } //code that is run if view profile button is clicked
+           if (e.getSource() == unfriendButton) {
+               String username = (String) friendsList.getSelectedItem();
+               ioMachine.unfriend(getUsername(), username); //changes saved in server
 
-            } //code that is run if unfriend button is clicked
-            if (e.getSource() == rescindRequestButton) {
-                String username = (String) requestsSentList.getSelectedItem();
-                ioMachine.rescindRequest(getUsername(), username); //changes saved in server
+           } //code that is run if unfriend button is clicked
+           if (e.getSource() == rescindRequestButton) {
+               String username = (String) requestsSentList.getSelectedItem();
+               ioMachine.rescindRequest(getUsername(), username); //changes saved in server
 
-            }
-            if (e.getSource() == backButton) {
-                frame.dispose(); //close the GUI screen
-            }//code that is run if back button is clicked
+           }
+           if (e.getSource() == backButton) {
+               frame.dispose(); //close the GUI screen
+           }//code that is run if back button is clicked
         }
     };
 
-    //Code that Runs every 3 seconds, updating the view of another profile list
+   //Code that Runs every 3 seconds, updating the view of another profile list
     transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             //saves the current selection
@@ -229,7 +231,7 @@ public class FriendsListGUI implements Runnable {
                 acceptButton.setEnabled(true);
                 declineButton.setEnabled(true);
             }
-
+            
             //sets the selection what it was previously
             requestsPendingList.setSelectedItem(currentSelectionReceived);
 
@@ -255,7 +257,7 @@ public class FriendsListGUI implements Runnable {
                 viewProfileButton.setEnabled(true);
                 unfriendButton.setEnabled(true);
             }
-
+            
             //sets the selection what it was previously
             friendsList.setSelectedItem(currentSelectionFriend);
 
@@ -279,19 +281,19 @@ public class FriendsListGUI implements Runnable {
             } else {
                 rescindRequestButton.setEnabled(true);
             }
-
+            
             //sets the selection what it was previously
-            requestsSentList.setSelectedItem(currentSelectionSent);
+            requestsSentList.setSelectedItem(currentSelectionReceived);
 
 
 
             //updates the GUI
             frame.revalidate();
+            centralPanelNorth.repaint();
+            centralPanelSouth.repaint();
+            southPanel.repaint();
 
         }
     };
 
 }
-
-
-

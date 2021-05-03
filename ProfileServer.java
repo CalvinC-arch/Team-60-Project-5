@@ -86,9 +86,9 @@ public class ProfileServer
                 accounts.add(new Account(splitLine[0], splitLine[1], profiles)); //creates a new account using the
                 // saved email, password, and newly created profile arrayList
 
-                System.out.println("Server reset from backup");
-
             }
+
+            System.out.println("Server reset from backup");
 
         } catch (Exception e) { //if IO Exception, likely due to the backup file not existing
             System.out.println("There was no valid server backup");

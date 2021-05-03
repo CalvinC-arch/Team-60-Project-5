@@ -5,13 +5,14 @@ import java.net.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * LoginPageGUI.java
  *
  * This program prompts a user to enter a username and password in order to log-in to a preexisting account
  * or create a new account for a new user.
- * 
+ *
  * run method - creates and displays the main GUI
  * validateAccount method - boolean method that is run whenever the EnterButton is clicked. It attempts to connect to the server and send it "Validate" to signal to the
  * server what to do. Then it sends the server the email and password submitted in the text fields. If the server is able to adequately process this request, it sends
@@ -76,7 +77,7 @@ public class  LoginPageGUI implements Runnable {
         testButton.addActionListener(actionListener);
         panel.add(testButton);
 
-       
+
         frame.add(panel, BorderLayout.CENTER); //add JPanel to JFrame
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
         frame.setVisible(true); //makes the frame visible to the user
@@ -85,7 +86,7 @@ public class  LoginPageGUI implements Runnable {
 
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) { //detects button clicks
-;
+            ;
             if (e.getSource() == enterButton) { //Code to perform when Enter Button is clicked
                 //variables to use in the method
                 boolean validAccount = false;
@@ -123,7 +124,7 @@ public class  LoginPageGUI implements Runnable {
                     passwordField.setText(""); //reset the text field to empty
 
                     //Tries to connect to server and send inputs
-                      
+
                     try {
                         //gets the account associated with the requested email
                         validate = ioMachine.findAccount(email);
@@ -186,11 +187,11 @@ public class  LoginPageGUI implements Runnable {
 
                         //Sends a new account to the server
                         //check whether an account associated with that email exists
-                        if(ioMachine.findAccount(email) == null) { 
+                        if(!Objects.nonNull(ioMachine.findAccount(email))) {
                             //if not, create new account
-                            Account tempAccount = new Account(email, password, new ArrayList<Profile>()); 
+                            Account tempAccount = new Account(email, password, new ArrayList<Profile>());
                             accountCreated = ioMachine.addAccount(tempAccount);
-                        } else {                          
+                        } else {
                             JOptionPane.showMessageDialog(null, "An account associated " +
                                     "with that email already exists!", "CampsGram", JOptionPane.ERROR_MESSAGE);
                         }
@@ -200,7 +201,7 @@ public class  LoginPageGUI implements Runnable {
                             account.run();
                         }
                     } catch (Exception ee) {
-                        JOptionPane.showMessageDialog(null, "Could not make new account!", 
+                        JOptionPane.showMessageDialog(null, "Could not make new account!",
                                 "CampsGram", JOptionPane.ERROR_MESSAGE);
                     }
                 }

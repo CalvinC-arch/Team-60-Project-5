@@ -351,82 +351,6 @@ public class Profile implements Serializable, Runnable {
 
     }
 
-    public void viewOtherProfile() {
-        frame = new JFrame(username);
-        frame.setSize(640, 480);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        //Everything below is for the center panel which holds user info
-
-        //name panel
-        JPanel namePanel = new JPanel();
-        nameText = new JLabel("USER:          ");
-        namePanel.add(nameText);
-        usernameArea = new JTextArea(this.username, 5, 15);
-        usernameArea.setEditable(false);
-        namePanel.add(usernameArea);
-
-        //phone panel
-        JPanel phonePanel = new JPanel();
-        phoneText = new JLabel("PHONE:          ");
-        phonePanel.add(phoneText);
-        phoneArea = new JTextArea(EnterInfoGUI.formatPhoneString(this.phoneNumber), 5, 15);
-        phoneArea.setEditable(false);
-        phonePanel.add(phoneArea);
-
-        //email panel
-        JPanel emailPanel = new JPanel();
-        emailText = new JLabel("EMAIL:         ");
-        emailPanel.add(emailText);
-        emailArea = new JTextArea(this.email, 5,15);
-        emailArea.setEditable(false);
-        emailPanel.add(emailArea);
-
-        //education panel
-        JPanel educationPanel = new JPanel();
-        educationText = new JLabel("EDUCATION: ");
-        educationPanel.add(educationText);
-        educationArea = new JTextArea(this.education, 5, 15);
-        educationArea.setEditable(false);
-        educationPanel.add(educationArea);
-
-        //about me panel
-        JPanel aboutMePanel = new JPanel();
-        aboutMeText = new JLabel("ABOUT ME:");
-        aboutMePanel.add(aboutMeText);
-        aboutMeArea = new JTextArea(EnterInfoGUI.formatAboutString(this.aboutMe), 8, 15);
-        aboutMeArea.setEditable(false);
-        aboutMePanel.add(aboutMeArea);
-
-
-        //interests panel
-        JPanel interestsPanel = new JPanel();
-        interestsText = new JLabel("INTERESTS:  ");
-        interestsPanel.add(interestsText);
-        interestArea = new JTextArea(EnterInfoGUI.formatInterestsString(this.interests),
-                8, 15);
-        interestArea.setEditable(false);
-        interestsPanel.add(interestArea);
-
-        //Combines the above panels in grid layout
-        JPanel profilePanel = new JPanel();
-        profilePanel.setLayout(new GridLayout(3, 2));
-        profilePanel.add(namePanel);
-        profilePanel.add(phonePanel);
-        profilePanel.add(emailPanel);
-        profilePanel.add(educationPanel);
-        profilePanel.add(aboutMePanel);
-        profilePanel.add(interestsPanel);
-        frame.add(profilePanel, BorderLayout.CENTER);
-
-        frame.setVisible(true);
-        
-        //begins a timer that automatically updates the user list every 3 seconds
-        Timer timer = new Timer(3000, viewRefresher);
-        timer.setRepeats(true);
-        timer.start();
-    }
-
     transient ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == export) {
@@ -442,66 +366,27 @@ public class Profile implements Serializable, Runnable {
 
             }
             if (e.getSource() == edit) {
-                //Uses the EnterInfoGUI methods to edit the fields of the object
+                //GUI for all editing
                 phoneNumber = EnterInfoGUI.showPhoneInputDialog();
-                if (phoneNumber != 1111111111) {
-                    if (ioMachine.editProfile(username, "PhoneNumber", String.valueOf(phoneNumber))) {
-                        phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber)); //format phone (update enter info gui)
-                    }
-                }
+                education = EnterInfoGUI.showEducationInputDialog();
+                interests = EnterInfoGUI.showInterestsInputDialog();
                 aboutMe = EnterInfoGUI.showAboutInputDialog();
-                if (!aboutMe.equals("User decided not to share info!")) {
-                    if (ioMachine.editProfile(username, "AboutMe", aboutMe)) {
-                        aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
-                    }
-                }
-                education = JOptionPane.showInputDialog(null, "Enter your education:",
-                        "CampsGram", JOptionPane.QUESTION_MESSAGE);
-                if (education == null || education.equals("")) {
-                    //do nothing
-                } else {
-                    if (ioMachine.editProfile(username, "Education", education)) {
-                        educationArea.setText(education);
-                    }
-                }
-                String action;
-                do {
-                    String [] options = {"add", "remove"};
-                    action = (String) JOptionPane.showInputDialog(null, "Add or Remove Interest?",
-                            "CampsGram", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    if(action == null) {
-                        //do nothing
-                    } else if (action.equals("add")) {
-                        String addInterest = JOptionPane.showInputDialog(null, "Add Interest",
-                                "CampsGram", JOptionPane.QUESTION_MESSAGE);
-                        addInterest = addInterest.replace(" ", "");
-                        addInterest = addInterest.toLowerCase();
-                        if (addInterest == null || addInterest.equals("")) {
-                            //do nothing
-                        } else {
-                            if (ioMachine.editProfileList("Add", username, "Interest", addInterest)) {
-                                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
-                            }
-                        }
-                    } else if (action.equals("remove")) {
-                        String removeInterest = JOptionPane.showInputDialog(null, "Remove Interest",
-                                "CampsGram", JOptionPane.QUESTION_MESSAGE);
-                        removeInterest = removeInterest.replace(" ", "");
-                        removeInterest = removeInterest.toLowerCase();
-                        if (removeInterest == null || removeInterest.equals("")) {
-                            //do nothing
-                        } else {
-                            //TODO: Check whether it is updating interests
-                            if (ioMachine.editProfileList("Remove", username, "Interest", removeInterest)) {
-                                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Cannot remove interest",
-                                        "CampsGram", JOptionPane.ERROR_MESSAGE);
 
-                            }
-                        }
-                    }
-                } while (action != null);
+                //sets the text to the new fields
+                phoneArea.setText(EnterInfoGUI.formatPhoneString(phoneNumber));
+                educationArea.setText(education);
+                interestArea.setText(EnterInfoGUI.formatInterestsString(interests));
+                aboutMeArea.setText(EnterInfoGUI.formatAboutString(aboutMe));
+
+                //updates the profile in the server
+                Profile profile = new Profile(username, interests, friends, education, email, phoneNumber, aboutMe,
+                        requestsSent, requestsReceived);
+                ioMachine.deleteProfile(username);
+                ioMachine.addProfile(profile, email);
+
+                //updates the GUI
+                frame.repaint();
+                frame.revalidate();
             }
             if(e.getSource() == requests) {
                 //TODO: Figure out why it doesn't match a case in the server
@@ -517,8 +402,9 @@ public class Profile implements Serializable, Runnable {
                 String requestedUser = (String) users.getSelectedItem();
 
                 Profile profile = ioMachine.findProfile(requestedUser);
+                ViewProfile viewProfile = new ViewProfile(profile, ioMachine);
 
-                profile.viewOtherProfile();
+                viewProfile.run();
             }
             if (e.getSource() == sendFriendRequest) {
                 String requestedUser = (String) users.getSelectedItem();
@@ -555,29 +441,6 @@ public class Profile implements Serializable, Runnable {
             //updates the GUI
             frame.revalidate();
             bottomPanel.repaint();
-        }
-    };
-    
-    //Code that Runs every 3 seconds, updating the view of another profile list
-    transient ActionListener viewRefresher = new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-            //gets the most recent version of the profile
-            Profile updatedProfile = ioMachine.findProfile(getUsername());
-            
-            //updates the text areas
-            phoneArea.setText(EnterInfoGUI.formatPhoneString(updatedProfile.getPhoneNumber()));
-            emailArea.setText(updatedProfile.getEmail());
-            educationArea.setText(updatedProfile.getEducation());
-            aboutMeArea.setText(EnterInfoGUI.formatAboutString(updatedProfile.getAboutMe()));
-            interestArea.setText(EnterInfoGUI.formatInterestsString(updatedProfile.getInterests()));
-
-            //updates the GUI
-            phoneArea.repaint();
-            emailArea.repaint();
-            educationArea.repaint();
-            aboutMeArea.repaint();
-            interestArea.repaint();
-            frame.revalidate();
         }
     };
 

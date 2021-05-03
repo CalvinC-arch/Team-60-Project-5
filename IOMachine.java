@@ -285,6 +285,7 @@ public class IOMachine extends ObjectOutputStream {
             result = (String) dis.readObject();
 
             if (result.equals("True")) {
+
                 dos.writeObject("AddRequestsReceived");
                 dos.writeObject(requester);
                 dos.writeObject(username);
@@ -300,7 +301,8 @@ public class IOMachine extends ObjectOutputStream {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false; }
+            return false;
+        }
 
     }
 
@@ -398,7 +400,8 @@ public class IOMachine extends ObjectOutputStream {
     /**
      * declines a friend request
      *
-     * @param username - the username selected in the JComboBox when the decline button is clicked
+     * @param username - the username of the profile that is declining the request
+     * @param requester - the username of the profile that sent the request
      *
      * @return whether the friend request was denied
      */
@@ -435,7 +438,8 @@ public class IOMachine extends ObjectOutputStream {
     /**
      * unfriends another user
      *
-     * @param username - the username selected in the friends JComboBox when the Unfriend button is clicked
+     * @param username - the username of the profile being unfriended
+     * @param requester - the username of the profile that initiated the unfriending
      *
      * @return whether the user was unfriended
      * */

@@ -150,6 +150,27 @@ public class Account implements Serializable {
     transient ActionListener bottomBarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == deleteAcc) {
+
+                ioMachine.deleteAccount(ioMachine.findAccount(email));
+                for (int i = 0; i < profiles.size(); i++) {
+
+                    //gets a profile in the account
+                    Profile toDelete = profiles.get(i);
+
+                    //unfriends that profile from all of its friends and recinds/declines its requests
+                    for (int r = 0; r < toDelete.getFriends().size(); r++) {
+                        ioMachine.unfriend(toDelete.getFriends().get(r), toDelete.getUsername());
+                    }
+                    for(int r = 0; r < toDelete.getRequestsSent().size(); r++) {
+                        ioMachine.rescindRequest(toDelete.getRequestsSent().get(r), toDelete.getUsername());
+                    }
+                    for(int r = 0; r < toDelete.getRequestsReceived().size(); r++) {
+                        ioMachine.declineFriend(toDelete.getRequestsReceived().get(r), toDelete.getUsername());
+                    }
+
+                    ioMachine.deleteProfile(toDelete.getUsername());
+                }
+
                 ioMachine.deleteAccount(ioMachine.findAccount(email));
                 frame.dispose();
             }
@@ -161,6 +182,9 @@ public class Account implements Serializable {
                     username = EnterInfoGUI.showUsernameInputDialog();
                     if(ioMachine.findProfile(username) == null){
                         usernameTaken = false;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Username Taken", "CampsGram",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } while (usernameTaken);
                 ArrayList<String> interests = EnterInfoGUI.showInterestsInputDialog();
@@ -237,6 +261,15 @@ public class Account implements Serializable {
             else if (e.getActionCommand().contains("delete")) //Runs if the received action command contains delete
             {
                 int profileIndex = Integer.parseInt(e.getActionCommand().substring(6));
+
+                //unfriends the user from everyone in its friends list and rescinds all its requests
+                Profile toDelete =  profileHashMap.get(profileIndex);
+                for(int i = 0; i < toDelete.getFriends().size(); i++) {
+                    ioMachine.unfriend(toDelete.getFriends().get(i), toDelete.getUsername());
+                }
+                for(int i = 0; i < toDelete.getFriends().size(); i++) {
+                    ioMachine.rescindRequest(toDelete.getFriends().get(i), toDelete.getUsername());
+                }
 
                 //removes the profile from the arraylist of profiles
                 profiles.remove(profileHashMap.get(profileIndex));
