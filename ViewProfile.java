@@ -3,6 +3,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * ViewProfile.java
+ *
+ * This program establishes a way for a user to view the profiles of other users that automatically updates the
+ * profiles in the event that the other user edits his or her profile.
+ *
+ * @author Team 060, Section 11
+ * @version May 03, 2021
+ * */
+
 public class ViewProfile extends Profile{
 
     public ViewProfile(Profile profile, IOMachine ioMachine) {

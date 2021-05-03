@@ -7,6 +7,20 @@ import java.util.ArrayList;
 import java.io.*;
 import java.util.Locale;
 
+/**
+ * Profile.java
+ *
+ * This class creates profile objects. It contains a run method for displaying a profile GUI. The run method
+ * contains a timer object, so that the profile may automatically update to changes processed in the server.
+ * This file also contains action listeners for functionality to implement on button clicks. Specifically,
+ * there is an export file button which creates a CSV file of the profile object and an edit profile button which
+ * sends any changes to the profile to the server and updates the GUI. Additionally, the profile GUI contains
+ * buttons for navigating to a friends list screen, viewing any profile on the server, and sending friend
+ * requests to any user.
+ *
+ * @author Team 060, Section 11
+ * @version May 03, 2021
+ * */
 
 public class Profile implements Serializable, Runnable {
 

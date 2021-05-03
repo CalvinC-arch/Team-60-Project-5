@@ -9,20 +9,14 @@ import java.util.ArrayList;
 /**
  * FriendsListGUI.java
  *
- * This program creates a GUI displaying the list of friends for a profile. It contains methods that are run
- * when buttons are clicked that take care of communicating with the server in order to process accepting and
- * declining friend requests, unfriending current friends, viewing friends' profiles, and navigating away
- * from the page.
- *
- * run method - creates the GUI
- * acceptFriend method - boolean method run when accept button is clicked. It sends "Accept" to the server as a signal to process accepting friend request and receives
- * true or false back from the server depending on if the request was properly processed and returns this value
- * declineFriend method - boolean method run when decline button is clicked. It sends "Decline" to the server as a signal to process declining friend request and receives
- * true or false back from the server depening on if the request was properly processed and returns this value
- * viewProfile method - boolean method run when view profile button is clicked. It sends "View" to the server as a signal to process viewing friend's profile and receives 
- * true or false back from the server depending on if the rquest was properly processed and returns this value
- * unfriend method - boolean method run when the unfriend button is clicked. It sends "Unfriend" to the server as a signal to process unfriending and receives true or false
- * back from the server depending on the request was properly processed and returns this value
+ * This program creates objects constructed from the fields of a profile. It creates a GUI displaying a list
+ * of profile usernames this profile sent a friend request to, a list of profile usernames this profile
+ * received a friend request from, and this profile's list of current friends. In the run method that
+ * constructs the GUI, there is a timer object which is used to repeatedly updates the GUI to account for
+ * changes in the server. This program also contains action listeners that respond to button clicks.
+ * Specifically, it can manage rescinding a friend request sent to another user, accepting or declining a
+ * friend request received from another user, viewing the profile of a current friend, or unfriending a
+ * current friend.
  *
  * @author Team 060, Section 11
  * @version May 03, 2021

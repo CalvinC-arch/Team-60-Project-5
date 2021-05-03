@@ -6,14 +6,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
-AccountGUI useful methods:
-AccountGUI(String name, ArrayList<Franken> profiles)
-  - name is name of the account
-  - profiles is a list of profiles under the account
-.run() ~ runs the GUI for an AccountGUI object
-Creators: Will Stonebridge, Calvin Carta
- */
+/**
+ * Account.java
+ *
+ * This program create account objects. It contains a run method for creating a graphical user interface. The
+ * GUI displays all the profiles created associated with this account. It also contains action listeners to
+ * respond to button clicks. Specifically, this GUI contains an add profile method, which calls a series of
+ * JOptionPanes that accept input from the user that are used to create a profile for this account; a delete
+ * account method, which removes the account and associated profiles from the server and disposes of the GUI;
+ * and an import button, which enables the user to create a new profile for this account from a CSV file.
+ * Additionally, for each profile that is created, there is a view button which enables the user to see the
+ * particular profile, and a delete button which removes the profile from the list of profiles associated
+ * with this account.
+ *
+ * @author Team 060, Section 11
+ * @version May 03, 2021
+ * */
 
 public class Account implements Serializable {
 

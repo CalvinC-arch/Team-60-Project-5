@@ -10,15 +10,13 @@ import java.util.Objects;
 /**
  * LoginPageGUI.java
  *
- * This program prompts a user to enter a username and password in order to log-in to a preexisting account
- * or create a new account for a new user.
- *
- * run method - creates and displays the main GUI
- * validateAccount method - boolean method that is run whenever the EnterButton is clicked. It attempts to connect to the server and send it "Validate" to signal to the
- * server what to do. Then it sends the server the email and password submitted in the text fields. If the server is able to adequately process this request, it sends
- * true or false back, which is read in. This boolean value is returned.
- * createAccount method - boolean method that is very similar to the validateAccount method, except that it sends the server the word "Create" as a signal for what
- * processing the server should do. This method also reads in true or false from the server to determine whether the processing was complete.
+ * This program creates a GUI which constitutes the opening screen for the CampsGram application. It has
+ * an email text field and password text field where users input information to log into an account.
+ * Clicking the enter button will verify whether an account with the given email and password exists and
+ * navigate to the account if it does, or else display an error message and ask the user to enter new inputs.
+ * Clicking the make new account will verify whether the given email is associated with any existing account.
+ * If not, it will create a new account and navigate to that account screen. If so, it will display an error
+ * message and inform the user that an account with that email already exists.
  *
  * @author Team 060, Section 11
  * @version May 03, 2021
