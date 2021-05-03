@@ -123,12 +123,7 @@ public class FriendsListGUI implements Runnable {
         centralPanelNorth.add(rescindRequestButton);
         centralPanel.add(centralPanelNorth, BorderLayout.NORTH);
 
-        //If no sent friend requests, disable rescind friend request button
-        if(requestsSentList.getItemCount() == 0) {
-            rescindRequestButton.setEnabled(false);
-        } else {
-            rescindRequestButton.setEnabled(true);
-        }
+        
 
         centralPanelSouth = new JPanel();
         JLabel received = new JLabel("Pending Friend Requests:");
@@ -148,14 +143,7 @@ public class FriendsListGUI implements Runnable {
         centralPanel.add(centralPanelSouth, BorderLayout.SOUTH);
         frame.add(centralPanel, BorderLayout.CENTER);
 
-        //If no received friend requests, disable accept and decline buttons
-        if (requestsPendingList.getItemCount() == 0) {
-            acceptButton.setEnabled(false);
-            declineButton.setEnabled(false);
-        } else {
-            acceptButton.setEnabled(true);
-            declineButton.setEnabled(true);
-        }
+        
 
         //Add friend list, view profile button, and unfriend button to screen
         southPanel = new JPanel();
@@ -175,14 +163,7 @@ public class FriendsListGUI implements Runnable {
         southPanel.add(unfriendButton);
         frame.add(southPanel, BorderLayout.SOUTH);
 
-        //If no friends, disable view profile and unfriend buttons
-        if (friendsList.getItemCount() == 0) {
-            viewProfileButton.setEnabled(false);
-            unfriendButton.setEnabled(false);
-        } else {
-            viewProfileButton.setEnabled(true);
-            unfriendButton.setEnabled(true);
-        }
+        
         
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); //set default close operation to dispose
         frame.setVisible(true); //make the frame visible
@@ -228,7 +209,7 @@ public class FriendsListGUI implements Runnable {
         }
     };
 
-    //Code that Runs every 3 seconds, updating the view of another profile list
+   //Code that Runs every 3 seconds, updating the view of another profile list
     transient ActionListener refresher = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             //saves the current selection
@@ -242,6 +223,15 @@ public class FriendsListGUI implements Runnable {
             DefaultComboBoxModel<String> modelReceived = new DefaultComboBoxModel<>(received);
             requestsPendingList.setModel(modelReceived);
 
+            //If no received friend requests, disable accept and decline buttons
+            if (requestsPendingList.getItemCount() == 0) {
+                acceptButton.setEnabled(false);
+                declineButton.setEnabled(false);
+            } else {
+                acceptButton.setEnabled(true);
+                declineButton.setEnabled(true);
+            }
+            
             //sets the selection what it was previously
             requestsPendingList.setSelectedItem(currentSelectionReceived);
 
@@ -259,6 +249,15 @@ public class FriendsListGUI implements Runnable {
             DefaultComboBoxModel<String> modelFriend = new DefaultComboBoxModel<>(friend);
             friendsList.setModel(modelFriend);
 
+            //If no friends, disable view profile and unfriend buttons
+            if (friendsList.getItemCount() == 0) {
+                viewProfileButton.setEnabled(false);
+                unfriendButton.setEnabled(false);
+            } else {
+                viewProfileButton.setEnabled(true);
+                unfriendButton.setEnabled(true);
+            }
+            
             //sets the selection what it was previously
             friendsList.setSelectedItem(currentSelectionFriend);
 
@@ -276,6 +275,13 @@ public class FriendsListGUI implements Runnable {
             DefaultComboBoxModel<String> modelSent = new DefaultComboBoxModel<>(sent);
             requestsSentList.setModel(modelSent);
 
+            //If no sent friend requests, disable rescind friend request button
+            if(requestsSentList.getItemCount() == 0) {
+                rescindRequestButton.setEnabled(false);
+            } else {
+                rescindRequestButton.setEnabled(true);
+            }
+            
             //sets the selection what it was previously
             requestsSentList.setSelectedItem(currentSelectionReceived);
 
