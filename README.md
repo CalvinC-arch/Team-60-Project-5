@@ -26,6 +26,7 @@ Test Cases for non GUI methods in Account may be found in the class AccountTestC
 
 
 EnterInfoGUI Class:
+
 This class contains all the JOptionPanes needed to collect enough information to create a profile. There are two types of methods in this class: one type prompts input dialogs, and the other type formats inputted information correctly. The method that prompt the input dialogs ask for the following personal information from the user: username, phone number, email address, education information, “About” section, and lists of interests. To test this class, a main method was created that call every other method and prints out the data once it is done. To handle the potential errors in the methods, try-catch blocks were implemented in most of the cases. In the remaining cases, if statements were added to handle any possible input. A do-while loop is also implemented in methods where inputs are required, such as thein the method showUsernameInputDialog, that will prompt the user to re-enter the information until it is correctly formatted. This class is related to other classes by having its methods called by the Account.java and Profile.java classes; these classes call the methods in EnterInfoGUI.java whenever the user wants to create or edit a profile.
 
 FriendsListGUI Class:
