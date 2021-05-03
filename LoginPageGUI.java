@@ -193,7 +193,7 @@ public class  LoginPageGUI implements Runnable {
 
                         //Sends a new account to the server
                         //check whether an account associated with that email exists
-                        if(!Objects.nonNull(ioMachine.findAccount(email))) {
+                        if (!Objects.nonNull(ioMachine.findAccount(email))) {
                             //if not, create new account
                             Account tempAccount = new Account(email, password, new ArrayList<Profile>());
                             accountCreated = ioMachine.addAccount(tempAccount);
