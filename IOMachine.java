@@ -375,15 +375,15 @@ public class IOMachine extends ObjectOutputStream {
             }
 
             dos.writeObject("RemoveRequestsSent");
-            dos.writeObject(username);
             dos.writeObject(requester);
+            dos.writeObject(username);
 
             result = (String) dis.readObject();
 
             if (result.equals("True")) {
                 dos.writeObject("RemoveRequestsReceived");
-                dos.writeObject(requester);
                 dos.writeObject(username);
+                dos.writeObject(requester);
 
                 result = (String) dis.readObject();
 
