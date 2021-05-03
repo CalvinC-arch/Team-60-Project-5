@@ -63,11 +63,13 @@ public class testIOMachine implements Serializable {
 
             //creating new profile objects to use in testing
             Profile pf = new Profile("chen3801", interests, friends, "Purdue University",
-                    "jchsda@gmail.com", 1231231234L, "jdsfhladhflajdshfladhflal dsfasdfhlahfl",
+                    "jchsda@gmail.com", 1231231234L, "jdsfhladhflajdshfladhflal " +
+                    "dsfasdfhlahfl",
                     requestsSent, requestsReceived);
 
             Profile pf1 = new Profile("chen380", interests, friends, "Purdue University",
-                    "jchsda@gmail.com", 1231231234L, "jdsfhladhflajdshfladhflal dsfasdfhlahfl",
+                    "jchsda@gmail.com", 1231231234L, "jdsfhladhflajdshfladhflal " +
+                    "dsfasdfhlahfl",
                     requestsSent, requestsReceived);
 
             ArrayList<Profile> pfList = new ArrayList<>();
