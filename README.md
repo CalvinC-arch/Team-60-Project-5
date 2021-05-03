@@ -14,7 +14,8 @@ ProfileServer.java. For the client, edit line 26 of ProfileClient.java to contai
 Submission Locations:
 
 Naia Echevarria - Submitted Report on Brightspace.
-Calvin Carta - Submitted Vocareum Workspace
+Calvin Carta - Submitted Vocareum Workspace.
+Jeff Chen - Submitted Presentation on Brightspace.
 
 Class Descriptions and Testing:
 
