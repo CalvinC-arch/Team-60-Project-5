@@ -436,8 +436,10 @@ class ProfileClientHandler extends Thread {
 
                                         if (accounts.get(i).getProfiles().get(j).getFriends().get(k).equals(parameter))
                                         {  //if friend found
+
                                             accounts.get(i).getProfiles().get(j).getFriends().remove(k);
                                             objectFound = true;
+                                            dos.writeObject("True");
                                         }
                                     }
                                 }
