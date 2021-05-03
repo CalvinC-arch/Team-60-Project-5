@@ -263,7 +263,7 @@ public class Profile implements Serializable, Runnable {
         bottomPanel = new JPanel();
         JLabel userLabel = new JLabel("Find Other Users: ");
         bottomPanel.add(userLabel);
-        
+
         //Drop down box of usernames
 
         //retrieves the complete list of users, remove the current users name from the list
@@ -616,7 +616,7 @@ public class Profile implements Serializable, Runnable {
     }
 
     public void setRequestsReceived(ArrayList<String> requestsReceived) {
-        this.requestsSent = requestsSent;
+        this.requestsReceived = requestsReceived;
     }
 
     public void addReceivedRequest(String username) {
