@@ -374,7 +374,7 @@ public class IOMachine extends ObjectOutputStream {
                 return false;
             }
 
-            dos.writeObject("RequestsSent");
+            dos.writeObject("RemoveRequestsSent");
             dos.writeObject(username);
             dos.writeObject(requester);
 
