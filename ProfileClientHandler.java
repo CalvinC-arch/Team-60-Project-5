@@ -158,9 +158,6 @@ class ProfileClientHandler extends Thread {
                             dos.writeObject("False");
                         } else {
                             dos.writeObject("True");
-
-                            System.out.println(usernames.getClass());
-
                             dos.writeObject(usernames);
                         }
 
