@@ -35,7 +35,7 @@ LoginPage GUI Class:
 
 
 Profile Class:
-
+View the ProfileTestCasesClass
 
 ProfileClient Class:
 
