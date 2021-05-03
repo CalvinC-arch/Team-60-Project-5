@@ -103,7 +103,8 @@ public class EnterInfoGUI {
                 JOptionPane.showMessageDialog(null, "Username can only be a single word!",
                         "CampsGram", JOptionPane.ERROR_MESSAGE); //shows error
             } //end if
-        } while (username == null || username.equals("") || username.contains(" ")); //do-while runs while username is null or it has a space
+        } while (username == null || username.equals("") || username.contains(" ")); //do-while runs while username.. 
+        // ..is null or it has a space
         return username; //returns the username for the profile
     } //showUsernameInputDialog
 
@@ -128,12 +129,14 @@ public class EnterInfoGUI {
                     phoneLong = Long.parseLong(phone); //throws exception is phone number is not a Long
                     checking = false; //makes loop stop if no exception is thrown
                     if (phone.length() != 10) { //checks if phone number has more than 10 digits
-                        JOptionPane.showMessageDialog(null, "Please enter a valid phone number! " +
+                        JOptionPane.showMessageDialog(null, 
+                                "Please enter a valid phone number! " +
                                         "It should be 10 digits long!", "CampsGram",
                                 JOptionPane.ERROR_MESSAGE); //shows error
                         checking = true; //makes loop run again which asks user to input again
                     } else if (phone.substring(0, 1).equals("0")) {
-                        JOptionPane.showMessageDialog(null, "Please enter a valid phone number!" +
+                        JOptionPane.showMessageDialog(null, 
+                                "Please enter a valid phone number!" +
                                         " Phone number cannot start with 0!", "CampsGram",
                                 JOptionPane.ERROR_MESSAGE); //shows error
                         checking = true; //makes loop run again which asks user to input again
