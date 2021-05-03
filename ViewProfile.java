@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  * @version May 03, 2021
  * */
 
-public class ViewProfile extends Profile{
+public class ViewProfile extends Profile {
 
     public ViewProfile(Profile profile, IOMachine ioMachine) {
         super(profile, ioMachine);
@@ -118,4 +118,3 @@ public class ViewProfile extends Profile{
         }
     };
 }
-
