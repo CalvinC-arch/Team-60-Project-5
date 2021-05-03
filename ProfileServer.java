@@ -86,6 +86,8 @@ public class ProfileServer
                 accounts.add(new Account(splitLine[0], splitLine[1], profiles)); //creates a new account using the
                 // saved email, password, and newly created profile arrayList
 
+                profiles = new ArrayList<Profile>(); //reset the profiles arrayList
+
             }
 
             System.out.println("Server reset from backup");
