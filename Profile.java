@@ -560,11 +560,11 @@ public class Profile implements Serializable, Runnable {
         this.friends = friends;
     }
 
-    public void addFriend(String friend) { //TODO change this
+    public void addFriend(String friend) {
         this.friends.add(friend);
     }
 
-    public void removeFriends(String friend) { //TODO change this
+    public void removeFriends(String friend) { 
 
         for (int i = 0; i < friends.size(); i++) {
 
