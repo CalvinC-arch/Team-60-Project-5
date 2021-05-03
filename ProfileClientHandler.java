@@ -151,19 +151,16 @@ class ProfileClientHandler extends Thread {
                                 usernames.add(accounts.get(i).getProfiles().get(j).getUsername());
                                 objectFound = true;
 
-                                //TODO REMOVE
-                                //System.out.println(accounts.get(i).getProfiles().get(j).getUsername());
-
                             }
                         }
-
-                        //TODO REMOVE
-                        //System.out.println(objectFound);
 
                         if (!objectFound) { //if a matching profile is not found
                             dos.writeObject("False");
                         } else {
                             dos.writeObject("True");
+
+                            System.out.println(usernames.getClass());
+
                             dos.writeObject(usernames);
                         }
 
