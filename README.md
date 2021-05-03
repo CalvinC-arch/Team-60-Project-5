@@ -36,6 +36,8 @@ FriendsListGUI appears whenever the view requests button in a profile is clicked
 
 IOMachine Class:
 
+The IOMachine class is essentially an intermediary class between the client and server classes, allowing the client to easily communicate with and send data to the server. Each method in IOMachine communicates with ProfileClientHandler, each one telling the server to do something different based on a keyword that is sent to the server. These methods tell the server to do things like add profiles to specific accounts, edit fields for profiles, manage friend requests for specific profiles, add or delete accounts and profiles, find accounts or profiles, and return the usernames for all profiles. Each of the client GUI classes that take user input to perform a certain task will call methods within IOMachine, which in turn sends keywords to the server class, or ProfileClientHandler, to perform that specific task and send back any related output or data to be displayed to the user. That is how IOMachine is related to the other classes. For testing, we created a class called testIOMachine.java that tests each one of IOMachine’s methods. This is done through calling each method twice, once with correct input that will run successfully, and a second time with invalid input to show a case where the method fails. This is done to ensure that each method runs correctly.
+
 
 LoginPage GUI Class:
 
