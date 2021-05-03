@@ -213,7 +213,7 @@ public class Profile implements Serializable, Runnable {
         this.phoneNumber = Long.parseLong(profileInfo[index]);
         index++;
 
-        this.aboutMe = profileInfo[index] + ",";
+        this.aboutMe = profileInfo[index] + ", ";
         index++;
 
         //loop through the rest of the indexes in profileInfo and append to the aboutMe section with a comma
